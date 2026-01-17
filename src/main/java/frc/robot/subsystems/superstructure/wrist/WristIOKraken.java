@@ -28,16 +28,16 @@ public class WristIOKraken implements WristIO {
             new MotionMagicVoltage(0).withSlot(0).withEnableFOC(true);
     private final VoltageOut voltageOut = new VoltageOut(0).withEnableFOC(true);
 
-    private final Canandmag absoluteEncoder;
+    //private final Canandmag absoluteEncoder;
 
     public WristIOKraken() {
         wristMotor = new TalonFX(CAN_ID);
-        absoluteEncoder = new Canandmag(ABS_ENCODER_ID);
+        //absoluteEncoder = new Canandmag(ABS_ENCODER_ID);
 
-        CanandmagSettings canandmagSettings = new CanandmagSettings();
-        canandmagSettings.setInvertDirection(true);
+        //CanandmagSettings canandmagSettings = new CanandmagSettings();
+        //canandmagSettings.setInvertDirection(true);
 
-        absoluteEncoder.setSettings(canandmagSettings);
+       // absoluteEncoder.setSettings(canandmagSettings);
 
         TalonFXConfiguration config = new TalonFXConfiguration();
 
@@ -68,13 +68,13 @@ public class WristIOKraken implements WristIO {
                 .withForwardSoftLimitThreshold(MAX_POS)
                 .withReverseSoftLimitThreshold(MIN_POS);
 
-        Commands.sequence(Commands.waitSeconds(2), Commands.runOnce(() -> {
+        /*Commands.sequence(Commands.waitSeconds(2), Commands.runOnce(() -> {
                     if (absoluteEncoder.isConnected())
                         wristMotor.setPosition(getAbsPosition() / (2 * Math.PI));
                     else wristMotor.setPosition(Units.degreesToRotations(90));
                 }))
                 .ignoringDisable(true)
-                .schedule();
+                .schedule(); */
 
         BaseStatusSignal.setUpdateFrequencyForAll(
                 100,
@@ -83,7 +83,7 @@ public class WristIOKraken implements WristIO {
                 wristMotor.getMotorVoltage());
 
         HardwareWatchdog.getInstance().registerCTREDevice(wristMotor, this.getClass());
-        HardwareWatchdog.getInstance().registerReduxDevice(absoluteEncoder, this.getClass());
+       // HardwareWatchdog.getInstance().registerReduxDevice(absoluteEncoder, this.getClass());
     }
 
     @Override
@@ -92,7 +92,7 @@ public class WristIOKraken implements WristIO {
         inputs.velocityRadiansPerSecond = 2 * Math.PI * wristMotor.getVelocity().getValueAsDouble();
         inputs.volts = wristMotor.getMotorVoltage().getValueAsDouble();
 
-        inputs.absoluteEncoderPosition = getAbsPosition();
+        //inputs.absoluteEncoderPosition = getAbsPosition();
 
         Logger.recordOutput(
                 "elevator/motionMagicEnabled",
@@ -125,9 +125,9 @@ public class WristIOKraken implements WristIO {
     public void setBrakeMode(boolean brakeMode) {
         wristMotor.setNeutralMode(brakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
     }
-
-    private double getAbsPosition() {
+}
+    /*private double getAbsPosition() {
         return MathUtil.angleModulus(
                 (2 * Math.PI) * absoluteEncoder.getAbsPosition() + Math.toRadians(90));
     }
-}
+} */

@@ -9,7 +9,7 @@ import com.ctre.phoenix6.SignalLogger;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.units.measure.Units;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -142,9 +142,9 @@ public class Wrist extends BlitzSubsystem {
         Logger.recordOutput(
                 logKey + "/profile/velocityGoal", goal.orElse(TRAPEZOID_NAN_STATE).velocity);
 
-        Logger.recordOutput(
-                logKey + "/absEncoderDegrees", Math.toRadians(inputs.absoluteEncoderPosition));
-
+        // Logger.recordOutput(
+        //         logKey + "/absEncoderDegrees", Math.toRadians(inputs.absoluteEncoderPosition));
+        
         LoggedTunableNumber.ifChanged(
                 hashCode(), pid -> io.setPid(pid[0], pid[1], pid[2]), kP, kI, kD);
 

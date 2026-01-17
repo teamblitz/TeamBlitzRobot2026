@@ -29,7 +29,7 @@ public class ElevatorIOKraken implements ElevatorIO {
         leftMotor = new TalonFX(LEFT_ID);
         rightMotor = new TalonFX(RIGHT_ID);
 
-        leftMotor.setControl(new Follower(rightMotor.getDeviceID(), false));
+        //leftMotor.setControl(new Follower(rightMotor.getDeviceID(), false));
 
         TalonFXConfiguration config = new TalonFXConfiguration();
 
@@ -78,7 +78,7 @@ public class ElevatorIOKraken implements ElevatorIO {
         leftMotor.setPosition(0);
         rightMotor.setPosition(0);
 
-        leftMotor.setControl(new Follower(rightMotor.getDeviceID(), true));
+       // leftMotor.setControl(new Follower(rightMotor.getDeviceID(), true));
 
         leader = rightMotor;
 

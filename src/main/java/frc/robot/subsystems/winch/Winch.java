@@ -56,8 +56,8 @@ public class Winch extends BlitzSubsystem {
     public void periodic() {
         super.periodic();
 
-        io.updateInputs(inputs);
-        Logger.processInputs(logKey, inputs);
+        //io.updateInputs(inputs);
+        //Logger.processInputs(logKey, inputs);
 
         //        LoggedTunableNumber.ifChanged(hashCode(), p -> io.setPid(p[0], 0, 0), kP);
         //

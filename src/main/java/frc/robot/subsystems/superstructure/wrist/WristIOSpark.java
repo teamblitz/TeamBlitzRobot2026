@@ -57,7 +57,7 @@ public class WristIOSpark implements WristIO {
                 .positionConversionFactor((2 * Math.PI))
                 .velocityConversionFactor((2 * Math.PI));
 
-        config.closedLoop.feedbackSensor(ClosedLoopConfig.FeedbackSensor.kAbsoluteEncoder);
+        //config.closedLoop.feedbackSensor(ClosedLoopConfig.FeedbackSensor.kAbsoluteEncoder);
 
         motor.configure(
                 config,

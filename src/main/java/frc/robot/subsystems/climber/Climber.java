@@ -5,7 +5,7 @@ import static frc.robot.Constants.Climber.*;
 import com.ctre.phoenix6.SignalLogger;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.units.measure.Units;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -38,7 +38,7 @@ public class Climber extends BlitzSubsystem {
 
     private final LoggedTunableNumber kP =
             new LoggedTunableNumber("climber/unloaded_kP", UnloadedGains.KP);
-    //    private final LoggedTunableNumber unloadedMaxVel = new
+       // private final LoggedTunableNumber unloadedMaxVel = new
     // LoggedTunableNumber("climber/unloaded_max_vel", MAX);
 
     private final SysIdRoutine routine;
@@ -97,8 +97,8 @@ public class Climber extends BlitzSubsystem {
         Logger.recordOutput(logKey + "/state", state.toString());
     }
 
-    private Command goToPosition(DoubleSupplier position) {
-        return new FunctionalCommand(
+     private Command goToPosition(DoubleSupplier position) {
+         return new FunctionalCommand(
                 () -> io.setMotionProfile(position.getAsDouble()),
                 () -> {},
                 (interrupted) -> {
@@ -106,7 +106,7 @@ public class Climber extends BlitzSubsystem {
                 },
                 () -> MathUtil.isNear(position.getAsDouble(), inputs.position, EPSILON),
                 this);
-    }
+    }  
 
     public Command deployClimber() {
         return goToPosition(SupplierUtils.toRadians(deployPosition))

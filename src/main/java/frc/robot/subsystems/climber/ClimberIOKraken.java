@@ -59,7 +59,7 @@ public class ClimberIOKraken implements ClimberIO {
         leftMotor.getConfigurator().apply(config);
         rightMotor.getConfigurator().apply(config);
 
-        leftMotor.setControl(new Follower(rightMotor.getDeviceID(), true));
+        //leftMotor.setControl(new Follower(rightMotor.getDeviceID(), true));
 
         leader = rightMotor;
 

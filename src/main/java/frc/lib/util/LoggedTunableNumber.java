@@ -9,7 +9,7 @@ package frc.lib.util;
 
 import frc.robot.Constants;
 
-import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -27,7 +27,7 @@ public class LoggedTunableNumber implements DoubleSupplier {
     private final String key;
     private boolean hasDefault = false;
     private double defaultValue;
-    private LoggedDashboardNumber dashboardNumber;
+    private LoggedNetworkNumber dashboardNumber;
     private final Map<Integer, Double> lastHasChangedValues = new HashMap<>();
 
     /**
@@ -60,7 +60,7 @@ public class LoggedTunableNumber implements DoubleSupplier {
             hasDefault = true;
             this.defaultValue = defaultValue;
             if (Constants.TUNING_MODE) {
-                dashboardNumber = new LoggedDashboardNumber(key, defaultValue);
+                dashboardNumber = new LoggedNetworkNumber(key, defaultValue);
             }
         }
     }
