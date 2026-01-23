@@ -11,7 +11,6 @@ import org.littletonrobotics.junction.Logger;
 
 public class Intake extends BlitzSubsystem {
     private final IntakeIO io;
-    private final IntakeInputsAutoLogged inputs = new IntakeInputsAutoLogged();
 
     public Intake(IntakeIO io) {
         super("intake");
@@ -23,26 +22,7 @@ public class Intake extends BlitzSubsystem {
     public void periodic() {
         super.periodic();
 
-        io.updateInputs(inputs);
-        Logger.processInputs(logKey, inputs);
-    }
-
-    public boolean hasCoral() {
-        return intakeSensor() || Robot.isSimulation();
-    }
-
-    public Command handoff() {
-        return startEnd(
-                        () -> {
-                            io.setSpeed(HANDOFF_SPEED);
-                            io.enableCoralInterrupt(true);
-                        },
-                        () -> {
-                            io.setSpeed(0);
-                            io.enableCoralInterrupt(false);
-                        })
-                .until(this::intakeSensor)
-                .onlyIf(() -> !intakeSensor());
+        
     }
 
     public Command reverse() {
@@ -63,10 +43,6 @@ public class Intake extends BlitzSubsystem {
 
     private Command stop() {
         return runOnce(() -> io.setSpeed(0));
-    }
-
-    private boolean intakeSensor() {
-        return inputs.breakBeam;
     }
 
     public Command setSpeed(double speed) {
