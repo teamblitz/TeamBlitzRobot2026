@@ -35,6 +35,9 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOKraken;
 import frc.robot.subsystems.intake.IntakeIOSpark;
 import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.ShooterIO;
+import frc.robot.subsystems.shooter.ShooterIOKraken;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -54,6 +57,7 @@ public class RobotContainer {
     private Intake intake;
     private AutoCommands autoCommands;
     private DriveCommands driveCommands;
+    private Shooter shooter;
 
     /* ***** --- Autonomous --- ***** */
     private AutoChooser autoChooser;
@@ -82,6 +86,7 @@ public class RobotContainer {
         vision = new Vision(drive);
 
         intake = new Intake(Constants.compBot() ? new IntakeIOKraken() : new IntakeIOSpark());
+
 
     }
 
