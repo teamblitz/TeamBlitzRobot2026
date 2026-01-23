@@ -163,6 +163,10 @@ public class OIConstants {
         public static final Trigger CLIMBER_DOWN_MAN = DRIVE_CONTROLLER.button(10);
     }
 
+    public static final class Shooter {
+        public static final Trigger SHOOT = OPERATOR_CONTROLLER.a();
+    }
+
     //    public static final class TestMode {
     //        public static final Trigger ZERO_ABS_ENCODERS = UNBOUND;
     //

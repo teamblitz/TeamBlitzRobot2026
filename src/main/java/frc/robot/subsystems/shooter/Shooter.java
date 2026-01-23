@@ -1,16 +1,29 @@
 package frc.robot.subsystems.shooter;
 
+import static edu.wpi.first.wpilibj2.command.Commands.sequence;
+
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import frc.lib.BlitzSubsystem;
+import frc.robot.Constants;
 
-public class Shooter extends BlitzSubsystem {
-	private final ShooterIO io;
+public class Shooter extends SubsystemBase {
+	// private final ShooterIO io;
 
-	public Shooter(ShooterIO io) {
-		super("shooter");
+    private final TalonFX shooter;
+    private final TalonFX feeder;
 
-		this.io = io;
+	public Shooter() {
+	
+        shooter = new TalonFX(30);
+        feeder = new TalonFX(31);
 	}
 
 	@Override
@@ -19,11 +32,10 @@ public class Shooter extends BlitzSubsystem {
 		// IO update would be done by a higher-level manager; keep minimal here
 	}
 
-	public Command setShooterSpeed(double speed) {
-		return startEnd(() -> io.setShooterSpeed(speed), () -> io.setShooterSpeed(0));
-	}
 
-	public Command setFeederSpeed(double speed) {
-		return startEnd(() -> io.setFeederSpeed(speed), () -> io.setFeederSpeed(0));
-	}
+    public Command shoot() {
+        return run(() -> shooter.set(0.8))
+                .andThen(Commands.waitSeconds(1))
+                .andThen(() -> feeder.set(0.2));
+    }
 }
