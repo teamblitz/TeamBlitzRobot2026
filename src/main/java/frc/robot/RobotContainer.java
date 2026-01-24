@@ -30,11 +30,9 @@ import frc.lib.math.AllianceFlipUtil;
 import frc.lib.reefscape.ScoringPositions;
 import frc.robot.commands.*;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
-import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.IntakeIOKraken;
-import frc.robot.subsystems.intake.IntakeIOSpark;
-import frc.robot.subsystems.vision.Vision;
+//import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
+
+// import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOKraken;
@@ -52,11 +50,7 @@ import java.util.Set;
 public class RobotContainer {
 
     /* ***** --- Subsystems --- ***** */
-    private CommandSwerveDrivetrain drive;
-    private Vision vision;
-    private Intake intake;
-    private AutoCommands autoCommands;
-    private DriveCommands driveCommands;
+
     private Shooter shooter;
 
     /* ***** --- Autonomous --- ***** */
@@ -80,12 +74,7 @@ public class RobotContainer {
     }
 
     private void configureSubsystems() {
-        drive = TunerConstants.createDrivetrain();
-        driveCommands = new DriveCommands(drive);
 
-        vision = new Vision(drive);
-
-        intake = new Intake(Constants.compBot() ? new IntakeIOKraken() : new IntakeIOSpark());
         
         shooter = new Shooter();
         
@@ -94,25 +83,14 @@ public class RobotContainer {
     }
 
     private void setDefaultCommands() {
-        drive.setDefaultCommand(driveCommands
-                .joystickDrive(
-                        OIConstants.Drive.X_TRANSLATION,
-                        OIConstants.Drive.Y_TRANSLATION,
-                        OIConstants.Drive.ROTATION_SPEED,
-                        () -> 5,
-                        () -> 10,
-                        () -> 2 * Math.PI,
-                        true)
-                .onlyWhile(RobotState::isTeleop)
-                .onlyIf(RobotState::isTeleop)
-                .withName("Joystick Drive"));
+
 
         
     }
 
     private void configureTriggerBindings() {
-        OIConstants.Drive.RESET_GYRO.onTrue(Commands.runOnce(() -> drive.resetRotation(
-                AllianceFlipUtil.shouldFlip() ? Rotation2d.k180deg : Rotation2d.kZero)));
+        // OIConstants.Drive.RESET_GYRO.onTrue(Commands.runOnce(() -> drive.resetRotation(
+        //         AllianceFlipUtil.shouldFlip() ? Rotation2d.k180deg : Rotation2d.kZero)));
         //        OIConstants.Drive.X_BREAK.onTrue(drive.park());
         //
         //        OIConstants.Drive.BRAKE.onTrue(Commands.runOnce(() -> drive.setBrakeMode(true)));
@@ -121,17 +99,17 @@ public class RobotContainer {
        
 
        
-        OIConstants.Intake.REVERSE.whileTrue(intake.reverse());
+        // OIConstants.Intake.REVERSE.whileTrue(intake.reverse());
         
-        OIConstants.Drive.ALIGN_LEFT.whileTrue(new DeferredCommand(
-                () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(
-                        PositionConstants.getClosestFace(drive.getPose())[0])),
-                Set.of(drive)));
+        // OIConstants.Drive.ALIGN_LEFT.whileTrue(new DeferredCommand(
+        //         () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(
+        //                 PositionConstants.getClosestFace(drive.getPose())[0])),
+        //         Set.of(drive)));
 
-        OIConstants.Drive.ALIGN_RIGHT.whileTrue(new DeferredCommand(
-                () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(
-                        PositionConstants.getClosestFace(drive.getPose())[1])),
-                Set.of(drive)));
+        // OIConstants.Drive.ALIGN_RIGHT.whileTrue(new DeferredCommand(
+        //         () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(
+        //                 PositionConstants.getClosestFace(drive.getPose())[1])),
+        //         Set.of(drive)));
 
         OIConstants.Shooter.SHOOT.whileTrue(shooter.shoot());
     }
@@ -163,29 +141,29 @@ public class RobotContainer {
                         })
                         .ignoringDisable(true));
 
-        Commands.run(() -> {
-                    PositionConstants.getClosestFace(drive.getPose());
-                })
-                .ignoringDisable(true)
-                .onlyIf(Robot::isSimulation)
-                .schedule();
+        // Commands.run(() -> {
+        //             PositionConstants.getClosestFace(drive.getPose());
+        //         })
+        //         .ignoringDisable(true)
+        //         .onlyIf(Robot::isSimulation)
+        //         .schedule();
     }
 
     private void configureAutonomous() {
         autoChooser = new AutoChooser();
         SmartDashboard.putData("autoChooser", autoChooser);
 
-        autoChooser.addRoutine("leaveRight", () -> autoCommands.leave("leaveRight"));
+        // autoChooser.addRoutine("leaveRight", () -> autoCommands.leave("leaveRight"));
     }
 
-    public Command getAutonomousCommand() {
-        Logger.recordOutput("selectedAuto", autoChooser.selectedCommand().getName());
-        return Commands.sequence(
-                        Commands.runOnce(() -> drive.resetRotation(
-                                AllianceFlipUtil.shouldFlip()
-                                        ? Rotation2d.kZero
-                                        : Rotation2d.k180deg)),
-                        autoChooser.selectedCommandScheduler())
-                .withName("Auto Command");
-    }
+//     public Command getAutonomousCommand() {
+// //         Logger.recordOutput("selectedAuto", autoChooser.selectedCommand().getName());
+// //         return Commands.sequence(
+// //                         Commands.runOnce(() -> drive.resetRotation(
+// //                                 AllianceFlipUtil.shouldFlip()
+// //                                         ? Rotation2d.kZero
+// //                                         : Rotation2d.k180deg)),
+// //                         autoChooser.selectedCommandScheduler())
+// //                 .withName("Auto Command");
+//      }
 }
