@@ -33,7 +33,6 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOKraken;
-import frc.robot.subsystems.intake.IntakeIOSpark;
 import frc.robot.subsystems.vision.Vision;
 
 import org.littletonrobotics.junction.Logger;
@@ -81,7 +80,7 @@ public class RobotContainer {
 
         vision = new Vision(drive);
 
-        intake = new Intake(Constants.compBot() ? new IntakeIOKraken() : new IntakeIOSpark());
+       // intake = new Intake(Constants.compBot() ? new IntakeIOKraken() : new IntakeIOSpark());
 
     }
 
@@ -110,10 +109,6 @@ public class RobotContainer {
         //        OIConstants.Drive.BRAKE.onTrue(Commands.runOnce(() -> drive.setBrakeMode(true)));
         //        OIConstants.Drive.COAST.onTrue(Commands.runOnce(() -> drive.setBrakeMode(false)));
 
-       
-
-       
-        OIConstants.Intake.REVERSE.whileTrue(intake.reverse());
         
         OIConstants.Drive.ALIGN_LEFT.whileTrue(new DeferredCommand(
                 () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(

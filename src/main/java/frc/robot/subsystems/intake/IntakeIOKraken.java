@@ -19,13 +19,12 @@ import org.littletonrobotics.junction.Logger;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class IntakeIOKraken implements IntakeIO {
-    public final TalonFX intake;
-
-    private final DigitalInput breakBeam;
-    private final AsynchronousInterrupt coralInterrupt;
+    public final TalonFX grabball;
+    public final TalonFX intakeup;
 
     public IntakeIOKraken() {
-        intake = new TalonFX(CAN_ID); // TODO SET VALUE
+        grabball = new TalonFX(INTAKEMOTOR_ID); // TODO SET VALUE
+        intakeup = new TalonFX(ANGLEMOTOR_ID); 
 
         TalonFXConfiguration config = new TalonFXConfiguration();
 
@@ -36,41 +35,25 @@ public class IntakeIOKraken implements IntakeIO {
                         INVERTED
                                 ? InvertedValue.Clockwise_Positive
                                 : InvertedValue.CounterClockwise_Positive);
-        breakBeam = new DigitalInput(0);
+        
 
-        intake.getConfigurator().apply(config);
-
-        ControlRequest _threadInterruptStop = new NeutralOut().withUpdateFreqHz(0);
-
-        coralInterrupt = new AsynchronousInterrupt(breakBeam, (rising, falling) -> {
-            if (falling && doInterrupt.get()) {
-                System.out.println("STOPPINGS **********");
-                intake.setControl(_threadInterruptStop);
-            }
-        });
-
-        // Current sensor wiring has reversed phase for some reason.
-        coralInterrupt.setInterruptEdges(false, true);
-
-        HardwareWatchdog.getInstance().registerCTREDevice(intake, this.getClass());
+        grabball.getConfigurator().apply(config);
+        intakeup.getConfigurator().apply(config);
     }
+        
+    
 
     @Override
     public void setSpeed(double speed) {
-        intake.set(speed);
+        grabball.set(speed);
+        intakeup.set(speed);
+
     }
 
     @Override
     public void updateInputs(IntakeInputs inputs) {
-        inputs.breakBeam = !breakBeam.get();
 
-        Logger.recordOutput("intake/lastInterruptTriggered", coralInterrupt.getFallingTimestamp());
+
     }
 
-    private final AtomicBoolean doInterrupt = new AtomicBoolean(false);
-
-    @Override
-    public void enableCoralInterrupt(boolean interrupt) {
-        doInterrupt.set(true);
-    }
 }
