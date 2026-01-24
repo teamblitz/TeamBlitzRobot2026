@@ -108,7 +108,9 @@ public class RobotContainer {
         //
         //        OIConstants.Drive.BRAKE.onTrue(Commands.runOnce(() -> drive.setBrakeMode(true)));
         //        OIConstants.Drive.COAST.onTrue(Commands.runOnce(() -> drive.setBrakeMode(false)));
-
+        OIConstants.Intake.REVERSE.whileTrue(intake.reverse());
+        OIConstants.Intake.FORWARD.whileTrue(intake.forward());
+        // OIConstants.Intake.STOP.whileTrue(intake.reverse());
         
         OIConstants.Drive.ALIGN_LEFT.whileTrue(new DeferredCommand(
                 () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(
