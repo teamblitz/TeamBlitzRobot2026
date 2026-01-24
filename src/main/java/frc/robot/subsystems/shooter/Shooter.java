@@ -34,9 +34,9 @@ public class Shooter extends SubsystemBase {
 
 
     public Command shoot() {
-        return runOnce(() -> shooter.set(0.8))
+        return runOnce(() -> shooter.set(-1))
                 .andThen(Commands.waitSeconds(1))
-                .andThen(() -> feeder.set(0.2))
+                .andThen(() -> feeder.set(1))
                 .andThen(Commands.waitSeconds(3))
                 .finallyDo(
                     () -> {
