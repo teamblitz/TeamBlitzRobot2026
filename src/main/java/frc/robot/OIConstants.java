@@ -122,6 +122,9 @@ public class OIConstants {
     public static final class Wrist {
         public static final DoubleSupplier MANUAL =
                 () -> MathUtil.applyDeadband(-OPERATOR_CONTROLLER.getRightY(), .1);
+
+        public static final Trigger WRIST_UP = OPERATOR_CONTROLLER.a();
+        public static final Trigger WRIST_DOWN = OPERATOR_CONTROLLER.b();
     }
 
     public static final class Elevator {

@@ -28,12 +28,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.lib.math.AllianceFlipUtil;
 import frc.lib.reefscape.ScoringPositions;
+import frc.robot.Constants.Wrist;
 import frc.robot.commands.*;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOKraken;
-import frc.robot.subsystems.intake.IntakeIOSpark;
 import frc.robot.subsystems.vision.Vision;
 
 import org.littletonrobotics.junction.Logger;
@@ -54,6 +54,7 @@ public class RobotContainer {
     private Intake intake;
     private AutoCommands autoCommands;
     private DriveCommands driveCommands;
+    private frc.robot.subsystems.wrist.Wrist wrist;
 
     /* ***** --- Autonomous --- ***** */
     private AutoChooser autoChooser;
@@ -81,7 +82,7 @@ public class RobotContainer {
 
         vision = new Vision(drive);
 
-        intake = new Intake(Constants.compBot() ? new IntakeIOKraken() : new IntakeIOSpark());
+        //intake = new Intake(Constants.compBot() ? new IntakeIOKraken() : new IntakeIOSpark());
 
     }
 
@@ -109,7 +110,8 @@ public class RobotContainer {
         //
         //        OIConstants.Drive.BRAKE.onTrue(Commands.runOnce(() -> drive.setBrakeMode(true)));
         //        OIConstants.Drive.COAST.onTrue(Commands.runOnce(() -> drive.setBrakeMode(false)));
-
+        OIConstants.Wrist.WRIST_UP.whileTrue(wrist.move_up());
+        OIConstants.Wrist.WRIST_DOWN.whileTrue(wrist.move_down());
        
 
        

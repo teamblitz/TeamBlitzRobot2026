@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.wrist;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.BlitzSubsystem;
@@ -19,11 +19,15 @@ public class Wrist extends BlitzSubsystem {
     @Override
     public void periodic() {
         super.periodic();
-
-        
     }
 
+    public Command move_up() {
+        return startEnd(()-> io.setSpeed(0.3), () -> io.setSpeed(0));
+    }
 
+    public Command move_down() {
+        return startEnd(() -> io.setSpeed(0.3), () -> io.setSpeed(0));
+    }
 
 
     public Command setSpeed(double speed) {
