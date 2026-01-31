@@ -4,9 +4,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.BlitzSubsystem;
 import frc.robot.subsystems.intake.IntakeIO;
 
-
-
-
 public class Wrist extends BlitzSubsystem {
     private final WristIO io;
 

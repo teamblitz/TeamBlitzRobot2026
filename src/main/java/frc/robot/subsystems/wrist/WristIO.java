@@ -1,6 +1,5 @@
 package frc.robot.subsystems.wrist;
 
-
 public interface WristIO {
 
     public class WristInputs {

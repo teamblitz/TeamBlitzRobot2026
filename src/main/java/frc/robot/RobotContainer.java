@@ -34,6 +34,7 @@ import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOKraken;
 import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.wrist.Wrist;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -51,6 +52,7 @@ public class RobotContainer {
     private CommandSwerveDrivetrain drive;
     private Vision vision;
     private Intake intake;
+    private Wrist wrist;
     private AutoCommands autoCommands;
     private DriveCommands driveCommands;
 
@@ -111,6 +113,9 @@ public class RobotContainer {
         OIConstants.Intake.REVERSE.whileTrue(intake.reverse());
         OIConstants.Intake.FORWARD.whileTrue(intake.forward());
         // OIConstants.Intake.STOP.whileTrue(intake.reverse());
+
+        OIConstants.Wrist.WRIST_UP.whileTrue(wrist.move_up());
+        OIConstants.Wrist.WRIST_DOWN.whileTrue(wrist.move_down());
         
         OIConstants.Drive.ALIGN_LEFT.whileTrue(new DeferredCommand(
                 () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(
