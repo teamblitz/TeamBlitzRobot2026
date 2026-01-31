@@ -9,14 +9,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.wpilibj.AsynchronousInterrupt;
-import edu.wpi.first.wpilibj.DigitalInput;
-
-import frc.lib.monitor.HardwareWatchdog;
-
 import org.littletonrobotics.junction.Logger;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class IntakeIOKraken implements IntakeIO {
     public final TalonFX grabball;
