@@ -119,6 +119,11 @@ public class OIConstants {
         public static final Trigger EJECT_ALGAE = OPERATOR_CONTROLLER.rightTrigger();
     }
 
+    public static final class Funnal{
+        public static final Trigger FEED = UNBOUND;
+        public static final Trigger SHOOT = UNBOUND;
+    }
+
     public static final class Wrist {
         public static final DoubleSupplier MANUAL =
                 () -> MathUtil.applyDeadband(-OPERATOR_CONTROLLER.getRightY(), .1);
