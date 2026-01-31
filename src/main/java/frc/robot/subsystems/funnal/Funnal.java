@@ -10,7 +10,7 @@ import frc.robot.Robot;
 import org.littletonrobotics.junction.Logger;
 
 public class Funnal extends BlitzSubsystem {
-    private final Funnal io;
+    private final FunnalIO io;
 
     public Funnal(FunnalIO io) {
         super("funnal");
