@@ -250,12 +250,14 @@ public final class Constants {
     public static final class Wrist {
         public static final int WRIST_ID = 30;
         public static final int ABS_ENCODER_ID = 31;
-        public static final double WRIST_GEAR_RATIO = (9.0) * (5.0) * (54.0 / 16.0);
+ //       public static final double WRIST_GEAR_RATIO = (9.0) * (5.0) * (54.0 / 16.0);
 
-        public static final double OPEN_LOOP_RAMP = .25;
+  //      public static final double OPEN_LOOP_RAMP = .25;
         public static final int CURRENT_LIMIT = 60;
-        public static final boolean INVERTED = false;
+   //     public static final boolean INVERTED = false;
 
+
+   //TODO TUNE MAXIMUM AND MINIMUM POSITIONS WHEN WE HAVE THE BOT
         public static final double MAX_POS = Units.degreesToRadians(compBot() ? 94 : 90);
         public static final double MIN_POS = Units.degreesToRadians(-90);
 

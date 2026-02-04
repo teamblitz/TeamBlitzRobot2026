@@ -8,6 +8,8 @@
 package frc.robot;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
+import static frc.robot.Constants.Wrist.MAX_POS;
+import static frc.robot.Constants.Wrist.MIN_POS;
 
 import choreo.auto.AutoChooser;
 
@@ -110,8 +112,13 @@ public class RobotContainer {
         //
         //        OIConstants.Drive.BRAKE.onTrue(Commands.runOnce(() -> drive.setBrakeMode(true)));
         //        OIConstants.Drive.COAST.onTrue(Commands.runOnce(() -> drive.setBrakeMode(false)));
-        OIConstants.Wrist.WRIST_UP.whileTrue(wrist.move_up());
-        OIConstants.Wrist.WRIST_DOWN.whileTrue(wrist.move_down());
+
+        //Tells Wrist to move to position MAX, or the max position
+        //The reason for the .onTrue, is because the trigger is a constant boolean value. This jsut says
+        // to only run the cpommand once and not break the bot.
+        OIConstants.Wrist.WRIST_UP.onTrue(Commands.runOnce(() -> wrist.goToPositon(MAX_POS)));
+
+        OIConstants.Wrist.WRIST_DOWN.onTrue(Commands.runOnce(() -> wrist.goToPositon(MIN_POS)));
        
 
        
