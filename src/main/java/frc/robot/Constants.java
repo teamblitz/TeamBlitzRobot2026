@@ -444,6 +444,10 @@ public final class Constants {
         public static final double MAX_ACCEL_LOADED = 1;
     }
 
+    public static final class Index{
+        public static final int INDEX_MOTOR_ID = 0; //TODO set motor id
+    }
+
     public static final class Vision {
 
         public static final List<RobotCamera> CAMERAS = List.of(
