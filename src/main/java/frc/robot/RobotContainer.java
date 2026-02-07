@@ -53,6 +53,7 @@ public class RobotContainer {
     private Vision vision;
     private Intake intake;
     private Wrist wrist;
+    private Shooter shooter;
     private AutoCommands autoCommands;
     private DriveCommands driveCommands;
 
@@ -81,6 +82,8 @@ public class RobotContainer {
         driveCommands = new DriveCommands(drive);
 
         vision = new Vision(drive);
+
+        shooter = new Shooter();
 
        // intake = new Intake(Constants.compBot() ? new IntakeIOKraken() : new IntakeIOSpark());
 
@@ -126,6 +129,8 @@ public class RobotContainer {
                 () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(
                         PositionConstants.getClosestFace(drive.getPose())[1])),
                 Set.of(drive)));
+
+        OIConstants.Shooter.SHOOT.whileTrue(shooter.shoot());
     }
 
     private void configureDashboard() {
