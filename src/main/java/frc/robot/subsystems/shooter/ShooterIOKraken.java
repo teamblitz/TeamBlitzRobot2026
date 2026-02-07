@@ -9,8 +9,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.lib.monitor.HardwareWatchdog;
 import org.littletonrobotics.junction.Logger;
 
-import frc.robot.subsystems.Shooter.ShooterIO;
-
 public class ShooterIOKraken implements ShooterIO {
     
     public final TalonFX shooter;
@@ -18,8 +16,8 @@ public class ShooterIOKraken implements ShooterIO {
 
     public ShooterIOKraken() {
 
-        shooter = new TalonFX(30);
-        feeder = new TalonFX(31);
+        shooter = new TalonFX(30);//TODO Set motor val
+        feeder = new TalonFX(31);//TODO Set motor val
 
         TalonFXConfiguration config = new TalonFXConfiguration();
 
@@ -35,22 +33,22 @@ public class ShooterIOKraken implements ShooterIO {
         HardwareWatchdog.getInstance().registerCTREDevice(feeder, this.getClass());
     }
 
-    @Override
-    public void setShooterSpeed(double speed) {
-        shooter.set(speed);
-    }
+    // @Override
+    // public void setShooterSpeed(double speed) {
+    //     shooter.set(speed);
+    // }
 
-    @Override
-    public void setFeederSpeed(double speed) {
-        feeder.set(speed);
-    }
+    // @Override
+    // public void setFeederSpeed(double speed) {
+    //     feeder.set(speed);
+    // }
 
-    @Override
-    public void updateInputs() {
-        // TODO: read real sensor values from TalonFX when available. For now, provide placeholders.
+    // @Override
+    // public void updateInputs() {
+    //     // TODO: read real sensor values from TalonFX when available. For now, provide placeholders.
   
-        Logger.recordOutput("shooter/shooterCANID", shooter.getDeviceID());
-        Logger.recordOutput("shooter/feederCANID", feeder.getDeviceID());
-    }
+    //     Logger.recordOutput("shooter/shooterCANID", shooter.getDeviceID());
+    //     Logger.recordOutput("shooter/feederCANID", feeder.getDeviceID());
+    // }
 }
 

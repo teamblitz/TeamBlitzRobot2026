@@ -35,6 +35,8 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOKraken;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.wrist.Wrist;
+import frc.robot.subsystems.shooter.Shooter;
+
 
 import org.littletonrobotics.junction.Logger;
 

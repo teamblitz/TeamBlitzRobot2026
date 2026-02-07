@@ -15,7 +15,7 @@ import frc.lib.BlitzSubsystem;
 import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
-	private final ShooterIO io;
+	// private final ShooterIO io;
 
     private final TalonFX shooter;
     private final TalonFX feeder;
