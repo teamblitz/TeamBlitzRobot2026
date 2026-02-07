@@ -1,6 +1,8 @@
 package frc.robot.subsystems.wrist;
 import frc.robot.Constants.Wrist;
 
+import org.littletonrobotics.junction.AutoLog;
+
 public interface WristIO {
 
     public static class WristInputs {

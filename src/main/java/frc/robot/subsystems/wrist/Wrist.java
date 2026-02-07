@@ -66,7 +66,7 @@ public class Wrist extends BlitzSubsystem {
                         Optional.of(
                             new TrapezoidProfile.State(
                                 MathUtil.clamp(
-                                    goal.getAsDouble(), MIN_POS, MAX_POS),
+                                    goal.getAsDouble(), EXTENDED_POS, ZERO_POS),
                                  0));
                     }
                 })
