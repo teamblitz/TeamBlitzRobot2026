@@ -155,6 +155,10 @@ public class OIConstants {
         public static final Trigger FUNNEL_DOWN = UNBOUND;
     }
 
+    public static final class Shooter {
+        public static final Trigger SHOOT = OPERATOR_CONTROLLER.a();
+    }
+    
     public static final class Climber {
         public static final Trigger DEPLOY_CLIMBER = DRIVE_CONTROLLER.button(4); // TODO BIND
         public static final Trigger RESTOW_CLIMBER = DRIVE_CONTROLLER.button(6);
