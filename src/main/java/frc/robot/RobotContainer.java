@@ -34,9 +34,9 @@ import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOKraken;
 import frc.robot.subsystems.vision.Vision;
-import frc.robot.subsystems.wrist.Wrist;
+import frc.robot.commands.DriveCommands;
+import frc.robot.subsystems.shooter.ShooterIOKraken;
 import frc.robot.subsystems.shooter.Shooter;
-
 
 import org.littletonrobotics.junction.Logger;
 
@@ -54,7 +54,6 @@ public class RobotContainer {
     private CommandSwerveDrivetrain drive;
     private Vision vision;
     private Intake intake;
-    private Wrist wrist;
     private Shooter shooter;
     private AutoCommands autoCommands;
     private DriveCommands driveCommands;
@@ -85,9 +84,7 @@ public class RobotContainer {
 
         vision = new Vision(drive);
 
-        shooter = new Shooter();
-
-       // intake = new Intake(Constants.compBot() ? new IntakeIOKraken() : new IntakeIOSpark());
+        intake = new Intake(Constants.compBot() ? new IntakeIOKraken() : new IntakeIOSpark());
 
     }
 
@@ -115,12 +112,11 @@ public class RobotContainer {
         //
         //        OIConstants.Drive.BRAKE.onTrue(Commands.runOnce(() -> drive.setBrakeMode(true)));
         //        OIConstants.Drive.COAST.onTrue(Commands.runOnce(() -> drive.setBrakeMode(false)));
-        OIConstants.Intake.REVERSE.whileTrue(intake.reverse());
-        OIConstants.Intake.FORWARD.whileTrue(intake.forward());
-        // OIConstants.Intake.STOP.whileTrue(intake.reverse());
 
-        OIConstants.Wrist.WRIST_UP.whileTrue(wrist.move_up());
-        OIConstants.Wrist.WRIST_DOWN.whileTrue(wrist.move_down());
+       
+
+       
+        OIConstants.Intake.REVERSE.whileTrue(intake.reverse());
         
         OIConstants.Drive.ALIGN_LEFT.whileTrue(new DeferredCommand(
                 () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(
@@ -131,8 +127,6 @@ public class RobotContainer {
                 () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(
                         PositionConstants.getClosestFace(drive.getPose())[1])),
                 Set.of(drive)));
-
-        OIConstants.Shooter.SHOOT.whileTrue(shooter.shoot());
     }
 
     private void configureDashboard() {

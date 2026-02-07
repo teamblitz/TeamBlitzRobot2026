@@ -13,37 +13,3 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import frc.lib.BlitzSubsystem;
 import frc.robot.Constants;
-
-public class Shooter extends SubsystemBase {
-	// private final ShooterIO io;
-
-    private final TalonFX shooter;
-    private final TalonFX feeder;
-
-	public Shooter() {
-	
-        shooter = new TalonFX(30);
-        feeder = new TalonFX(31);
-	}
-
-	@Override
-	public void periodic() {
-		super.periodic();
-		// IO update would be done by a higher-level manager; keep minimal here
-	}
-
-
-    public Command shoot() {
-        return runOnce(() -> shooter.set(-1))
-                .andThen(Commands.waitSeconds(1))
-                .andThen(() -> feeder.set(1))
-                .andThen(Commands.waitSeconds(100))
-                .finallyDo(
-                    () -> {
-                        shooter.set(0);
-                        feeder.set(0);
-                    }
-                );
-
-    }
-}
