@@ -116,6 +116,11 @@ public class OIConstants {
         
     }
 
+    public static final class Spindexer{
+        public static final Trigger FEED = UNBOUND; //TODO set val
+        public static final Trigger SHOOT = UNBOUND; //TODO set val
+    }
+
     public static final class Wrist {
         public static final DoubleSupplier MANUAL =
                 () -> MathUtil.applyDeadband(-OPERATOR_CONTROLLER.getRightY(), .1);

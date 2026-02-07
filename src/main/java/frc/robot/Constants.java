@@ -384,6 +384,10 @@ public final class Constants {
         public static final double L4_PLOP = .4;
     }
 
+    public static final class Spindexer {
+        public static final double SPINDEXER_MAX_SPEED = compBot() ? 80 : 25; //TODO set val
+        public static final int CAN_ID = 40;
+    }
     public static final class Winch {
         public static final int ID = 50;
 
