@@ -1,8 +1,8 @@
-package frc.robot.subsystems.funnal;
+package frc.robot.subsystems.Spindexer;
 
 import org.littletonrobotics.junction.AutoLog;
 
-public interface FunnalIO {
+public interface SpindexerIO {
 
     @AutoLog
     public class IntakeInputs {

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.funnal;
+package frc.robot.subsystems.Spindexer;
 
 import static frc.robot.Constants.Intake.*;
 
@@ -9,11 +9,12 @@ import frc.robot.Robot;
 
 import org.littletonrobotics.junction.Logger;
 
-public class Funnal extends BlitzSubsystem {
-    private final FunnalIO io;
+public class Spindexer extends BlitzSubsystem {
+    private final SpindexerIO io;
 
-    public Funnal(FunnalIO io) {
-        super("funnal");
+    public Spindexer(SpindexerIO io) {
+        super("spindexer");
+        
       this.io = io;
     }
 

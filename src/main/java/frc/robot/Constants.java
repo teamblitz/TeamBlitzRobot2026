@@ -248,16 +248,17 @@ public final class Constants {
     }
 
     public static final class Wrist {
-        public static final int CAN_ID = 30;
+        public static final int WRIST_ID = 30;
         public static final int ABS_ENCODER_ID = 31;
-        public static final double WRIST_GEAR_RATIO = (9.0) * (5.0) * (54.0 / 16.0);
+ //       public static final double WRIST_GEAR_RATIO = (9.0) * (5.0) * (54.0 / 16.0);
 
-        public static final double OPEN_LOOP_RAMP = .25;
+  //      public static final double OPEN_LOOP_RAMP = .25;
         public static final int CURRENT_LIMIT = 60;
-        public static final boolean INVERTED = false;
+   //     public static final boolean INVERTED = false;
 
-        public static final double MAX_POS = Units.degreesToRadians(compBot() ? 94 : 90);
-        public static final double MIN_POS = Units.degreesToRadians(-90);
+
+        public static final double MAX_POS = Units.degreesToRadians(compBot() ? 94 : 90); //TODO set val
+        public static final double MIN_POS = Units.degreesToRadians(-90); //TODO set val
 
         public static final double ABS_ENCODER_ZERO = Math.toRadians(306.71 + 90);
         public static final double TOLERANCE = Units.degreesToRadians(2.5);
@@ -381,6 +382,10 @@ public final class Constants {
         public static final double L1 = .3;
 
         public static final double L4_PLOP = .4;
+    }
+
+    public static final class Spindexer {
+        public static final double SPINDEXER_MAX_SPEED = compBot() ? 80 : 25; //TODO set val
     }
 
     public static final class Winch {

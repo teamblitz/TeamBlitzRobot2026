@@ -35,6 +35,8 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOKraken;
 import frc.robot.subsystems.intake.IntakeIOSpark;
 import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.Spindexer.Spindexer;
+import frc.robot.subsystems.Spindexer.SpindexerIOKraken;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -52,6 +54,7 @@ public class RobotContainer {
     private CommandSwerveDrivetrain drive;
     private Vision vision;
     private Intake intake;
+    private Spindexer spindexer;
     private AutoCommands autoCommands;
     private DriveCommands driveCommands;
 
@@ -83,6 +86,8 @@ public class RobotContainer {
 
         intake = new Intake(Constants.compBot() ? new IntakeIOKraken() : new IntakeIOSpark());
 
+        spindexer = new Spindexer(new SpindexerIOKraken()); //TODO Check this over, not sure if it will work
+
     }
 
     private void setDefaultCommands() {
@@ -110,9 +115,8 @@ public class RobotContainer {
         //        OIConstants.Drive.BRAKE.onTrue(Commands.runOnce(() -> drive.setBrakeMode(true)));
         //        OIConstants.Drive.COAST.onTrue(Commands.runOnce(() -> drive.setBrakeMode(false)));
 
-       
-
-       
+        OIConstants.Spindexer.FEED.whileTrue(spindexer.feed());
+        OIConstants.Intake.REVERSE.whileTrue(spindexer.feed());
         OIConstants.Intake.REVERSE.whileTrue(intake.reverse());
         
         OIConstants.Drive.ALIGN_LEFT.whileTrue(new DeferredCommand(

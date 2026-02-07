@@ -22,7 +22,6 @@ public class Intake extends BlitzSubsystem {
     public void periodic() {
         super.periodic();
 
-        
     }
 
     public Command reverse() {
@@ -48,4 +47,5 @@ public class Intake extends BlitzSubsystem {
     public Command setSpeed(double speed) {
         return startEnd(() -> io.setSpeed(speed), () -> io.setSpeed(0));
     }
+
 }

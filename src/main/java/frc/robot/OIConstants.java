@@ -119,9 +119,9 @@ public class OIConstants {
         public static final Trigger EJECT_ALGAE = OPERATOR_CONTROLLER.rightTrigger();
     }
 
-    public static final class Funnal{
-        public static final Trigger FEED = UNBOUND;
-        public static final Trigger SHOOT = UNBOUND;
+    public static final class Spindexer{
+        public static final Trigger FEED = UNBOUND; //TODO set val
+        public static final Trigger SHOOT = UNBOUND; //TODO set val
     }
 
     public static final class Wrist {

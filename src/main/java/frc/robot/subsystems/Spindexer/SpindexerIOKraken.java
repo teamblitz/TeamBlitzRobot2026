@@ -1,4 +1,4 @@
-package frc.robot.subsystems.funnal;
+package frc.robot.subsystems.Spindexer;
 
 import static frc.robot.Constants.Intake.*;
 
@@ -9,11 +9,11 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-public class FunnalIOKraken implements FunnalIO {
-    public final TalonFX funnal;
+public class SpindexerIOKraken implements SpindexerIO {
+    public final TalonFX spindexer;
 
-    public FunnalIOKraken() {
-        funnal = new TalonFX(CAN_ID); // TODO SET VALUE
+    public SpindexerIOKraken() {
+        spindexer = new TalonFX(CAN_ID); // TODO SET VALUE
 
         TalonFXConfiguration config = new TalonFXConfiguration();
 
@@ -25,14 +25,14 @@ public class FunnalIOKraken implements FunnalIO {
                                 ? InvertedValue.Clockwise_Positive
                                 : InvertedValue.CounterClockwise_Positive);
 
-        funnal.getConfigurator().apply(config);
+        spindexer.getConfigurator().apply(config);
 
         ControlRequest _threadInterruptStop = new NeutralOut().withUpdateFreqHz(0);
     }
 
     @Override
     public void setSpeed(double speed) {
-        funnal.set(speed);
+        spindexer.set(speed);
     }
 }
 
