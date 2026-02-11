@@ -18,6 +18,8 @@ import frc.robot.Constants;
 import frc.robot.PositionConstants;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.spindexer.Spindexer;
+import frc.robot.subsystems.shooter.Shooter;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -29,6 +31,8 @@ public class AutoCommands {
     private final SwerveDriveKinematics kinematics;
     private final AutoFactory autoFactory;
     private final Intake intake;
+    private final Spindexer spindexer;
+    private final Shooter shooter;
 
     //    private final Command configAutonDefault;
     private final Command configTeleDefault;
@@ -36,16 +40,22 @@ public class AutoCommands {
     private SwerveSample lastSample;
 
     public AutoCommands(
-            CommandSwerveDrivetrain drive, Intake intake) {
+            CommandSwerveDrivetrain drive, Intake intake, Spindexer spindexer, Shooter shooter) {
         this.drive = drive;
         this.intake = intake;
         this.kinematics = Constants.Drive.KINEMATICS;
-
+        this.spindexer = spindexer;
+        this.shooter = shooter;
+        
+        //Defining autofactory and creating a new autofactory
         autoFactory = new AutoFactory(
+                //Getting the current pose(position and rotation)
                 drive::getPose,
                 drive::resetPose,
                 sample -> {
-                    // Don't ask, just cast (the ring into the fire frodo)
+                    // "Don't ask, just cast (the ring into the fire frodo)" - Noah 2024
+                    //
+                    //Telling the bot to follow the trajectory(which is made in choreo)
                     lastSample = (SwerveSample) sample;
                     drive.followTrajectory((SwerveSample) sample);
                 },
@@ -54,8 +64,11 @@ public class AutoCommands {
 
         Command normalDriveDefault = drive.getDefaultCommand();
 
-        // I heard you liked commands, so I gave you a command to set the default command to be a
-        // different command
+        // "I heard you liked commands, so I gave you a command to set the default command to be a
+        // different command" - Noah 2024
+        //
+        //So this changes the robot's default command when autonomous is started. 
+        //The default command allows you to change different properties on the bot.
         RobotModeTriggers.autonomous()
                 .onTrue(Commands.runOnce(() -> drive.setDefaultCommand(Commands.run(
                         () -> {
@@ -78,9 +91,11 @@ public class AutoCommands {
                         },
                         drive))));
 
-        // As funny as it would be for the auto to steal the controls of the robot for the rest of
+        // "As funny as it would be for the auto to steal the controls of the robot for the rest of
         // the match,
-        // unfortunately that is undesired behavior :(, so we need to give them back
+        // unfortunately that is undesired behavior :(, so we need to give them back" - Noah 2024
+
+        // This reinitializes teleoperated controls for when autonomous ends
         configTeleDefault = Commands.runOnce(() -> drive.setDefaultCommand(normalDriveDefault))
                 .ignoringDisable(true);
 
@@ -88,10 +103,12 @@ public class AutoCommands {
         RobotModeTriggers.teleop().onTrue(configTeleDefault);
     }
 
+    //Returns our autoFactory field. Containas pose, and the choreo trajectory
     public AutoFactory getFactory() {
         return autoFactory;
     }
 
+    //Creates an auto which does nothing
     public Command getNoAuto() {
         final var routine = autoFactory.newRoutine("None");
         routine.active().onTrue(Commands.print("Running No Auto"));
@@ -99,6 +116,7 @@ public class AutoCommands {
         return routine.cmd();
     }
 
+    //Creates a test drive auto routine
     public AutoRoutine testDrive() {
         final var routine = autoFactory.newRoutine("test");
         final var traj = routine.trajectory("test");
@@ -109,15 +127,33 @@ public class AutoCommands {
 
         return routine;
     }
-
-    public AutoRoutine leave(String pathName) {
-        final var routine = autoFactory.newRoutine(pathName);
-        final var traj = routine.trajectory(pathName);
-
-        routine.active()
-                .whileTrue(Commands.sequence(traj.resetOdometry(), traj.cmd())
-                        .withName("auto/cmdSec"));
-
-        return routine;
+    //Creates a new ROUTINE which calls the autoshoot command.
+    //It must be done in thsi way using the commandfactory structure because of java syntax.
+    public AutoRoutine autoShoot() { 
+        CommandFactory.autoShoot(shooter, spindexer);
+        return autoFactory.newRoutine("Shoot");
     }
+
+
+
+
+
+    /**"
+     * I channelled my inner AP CSA here, I haven't touched normal for loops in a long time, and it
+     * really shows.
+     *
+     * @param numberOfCoral bingus
+     * @param pathName bongus
+     * @return boingus
+     " - Noah 2024*/
+    // public AutoRoutine leave(String pathName) {
+    //     final var routine = autoFactory.newRoutine(pathName);
+    //     final var traj = routine.trajectory(pathName);
+
+    //     routine.active()
+    //             .whileTrue(Commands.sequence(traj.resetOdometry(), traj.cmd())
+    //                     .withName("auto/cmdSec"));
+
+    //     return routine;
+    // }
 }

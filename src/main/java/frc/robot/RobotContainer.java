@@ -88,6 +88,7 @@ public class RobotContainer {
 
     }
 
+    //Creating a new driving system so that our robot understands our joystick and controls
     private void setDefaultCommands() {
         drive.setDefaultCommand(driveCommands
                 .joystickDrive(
@@ -105,6 +106,7 @@ public class RobotContainer {
         
     }
 
+    //Configures our button bindings to the robot commands.
     private void configureTriggerBindings() {
         OIConstants.Drive.RESET_GYRO.onTrue(Commands.runOnce(() -> drive.resetRotation(
                 AllianceFlipUtil.shouldFlip() ? Rotation2d.k180deg : Rotation2d.kZero)));
@@ -129,6 +131,9 @@ public class RobotContainer {
                 Set.of(drive)));
     }
 
+    //Configures the FRC dashboard and tells the robot several things:
+    //Which alliance, autochoosing, match timer,
+    //FYI the actual "Dashboard" is elastic(WPILIB)
     private void configureDashboard() {
 //        var tab = Shuffleboard.getTab("tuning");
 //
@@ -163,14 +168,15 @@ public class RobotContainer {
                 .onlyIf(Robot::isSimulation)
                 .schedule();
     }
-
+    //Configures autonomuous copmmands and autochooser
     private void configureAutonomous() {
         autoChooser = new AutoChooser();
         SmartDashboard.putData("autoChooser", autoChooser);
 
-        autoChooser.addRoutine("leaveRight", () -> autoCommands.leave("leaveRight"));
+        //EXAMPLE
+        // autoChooser.addRoutine("leaveRight", () -> autoCommands.leave("leaveRight"));
     }
-
+    //Configures the Autochooser, which is selected in the dashboard(elastic)
     public Command getAutonomousCommand() {
         Logger.recordOutput("selectedAuto", autoChooser.selectedCommand().getName());
         return Commands.sequence(
