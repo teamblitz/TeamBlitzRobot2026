@@ -13,11 +13,13 @@ public class ShooterIOKraken implements ShooterIO {
     
     public final TalonFX shooter;
     public final TalonFX feeder;
+    public final TalonFX deepFeed;
 
     public ShooterIOKraken() {
 
         shooter = new TalonFX(30);//TODO Set motor val
         feeder = new TalonFX(31);//TODO Set motor val
+        deepFeed = new TalonFX(32);//TODO Set motor val
 
         TalonFXConfiguration config = new TalonFXConfiguration();
 
@@ -27,10 +29,12 @@ public class ShooterIOKraken implements ShooterIO {
 
         shooter.getConfigurator().apply(config);
         feeder.getConfigurator().apply(config);
+        deepFeed.getConfigurator().apply(config);
 
     // Register devices with watchdog
         HardwareWatchdog.getInstance().registerCTREDevice(shooter, this.getClass());
         HardwareWatchdog.getInstance().registerCTREDevice(feeder, this.getClass());
+        HardwareWatchdog.getInstance().registerCTREDevice(deepFeed, this.getClass());
     }
 
     // @Override
