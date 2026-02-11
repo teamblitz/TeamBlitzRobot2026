@@ -128,12 +128,20 @@ public class AutoCommands {
         return routine;
     }
     //Creates a new ROUTINE which calls the autoshoot command.
-    //It must be done in thsi way using the commandfactory structure because of java syntax.
+    //It must be done in this way using the commandfactory structure because of java syntax.
     public AutoRoutine autoShoot() { 
-        CommandFactory.autoShoot(shooter, spindexer);
-        return autoFactory.newRoutine("Shoot");
+        final var routine = autoFactory.newRoutine("Shoot");
+        routine.active().whileTrue(CommandFactory.autoShoot(shooter, spindexer));
+        return routine;
     }
 
+    // public AutoRoutine driveAway (String pathName) {
+    //     final var routine = autoFactory.newRoutine("Drive Away");
+
+    //     drive.followTrajectory(lastSample);
+
+    //     return routine;
+    // }
 
 
 
