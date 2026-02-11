@@ -11,13 +11,13 @@ public class Shooter extends SubsystemBase {
 
     private final TalonFX shooter;
     private final TalonFX feeder;
-    //private final TalonFX deepFeed;
+    private final TalonFX deepFeed;
 
 	public Shooter() {
 	
         shooter = new TalonFX(30);
         feeder = new TalonFX(31);
-        //deepFeed = new TalonFX(32);
+        deepFeed = new TalonFX(32);
 	}
 
 	@Override
@@ -32,8 +32,8 @@ public class Shooter extends SubsystemBase {
                 .andThen(Commands.waitSeconds(1))
                 .andThen(() -> feeder.set(1))
                 .andThen(Commands.waitSeconds(100))
-               // .andThen(() -> deepFeed.set(1))
-               // .andThen(Commands.waitSeconds(1))//TODO set values to run
+                .andThen(() -> deepFeed.set(1))
+                .andThen(Commands.waitSeconds(1))//TODO set values to run
                 .finallyDo(
                     () -> {
                         shooter.set(0);
