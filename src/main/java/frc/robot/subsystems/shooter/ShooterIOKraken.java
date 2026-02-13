@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import frc.lib.monitor.HardwareWatchdog;
@@ -18,7 +19,9 @@ public class ShooterIOKraken implements ShooterIO {
     public ShooterIOKraken() {
 
         shooter = new TalonFX(30);//TODO Set motor val
-        feeder = new TalonFX(31);//TODO Set motor val
+        feeder = new TalonFX(31);//TODO Set motor va
+        
+        //Follower feeder = new Follower(30, false);
         deepFeed = new TalonFX(32);//TODO Set motor val
 
         TalonFXConfiguration config = new TalonFXConfiguration();
@@ -30,10 +33,10 @@ public class ShooterIOKraken implements ShooterIO {
         shooter.getConfigurator().apply(config);
         feeder.getConfigurator().apply(config);
         deepFeed.getConfigurator().apply(config);
-
-        //feeder.set(TalonFXControlMode.Follower, shooter);
-
+ 
+        feeder.setControl(new Follower(shooter.getDeviceID(), MotorAlignmentValue.Aligned)); // May need to be Inversted
         //feeder.setControl(new Follower(30, true));
+        
 
     // Register devices with watchdog
         HardwareWatchdog.getInstance().registerCTREDevice(shooter, this.getClass());

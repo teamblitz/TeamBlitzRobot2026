@@ -27,17 +27,17 @@ public class Shooter extends SubsystemBase {
 	}
 
 
-    public Command shoot() {
+    public Command shootTest() {
         return runOnce(() -> shooter.set(-1))
                 .andThen(Commands.waitSeconds(1))
-                .andThen(() -> feeder.set(1))
+                .andThen(() -> deepFeed.set(1))
                 .andThen(Commands.waitSeconds(100))
                 .andThen(() -> deepFeed.set(1))
                 .andThen(Commands.waitSeconds(1))//TODO set values to run
                 .finallyDo(
                     () -> {
                         shooter.set(0);
-                        feeder.set(0);
+                        deepFeed.set(0);
                     }
                 );
 
