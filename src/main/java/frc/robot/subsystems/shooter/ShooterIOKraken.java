@@ -31,7 +31,7 @@ public class ShooterIOKraken implements ShooterIO {
         feeder.getConfigurator().apply(config);
         deepFeed.getConfigurator().apply(config);
 
-        feeder.set(TalonFXControlMode.Follower, shooter);
+        //feeder.set(TalonFXControlMode.Follower, shooter);
 
         //feeder.setControl(new Follower(30, true));
 
