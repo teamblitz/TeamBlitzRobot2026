@@ -22,7 +22,7 @@ public class ShooterIOKraken implements ShooterIO {
         deepFeed = new TalonFX(32);//TODO Set motor val
 
         TalonFXConfiguration config = new TalonFXConfiguration();
-
+        
         // Basic configuration: neutral mode and inversion. Adjust as-needed in Constants.
         config.MotorOutput.withNeutralMode(NeutralModeValue.Brake)
                 .withInverted(InvertedValue.Clockwise_Positive);
@@ -31,7 +31,7 @@ public class ShooterIOKraken implements ShooterIO {
         feeder.getConfigurator().apply(config);
         deepFeed.getConfigurator().apply(config);
 
-        //feeder.set(TalonFXControlMode.Follower, shooter);
+        feeder.set(TalonFXControlMode.Follower, shooter);
 
         //feeder.setControl(new Follower(30, true));
 
