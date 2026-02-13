@@ -12,6 +12,6 @@ import frc.robot.subsystems.spindexer.Spindexer;
 public class CommandFactory {
     //Creates the autoShoot command, which can be called during auto
     public static Command autoShoot(Shooter shooter, Spindexer spindexer) {
-        return Commands.parallel(shooter.shoot(), spindexer.feed());
+        return Commands.parallel(shooter.shootTest(), spindexer.feed());
     }
 }

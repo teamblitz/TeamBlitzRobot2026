@@ -19,6 +19,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import frc.lib.math.AllianceFlipUtil;
 
 import frc.lib.util.COTSSwerveConstants;
 
@@ -387,6 +389,15 @@ public final class Constants {
     public static final class Spindexer {
         public static final double SPINDEXER_MAX_SPEED = compBot() ? 80 : 25; //TODO set val
         public static final int CAN_ID = 40;
+    }
+
+    public static final class Shooter {
+        public static final double SHOOTER_HEIGHT = 0.4826;
+        public static final double HUB_X = (!Constants.DISABLE_HAL && DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
+         ? 182.11 : 469.11;
+        public static final double HUB_Y = 158.84;
+        public static final double BASIN_H = 72 - SHOOTER_HEIGHT;
+        public static final double SHOOTER_ANGLE = 70;
     }
     public static final class Winch {
         public static final int ID = 50;

@@ -3,11 +3,16 @@ package frc.robot.subsystems.shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.Shooter.*;
+import frc.lib.math.AllianceFlipUtil;
+import edu.wpi.first.math.geometry.*;
+
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
 public class Shooter extends SubsystemBase {
-	// private final ShooterIO io;
+	//private final ShooterIO io;
 
     private final TalonFX shooter;
     private final TalonFX feeder;
@@ -25,6 +30,28 @@ public class Shooter extends SubsystemBase {
 		super.periodic();
 		// IO update would be done by a higher-level manager; keep minimal here
 	}
+
+    
+    /** This method calculates the required velocity for the ball,
+     * given the ditance to target.
+     * 
+     * @param pose the current translation2d pose of the robot,
+     * @return velocity, the required velocity
+     * 
+     */
+    public double getVelocity (Translation2d pose) {
+        double distance = Math.sqrt(
+            Math.pow((Constants.Shooter.HUB_X - pose.getX()), 2) + Math.pow((Constants.Shooter.HUB_Y - pose.getY()), 2)
+        );
+        double velocity;
+
+        velocity = Math.sqrt(
+            9.81 * Math.pow(distance, 2)/ distance * Math.sin(Constants.Shooter.SHOOTER_ANGLE * 2) - 
+            Constants.Shooter.BASIN_H * (1+ Math.cos(Constants.Shooter.SHOOTER_ANGLE * 2))
+        );
+        return velocity;
+    }
+
 
 
     public Command shootTest() {
