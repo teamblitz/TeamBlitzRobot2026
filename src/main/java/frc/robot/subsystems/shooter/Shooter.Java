@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Shooter.*;
+import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.lib.math.AllianceFlipUtil;
 import edu.wpi.first.math.geometry.*;
 
@@ -17,12 +18,14 @@ public class Shooter extends SubsystemBase {
     private final TalonFX shooter;
     private final TalonFX feeder;
     private final TalonFX deepFeed;
+    private final CommandSwerveDrivetrain drive;
 
-	public Shooter() {
+	public Shooter(CommandSwerveDrivetrain drive) {
 	
         shooter = new TalonFX(30);
         feeder = new TalonFX(31);
         deepFeed = new TalonFX(32);
+        this.drive = drive;
 	}
 
 	@Override
@@ -33,13 +36,14 @@ public class Shooter extends SubsystemBase {
 
     
     /** This method calculates the required velocity for the ball,
-     * given the ditance to target.
+     * given the distance to target.
      * 
-     * @param pose the current translation2d pose of the robot,
+     *
      * @return velocity, the required velocity
      * 
      */
-    public double getVelocity (Translation2d pose) {
+    public double getVelocity () {
+        var pose = drive.getState().Pose;
         double distance = Math.sqrt(
             Math.pow((Constants.Shooter.HUB_X - pose.getX()), 2) + Math.pow((Constants.Shooter.HUB_Y - pose.getY()), 2)
         );

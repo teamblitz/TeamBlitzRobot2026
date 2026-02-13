@@ -84,7 +84,7 @@ public class RobotContainer {
 
         vision = new Vision(drive);
 
-        shooter = new Shooter();
+        shooter = new Shooter(drive);
 
     }
 
