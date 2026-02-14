@@ -120,7 +120,7 @@ public class OIConstants {
     }
 
     public static final class Spindexer{
-        public static final Trigger FEED = UNBOUND; //TODO set val
+        public static final Trigger FEED = OPERATOR_CONTROLLER.x(); //TODO set val
         public static final Trigger SHOOT = UNBOUND; //TODO set val
     }
 

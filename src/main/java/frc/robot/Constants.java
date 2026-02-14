@@ -368,7 +368,7 @@ public final class Constants {
     }
 
     public static final class Intake {
-        public static final int CAN_ID = 40;
+        public static final int CAN_ID = 30;
         public static final boolean INVERTED = compBot() ? true : false;
         public static final int CURRENT_LIMIT = compBot() ? 80 : 25;
         public static final double HANDOFF_SPEED = compBot() ? .8 : .5;
