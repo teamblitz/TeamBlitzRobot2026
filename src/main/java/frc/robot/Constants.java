@@ -398,6 +398,7 @@ public final class Constants {
         public static final double HUB_Y = 158.84;
         public static final double BASIN_H = 72 - SHOOTER_HEIGHT;
         public static final double SHOOTER_ANGLE = 70;
+        public static final double WHEEL_DIAMETER = 0.1016;
     }
     public static final class Winch {
         public static final int ID = 50;

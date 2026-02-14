@@ -161,7 +161,7 @@ public class OIConstants {
     }
 
     public static final class Shooter {
-        public static final Trigger SHOOT = OPERATOR_CONTROLLER.a();
+        public static final Trigger SHOOT = OPERATOR_CONTROLLER.leftTrigger();
     }
     
     public static final class Climber {

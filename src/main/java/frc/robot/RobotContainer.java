@@ -119,6 +119,7 @@ public class RobotContainer {
 
        
         OIConstants.Intake.REVERSE.whileTrue(intake.reverse());
+        OIConstants.Shooter.SHOOT.whileTrue(shooter.shootTest());
         
         OIConstants.Drive.ALIGN_LEFT.whileTrue(new DeferredCommand(
                 () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(
