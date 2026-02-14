@@ -468,9 +468,20 @@ public final class Constants {
         public record RobotCamera(String name, Transform3d pose) {}
     }
 
+
+
     public static final class Auto {
         public static final class Timings {
             public static final double STOW_TO_L4_READY = 1.25; // IDK ACTUAL TIMINGS
         }
+    }
+
+    public static final class Shooter {
+        public static final int SHOOTER_ID = 30;
+        public static final int FEEDER_ID = 31;
+        public static final int DEEP_FEEDER_ID = 1;
+    
+        public static final double SHOOTER_GEAR_RATIO = (3) * (1);
+        public static final double FEEDER_GEAR_RATIO = (3) * (1);
     }
 }

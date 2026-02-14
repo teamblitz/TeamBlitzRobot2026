@@ -9,6 +9,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import frc.lib.monitor.HardwareWatchdog;
 import org.littletonrobotics.junction.Logger;
+import static frc.robot.Constants.Shooter.*;
 
 public class ShooterIOKraken implements ShooterIO {
     
@@ -34,6 +35,9 @@ public class ShooterIOKraken implements ShooterIO {
         HardwareWatchdog.getInstance().registerCTREDevice(feeder, this.getClass());
 
         // feeder.setControl(new Follower(shooter.getDeviceID(), MotorAlignmentValue.Aligned)); // May need to be Inversted
+        config.Feedback.withSensorToMechanismRatio(SHOOTER_GEAR_RATIO);
+        config.Feedback.withSensorToMechanismRatio(FEEDER_GEAR_RATIO);
+
 
     }
 

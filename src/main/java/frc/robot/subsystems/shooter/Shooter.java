@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-//import frc.robot.Constants.Shooter.*;
+import frc.robot.Constants.Shooter.*;
 import frc.lib.math.AllianceFlipUtil;
 import edu.wpi.first.math.geometry.*;
 
@@ -12,6 +12,11 @@ import edu.wpi.first.math.geometry.*;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+
+import static frc.robot.Constants.Shooter.DEEP_FEEDER_ID;
+import static frc.robot.Constants.Shooter.FEEDER_ID;
+import static frc.robot.Constants.Shooter.SHOOTER_ID;
+
 import com.ctre.phoenix6.controls.Follower;
 
 
@@ -25,12 +30,13 @@ public class Shooter extends SubsystemBase {
 
 	public Shooter() {
 	
-        shooter = new TalonFX(30);
-        feeder = new TalonFX(1);
-        deepFeed = new TalonFX(32);
+        shooter = new TalonFX(SHOOTER_ID);
+
+        feeder = new TalonFX(FEEDER_ID);
+        deepFeed = new TalonFX(DEEP_FEEDER_ID);
         //this.drive = drive;
 
-        feeder.setControl(new Follower(shooter.getDeviceID(), MotorAlignmentValue.Aligned)); // May need to be Inverted
+        feeder.setControl(new Follower(shooter.getDeviceID(), MotorAlignmentValue.Opposed)); // May need to be Inverted
 	}
 
 	@Override
@@ -79,9 +85,9 @@ public class Shooter extends SubsystemBase {
     public Command shootTest() {
         return runOnce(() -> shooter.set(-1))
                 .andThen(Commands.waitSeconds(1))
-                .andThen(() -> deepFeed.set(1))
+                .andThen(() -> deepFeed.set(0.6))
                 .andThen(Commands.waitSeconds(5))
-                .andThen(() -> deepFeed.set(1))
+                .andThen(() -> deepFeed.set(0.6))
                 .andThen(Commands.waitSeconds(1))//TODO set values to run
                 .finallyDo(
                     () -> {
