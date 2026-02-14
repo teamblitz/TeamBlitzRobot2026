@@ -111,7 +111,7 @@ public class RobotContainer {
         //                 PositionConstants.getClosestFace(drive.getPose())[1])),
         //         Set.of(drive)));
 
-        OIConstants.Shooter.SHOOT.whileTrue(shooter.shoot());
+        OIConstants.Shooter.SHOOT.whileTrue(shooter.shootTest());
     }
 
     private void configureDashboard() {
