@@ -5,13 +5,15 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 //import frc.robot.Constants.Shooter.*;
-//import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.lib.math.AllianceFlipUtil;
 import edu.wpi.first.math.geometry.*;
 
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.Follower;
+
 
 public class Shooter extends SubsystemBase {
 	//private final ShooterIO io;
@@ -21,12 +23,14 @@ public class Shooter extends SubsystemBase {
     private final TalonFX deepFeed;
     //private final CommandSwerveDrivetrain drive;
 
-	public Shooter(/*CommandSwerveDrivetrain drive*/) {
+	public Shooter() {
 	
         shooter = new TalonFX(30);
         feeder = new TalonFX(1);
         deepFeed = new TalonFX(32);
         //this.drive = drive;
+
+        feeder.setControl(new Follower(shooter.getDeviceID(), MotorAlignmentValue.Aligned)); // May need to be Inverted
 	}
 
 	@Override

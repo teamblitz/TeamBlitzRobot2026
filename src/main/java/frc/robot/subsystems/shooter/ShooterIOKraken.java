@@ -1,9 +1,10 @@
 package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import frc.lib.monitor.HardwareWatchdog;
@@ -31,6 +32,9 @@ public class ShooterIOKraken implements ShooterIO {
     // Register devices with watchdog
         HardwareWatchdog.getInstance().registerCTREDevice(shooter, this.getClass());
         HardwareWatchdog.getInstance().registerCTREDevice(feeder, this.getClass());
+
+        // feeder.setControl(new Follower(shooter.getDeviceID(), MotorAlignmentValue.Aligned)); // May need to be Inversted
+
     }
 
     @Override
