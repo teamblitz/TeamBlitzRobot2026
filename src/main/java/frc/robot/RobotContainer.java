@@ -31,12 +31,9 @@ import frc.lib.reefscape.ScoringPositions;
 import frc.robot.commands.*;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
-import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.IntakeIOKraken;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.commands.DriveCommands;
 
-import frc.robot.subsystems.shooter.Shooter;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -53,8 +50,6 @@ public class RobotContainer {
     /* ***** --- Subsystems --- ***** */
     private CommandSwerveDrivetrain drive;
     private Vision vision;
-    private Intake intake;
-    private Shooter shooter;
     private AutoCommands autoCommands;
     private DriveCommands driveCommands;
 
@@ -84,7 +79,6 @@ public class RobotContainer {
 
         vision = new Vision(drive);
 
-        shooter = new Shooter(drive);
 
     }
 
@@ -118,7 +112,6 @@ public class RobotContainer {
        
 
        
-        OIConstants.Intake.REVERSE.whileTrue(intake.reverse());
         
         OIConstants.Drive.ALIGN_LEFT.whileTrue(new DeferredCommand(
                 () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(

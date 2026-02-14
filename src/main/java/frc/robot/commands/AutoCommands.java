@@ -17,9 +17,7 @@ import frc.lib.reefscape.ScoringPositions.Branch;
 import frc.robot.Constants;
 import frc.robot.PositionConstants;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
-import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.spindexer.Spindexer;
-import frc.robot.subsystems.shooter.Shooter;
+
 
 import org.littletonrobotics.junction.Logger;
 
@@ -30,9 +28,6 @@ public class AutoCommands {
     private final CommandSwerveDrivetrain drive;
     private final SwerveDriveKinematics kinematics;
     private final AutoFactory autoFactory;
-    private final Intake intake;
-    private final Spindexer spindexer;
-    private final Shooter shooter;
 
     //    private final Command configAutonDefault;
     private final Command configTeleDefault;
@@ -40,13 +35,10 @@ public class AutoCommands {
     private SwerveSample lastSample;
 
     public AutoCommands(
-            CommandSwerveDrivetrain drive, Intake intake, Spindexer spindexer, Shooter shooter) {
+            CommandSwerveDrivetrain drive) {
         this.drive = drive;
-        this.intake = intake;
         this.kinematics = Constants.Drive.KINEMATICS;
-        this.spindexer = spindexer;
-        this.shooter = shooter;
-        
+       
         //Defining autofactory and creating a new autofactory
         autoFactory = new AutoFactory(
                 //Getting the current pose(position and rotation)
@@ -129,11 +121,11 @@ public class AutoCommands {
     }
     //Creates a new ROUTINE which calls the autoshoot command.
     //It must be done in this way using the commandfactory structure because of java syntax.
-    public AutoRoutine autoShoot() { 
-        final var routine = autoFactory.newRoutine("Shoot");
-        routine.active().whileTrue(CommandFactory.autoShoot(shooter, spindexer));
-        return routine;
-    }
+    // public AutoRoutine autoShoot() { 
+    //     final var routine = autoFactory.newRoutine("Shoot");
+    //     routine.active().whileTrue(CommandFactory.autoShoot(shooter, spindexer));
+    //     return routine;
+    // }
 
     // public AutoRoutine driveAway (String pathName) {
     //     final var routine = autoFactory.newRoutine("Drive Away");

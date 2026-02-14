@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.resources.GCMonitor;
 import frc.lib.resources.ResourceMonitor;
 import frc.lib.util.PeriodicExecutor;
-import frc.robot.subsystems.leds.Leds;
 
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -45,7 +44,6 @@ public class Robot extends LoggedRobot {
     public void robotInit() {
         System.out.println("Robot Start up at: " + Timer.getFPGATimestamp());
 
-        Leds.getInstance(); // Start leds
 
         // Record metadata
         Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
