@@ -1,5 +1,5 @@
 package frc.robot.subsystems.wrist;
-import frc.robot.Constants.Wrist;
+import frc.robot.Constants.WristConstants;
 
 import org.littletonrobotics.junction.AutoLog;
 

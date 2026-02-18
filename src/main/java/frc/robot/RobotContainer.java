@@ -8,8 +8,8 @@
 package frc.robot;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
-import static frc.robot.Constants.Wrist.EXTENDED_POS;
-import static frc.robot.Constants.Wrist.ZERO_POS;
+import static frc.robot.Constants.WristConstants.EXTENDED_POS;
+import static frc.robot.Constants.WristConstants.ZERO_POS;
 
 import choreo.auto.AutoChooser;
 
@@ -30,13 +30,15 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.lib.math.AllianceFlipUtil;
 import frc.lib.reefscape.ScoringPositions;
-import frc.robot.Constants.Wrist;
-import frc.robot.commands.*;
-import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
+import frc.robot.Constants.WristConstants;
+
+// import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOKraken;
-import frc.robot.subsystems.vision.Vision;
+
+import frc.robot.subsystems.wrist.Wrist;
+import frc.robot.subsystems.wrist.WristIO;
+import frc.robot.subsystems.wrist.WristIOKraken;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -51,12 +53,11 @@ import java.util.Set;
 public class RobotContainer {
 
     /* ***** --- Subsystems --- ***** */
-    private CommandSwerveDrivetrain drive;
-    private Vision vision;
+//     private CommandSwerveDrivetrain drive;
+
     private Intake intake;
-    private AutoCommands autoCommands;
-    private DriveCommands driveCommands;
-    private frc.robot.subsystems.wrist.Wrist wrist;
+
+    private Wrist wrist;
 
     /* ***** --- Autonomous --- ***** */
     private AutoChooser autoChooser;
@@ -67,11 +68,11 @@ public class RobotContainer {
         // Configure Subsystems
         configureSubsystems();
         // Set default commands
-        setDefaultCommands();
+        // setDefaultCommands();
         // Configure Trigger Bindings
         configureTriggerBindings();
         // Configure Autonomous
-        configureAutonomous();
+        
 
         configureDashboard();
 
@@ -79,35 +80,37 @@ public class RobotContainer {
     }
 
     private void configureSubsystems() {
-        drive = TunerConstants.createDrivetrain();
-        driveCommands = new DriveCommands(drive);
+        // drive = TunerConstants.createDrivetrain();
+        // driveCommands = new DriveCommands(drive);
 
-        vision = new Vision(drive);
+        // vision = new Vision(drive);
 
         //intake = new Intake(Constants.compBot() ? new IntakeIOKraken() : new IntakeIOSpark());
 
+        wrist = new Wrist(new WristIOKraken());
+
     }
 
-    private void setDefaultCommands() {
-        drive.setDefaultCommand(driveCommands
-                .joystickDrive(
-                        OIConstants.Drive.X_TRANSLATION,
-                        OIConstants.Drive.Y_TRANSLATION,
-                        OIConstants.Drive.ROTATION_SPEED,
-                        () -> 5,
-                        () -> 10,
-                        () -> 2 * Math.PI,
-                        true)
-                .onlyWhile(RobotState::isTeleop)
-                .onlyIf(RobotState::isTeleop)
-                .withName("Joystick Drive"));
+// //     private void setDefaultCommands() {
+//         drive.setDefaultCommand(driveCommands
+//                 .joystickDrive(
+//                         OIConstants.Drive.X_TRANSLATION,
+//                         OIConstants.Drive.Y_TRANSLATION,
+//                         OIConstants.Drive.ROTATION_SPEED,
+//                         () -> 5,
+//                         () -> 10,
+//                         () -> 2 * Math.PI,
+//                         true)
+//                 .onlyWhile(RobotState::isTeleop)
+//                 .onlyIf(RobotState::isTeleop)
+//                 .withName("Joystick Drive"));
 
         
-    }
+//     }
 
     private void configureTriggerBindings() {
-        OIConstants.Drive.RESET_GYRO.onTrue(Commands.runOnce(() -> drive.resetRotation(
-                AllianceFlipUtil.shouldFlip() ? Rotation2d.k180deg : Rotation2d.kZero)));
+        // OIConstants.Drive.RESET_GYRO.onTrue(Commands.runOnce(() -> drive.resetRotation(
+                // AllianceFlipUtil.shouldFlip() ? Rotation2d.k180deg : Rotation2d.kZero)));
         //        OIConstants.Drive.X_BREAK.onTrue(drive.park());
         //
         //        OIConstants.Drive.BRAKE.onTrue(Commands.runOnce(() -> drive.setBrakeMode(true)));
@@ -122,17 +125,17 @@ public class RobotContainer {
        
 
        
-        OIConstants.Intake.REVERSE.whileTrue(intake.reverse());
+        // OIConstants.Intake.REVERSE.whileTrue(intake.reverse());
         
-        OIConstants.Drive.ALIGN_LEFT.whileTrue(new DeferredCommand(
-                () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(
-                        PositionConstants.getClosestFace(drive.getPose())[0])),
-                Set.of(drive)));
+        // OIConstants.Drive.ALIGN_LEFT.whileTrue(new DeferredCommand(
+        //         () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(
+        //                 PositionConstants.getClosestFace(drive.getPose())[0])),
+        //         Set.of(drive)));
 
-        OIConstants.Drive.ALIGN_RIGHT.whileTrue(new DeferredCommand(
-                () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(
-                        PositionConstants.getClosestFace(drive.getPose())[1])),
-                Set.of(drive)));
+        // OIConstants.Drive.ALIGN_RIGHT.whileTrue(new DeferredCommand(
+        //         () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(
+        //                 PositionConstants.getClosestFace(drive.getPose())[1])),
+        //         Set.of(drive)));
     }
 
     private void configureDashboard() {
@@ -161,30 +164,13 @@ public class RobotContainer {
                             }
                         })
                         .ignoringDisable(true));
+                }
 
-        Commands.run(() -> {
-                    PositionConstants.getClosestFace(drive.getPose());
-                })
-                .ignoringDisable(true)
-                .onlyIf(Robot::isSimulation)
-                .schedule();
-    }
+        // // Commands.run(() -> {
+        // //             PositionConstants.getClosestFace(drive.getPose());
+        // //         })
+        //         .ignoringDisable(true)
+        //         .onlyIf(Robot::isSimulation)
+        //         .schedule();
 
-    private void configureAutonomous() {
-        autoChooser = new AutoChooser();
-        SmartDashboard.putData("autoChooser", autoChooser);
-
-        autoChooser.addRoutine("leaveRight", () -> autoCommands.leave("leaveRight"));
-    }
-
-    public Command getAutonomousCommand() {
-        Logger.recordOutput("selectedAuto", autoChooser.selectedCommand().getName());
-        return Commands.sequence(
-                        Commands.runOnce(() -> drive.resetRotation(
-                                AllianceFlipUtil.shouldFlip()
-                                        ? Rotation2d.kZero
-                                        : Rotation2d.k180deg)),
-                        autoChooser.selectedCommandScheduler())
-                .withName("Auto Command");
-    }
 }

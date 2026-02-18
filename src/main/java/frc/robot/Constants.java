@@ -247,9 +247,9 @@ public final class Constants {
         }
     }
 
-    public static final class Wrist {
+    public static final class WristConstants {
         public static final int WRIST_ID = 30;
-        public static final int ABS_ENCODER_ID = 31;
+        public static final int ABS_ENCODER_ID = 2;
  //       public static final double WRIST_GEAR_RATIO = (9.0) * (5.0) * (54.0 / 16.0);
 
   //      public static final double OPEN_LOOP_RAMP = .25;

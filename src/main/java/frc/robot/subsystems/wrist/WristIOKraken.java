@@ -1,7 +1,7 @@
 package frc.robot.subsystems.wrist;
 
 import static frc.robot.Constants.Intake.*;
-import static frc.robot.Constants.Wrist.*;
+import static frc.robot.Constants.WristConstants.*;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 // import com.ctre.phoenix6.controls.ControlRequest;
@@ -9,7 +9,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.reduxrobotics.sensors.canandmag.Canandmag;
+import com.ctre.phoenix6.hardware.CANcoder;
 // import com.revrobotics.AbsoluteEncoder;
 
 import edu.wpi.first.math.MathUtil;
@@ -24,12 +24,12 @@ import org.littletonrobotics.junction.Logger;
 
 public class WristIOKraken implements WristIO {
     public final TalonFX wrist;
-    public final Canandmag absoluteEncoder;
+    public final CANcoder absoluteEncoder;
 
 
     public WristIOKraken() {
-        wrist = new TalonFX(0); // TODO SET VALUE
-        absoluteEncoder = new Canandmag(ABS_ENCODER_ID);
+        wrist = new TalonFX(1); 
+        absoluteEncoder = new CANcoder(ABS_ENCODER_ID);
 
         TalonFXConfiguration config = new TalonFXConfiguration();
 
@@ -58,9 +58,10 @@ public class WristIOKraken implements WristIO {
         wrist.set(speed);
     }
 
-    private double getAbsPosition() {
+    public double getAbsPosition() {
+        var encoderPos = absoluteEncoder.getAbsolutePosition().getValueAsDouble();
         return MathUtil.angleModulus(
-                (2 * Math.PI) * absoluteEncoder.getAbsPosition() + Math.toRadians(90));
+                (2 * Math.PI) * encoderPos);
     }
 }
 

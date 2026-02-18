@@ -1,6 +1,6 @@
 package frc.robot.subsystems.wrist;
 
-import static frc.robot.Constants.Wrist.*;
+import static frc.robot.Constants.WristConstants.*;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.BlitzSubsystem;
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
-
+import frc.robot.subsystems.wrist.WristIOKraken;
 
 
 public class Wrist extends BlitzSubsystem {

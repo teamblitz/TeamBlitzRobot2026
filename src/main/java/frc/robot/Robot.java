@@ -169,15 +169,6 @@ public class Robot extends LoggedRobot {
     /* ***** --- Autonomous --- ***** */
 
     // Called at the start of autonomous.
-    @Override
-    public void autonomousInit() {
-        autonomousCommand = robotContainer.getAutonomousCommand();
-
-        // schedule autonomous commands
-        if (autonomousCommand != null) {
-            autonomousCommand.schedule();
-        }
-    }
 
     // Called periodically during autonomous
     @Override
