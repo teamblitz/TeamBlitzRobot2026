@@ -13,7 +13,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class Wrist extends BlitzSubsystem {
     public final WristIO io;
-    private final WristIOInputsAutoLogged inputs = new WristIOInputsAutoLogged();
+    private final WristInputsAutoLogged inputs = new WristInputsAutoLogged();
 
     private final TrapezoidProfile.Constraints constraints =
             new TrapezoidProfile.Constraints(MAX_VELOCITY, MAX_ACCEL);

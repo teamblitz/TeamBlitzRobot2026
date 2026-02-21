@@ -1,6 +1,7 @@
 package frc.robot.subsystems.wrist;
 
 import org.littletonrobotics.junction.AutoLog;
+import org.littletonrobotics.junction.AutoLogOutput;
 
 public interface WristIO {
 
@@ -12,7 +13,7 @@ public interface WristIO {
         public double velocityRadiansPerSecond;
     }
 
-    default void updateInputs(WristInputs inputs) {}
-    default void setSpeed(double speed) {}
-    default void setPosition(double positionRotations) {}
+    public default void updateInputs(WristInputs inputs) {}
+    public default void setSpeed(double speed) {}
+    public default void setPosition(double positionRotations) {}
 }
