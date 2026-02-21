@@ -375,15 +375,6 @@ public final class Constants {
         public static final int CURRENT_LIMIT = compBot() ? 80 : 25;
         public static final double HANDOFF_SPEED = compBot() ? .8 : .5;
         public static final double REVERSE_SPEED = -.15;
-
-        public static final double ALGAE_HOLD = -.4; // TODO CONFIG
-        public static final double ALGAE_EJECT = .4; // TODO CONFIG
-
-        public static final double ALGAE_REMOVAL = .5; // TODO CONFIG
-        public static final double SHOOT_CORAL = .5;
-        public static final double L1 = .3;
-
-        public static final double L4_PLOP = .4;
     }
 
     public static final class Winch {

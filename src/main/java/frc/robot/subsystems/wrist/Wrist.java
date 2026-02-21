@@ -47,6 +47,7 @@ public class Wrist extends BlitzSubsystem {
     public double getVelocity() {
         return inputs.velocityRadiansPerSecond;
     }
+    
 
     public Command moveUp() {
         return startEnd(() -> io.setSpeed(0.3), () -> io.setSpeed(0));
@@ -84,5 +85,10 @@ public class Wrist extends BlitzSubsystem {
     private Command refreshCurrentState() {
         return runOnce(() -> setpoint = new TrapezoidProfile.State(getPosition(), getVelocity()))
                 .onlyIf(() -> setpoint == null || goal.isEmpty());
+    }
+
+    public Command simpleGoTo(double position) {
+         startEnd(() -> io.setSpeed(0.1), () -> io.setSpeed(0))
+         .withDeadline(Commands.waitUntil(MathUtil.isNear(position, inputs.absoluteEncoderPosition , Constants.WristConstants.TOLERANCE)));
     }
 }

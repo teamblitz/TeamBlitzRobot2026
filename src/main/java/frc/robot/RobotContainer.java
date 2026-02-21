@@ -9,6 +9,7 @@ package frc.robot;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.robot.Constants.WristConstants.EXTENDED_POS;
+import static frc.robot.Constants.WristConstants.TOLERANCE;
 import static frc.robot.Constants.WristConstants.ZERO_POS;
 
 import choreo.auto.AutoChooser;
@@ -16,6 +17,7 @@ import choreo.auto.AutoChooser;
 import com.ctre.phoenix6.SignalLogger;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -85,7 +87,7 @@ public class RobotContainer {
 
         // vision = new Vision(drive);
 
-        //intake = new Intake(Constants.compBot() ? new IntakeIOKraken() : new IntakeIOSpark());
+        intake = new Intake(new IntakeIOKraken());
 
         wrist = new Wrist(new WristIOKraken());
 
@@ -119,8 +121,12 @@ public class RobotContainer {
         //Tells Wrist to move to position MAX, or the max position
         //The reason for the .onTrue, is because the trigger is a constant boolean value. This jsut says
         // to only run the cpommand once and not break the bot.
-        OIConstants.Wrist.WRIST_UP.onTrue(wrist.goToPosition(ZERO_POS));
-        OIConstants.Wrist.WRIST_DOWN.onTrue(wrist.goToPosition(EXTENDED_POS));
+        // OIConstants.Wrist.WRIST_UP.onTrue(wrist.goToPosition(ZERO_POS));
+        // OIConstants.Wrist.WRIST_DOWN.whileTrue(wrist.goToPosition(EXTENDED_POS));
+
+        OIConstants.Wrist.WRIST_DOWN.onTrue(wrist.simpleGoTo(EXTENDED_POS));
+
+        OIConstants.Wrist.WRIST_UP.whileTrue(wrist.moveUp());
        
 
        
