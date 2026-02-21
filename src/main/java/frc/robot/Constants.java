@@ -265,9 +265,9 @@ public final class Constants {
         public static final double TOLERANCE = Units.degreesToRadians(2.5);
 
         public static final double MAX_VELOCITY =
-                Constants.compBot() ? Units.rotationsToRadians(4) : Units.degreesToRadians(180);
+                 Units.rotationsToRadians(4);
         public static final double MAX_ACCEL =
-                Constants.compBot() ? Units.rotationsToRadians(8) : Units.degreesToRadians(360);
+                 Units.rotationsToRadians(8);
         public static final double MAX_JERK = MAX_ACCEL * 8;
 
 

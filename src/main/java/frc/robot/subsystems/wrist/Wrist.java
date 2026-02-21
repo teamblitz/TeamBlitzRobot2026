@@ -11,7 +11,6 @@ import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import frc.robot.subsystems.wrist.WristIOKraken;
 
-
 public class Wrist extends BlitzSubsystem {
     private final WristIO io;
 
@@ -20,6 +19,9 @@ public class Wrist extends BlitzSubsystem {
 
         this.io = io;
     }
+
+    private final TrapezoidProfile.Constraints constraints = 
+    new TrapezoidProfile.Constraints(MAX_VELOCITY, MAX_ACCEL);
 
     private Optional<TrapezoidProfile.State> goal;
     private TrapezoidProfile.State setpoint;
@@ -37,7 +39,6 @@ public class Wrist extends BlitzSubsystem {
         return startEnd(() -> io.setSpeed(0.3), () -> io.setSpeed(0));
     }
 
-
     public Command setSpeed(double speed) {
         return startEnd(() -> io.setSpeed(speed), () -> io.setSpeed(0));
     }
@@ -47,6 +48,7 @@ public class Wrist extends BlitzSubsystem {
         //Return the position of the encoder
         return WristIO.WristInputs.absoluteEncoderPosition;
     }
+
     //Sends the motor to a position by running followGoal until the deadline is called
     public Command goToPositon(double position) {
 
@@ -57,6 +59,7 @@ public class Wrist extends BlitzSubsystem {
                                     () -> MathUtil.isNear(position, getPosition(), TOLERANCE)))
                     .withName(logKey + "/goToPosition_waitForMechanism " + position);
     }
+
     public Command followGoal(DoubleSupplier goal) {
         //Run this process
         return run(() -> {
@@ -84,6 +87,7 @@ public class Wrist extends BlitzSubsystem {
     public double getVelocity() {
         return WristIO.WristInputs.velocityRadiansPerSecond;
     }
+
     //OLD CODE
 
     //     public Command goToPosition(double position, boolean requireProfileCompletion) {
