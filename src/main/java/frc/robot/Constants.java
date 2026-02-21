@@ -250,11 +250,12 @@ public final class Constants {
     public static final class WristConstants {
         public static final int WRIST_ID = 30;
         public static final int ABS_ENCODER_ID = 2;
- //       public static final double WRIST_GEAR_RATIO = (9.0) * (5.0) * (54.0 / 16.0);
+        public static final double WRIST_GEAR_RATIO = (9.0) * (5.0) * (54.0 / 16.0); //TODO get the correct ratio
+        public static final double MAGNET_OFFSET = 0.0; //TODO tune in phoenix tuner 
 
   //      public static final double OPEN_LOOP_RAMP = .25;
         public static final int CURRENT_LIMIT_WRIST = 60;
-   //     public static final boolean INVERTED = false;
+        public static final boolean INVERTED = false;
 
 
    //TODO TUNE MAXIMUM AND MINIMUM POSITIONS WHEN WE HAVE THE BOT

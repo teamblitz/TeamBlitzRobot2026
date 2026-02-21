@@ -9,101 +9,80 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.BlitzSubsystem;
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
-import frc.robot.subsystems.wrist.WristIOKraken;
+import org.littletonrobotics.junction.Logger;
 
 public class Wrist extends BlitzSubsystem {
-    private final WristIO io;
+    public final WristIO io;
+    private final WristIOInputsAutoLogged inputs = new WristIOInputsAutoLogged();
+
+    private final TrapezoidProfile.Constraints constraints =
+            new TrapezoidProfile.Constraints(MAX_VELOCITY, MAX_ACCEL);
+    private final TrapezoidProfile profile;
+
+    private Optional<TrapezoidProfile.State> goal = Optional.empty();
+    private TrapezoidProfile.State setpoint = new TrapezoidProfile.State();
 
     public Wrist(WristIO io) {
         super("Wrist");
-
         this.io = io;
+        this.profile = new TrapezoidProfile(constraints);
     }
-
-    private final TrapezoidProfile.Constraints constraints = 
-    new TrapezoidProfile.Constraints(MAX_VELOCITY, MAX_ACCEL);
-
-    private Optional<TrapezoidProfile.State> goal;
-    private TrapezoidProfile.State setpoint;
 
     @Override
     public void periodic() {
         super.periodic();
+        io.updateInputs(inputs);
+        Logger.processInputs(logKey, inputs);
+
+        goal.ifPresent(g -> {
+            setpoint = profile.calculate(0.02, setpoint, g);
+            io.setPosition(setpoint.position);
+        });
     }
 
-    public Command move_up() {
-        return startEnd(()-> io.setSpeed(0.3), () -> io.setSpeed(0));
+    public double getPosition() {
+        return inputs.absoluteEncoderPosition;
     }
 
-    public Command move_down() {
+    public double getVelocity() {
+        return inputs.velocityRadiansPerSecond;
+    }
+
+    public Command moveUp() {
         return startEnd(() -> io.setSpeed(0.3), () -> io.setSpeed(0));
+    }
+
+    public Command moveDown() {
+        return startEnd(() -> io.setSpeed(-0.3), () -> io.setSpeed(0));
     }
 
     public Command setSpeed(double speed) {
         return startEnd(() -> io.setSpeed(speed), () -> io.setSpeed(0));
     }
 
-    //A method to get the current position of the wrist
-    public double getPosition() {
-        //Return the position of the encoder
-        return WristIO.WristInputs.absoluteEncoderPosition;
-    }
-
-    //Sends the motor to a position by running followGoal until the deadline is called
-    public Command goToPositon(double position) {
-
+    public Command goToPosition(double position) {
         return followGoal(() -> position)
-                    .withDeadline(
-                        //This just means wait until the robot gets close to the desired position
-                            Commands.waitUntil(
-                                    () -> MathUtil.isNear(position, getPosition(), TOLERANCE)))
-                    .withName(logKey + "/goToPosition_waitForMechanism " + position);
+                .withDeadline(
+                        Commands.waitUntil(
+                                () -> MathUtil.isNear(position, getPosition(), TOLERANCE)))
+                .withName(logKey + "/goToPosition " + position);
     }
 
     public Command followGoal(DoubleSupplier goal) {
-        //Run this process
         return run(() -> {
-            // Create a new trapezoid profile if we don't have a goal currently set
-            if (this.goal.isEmpty() || this.goal.get().position != goal.getAsDouble()) {
-                this.goal =
-                        Optional.of(
-                            new TrapezoidProfile.State(
-                                MathUtil.clamp(
-                                    goal.getAsDouble(), EXTENDED_POS, ZERO_POS),
-                                 0));
+                    if (this.goal.isEmpty() || this.goal.get().position != goal.getAsDouble()) {
+                        this.goal = Optional.of(
+                                new TrapezoidProfile.State(
+                                        MathUtil.clamp(goal.getAsDouble(), EXTENDED_POS, ZERO_POS),
+                                        0));
                     }
                 })
                 .handleInterrupt(() -> this.goal = Optional.of(setpoint))
                 .beforeStarting(refreshCurrentState());
     }
-    
-    //Refreshes your current state by creating a new setpoint only if there isn't a current one
+
     private Command refreshCurrentState() {
         return runOnce(() -> setpoint = new TrapezoidProfile.State(getPosition(), getVelocity()))
                 .onlyIf(() -> setpoint == null || goal.isEmpty());
     }
-
-    //Gets the current velocity in radians per second
-    public double getVelocity() {
-        return WristIO.WristInputs.velocityRadiansPerSecond;
-    }
-
-    //OLD CODE
-
-    //     public Command goToPosition(double position, boolean requireProfileCompletion) {
-    //     if (requireProfileCompletion)
-    //         return followGoal(() -> position)
-    //                 .withDeadline(
-    //                         Commands.waitUntil(
-    //                                 () -> MathUtil.isNear(position, getPosition(), TOLERANCE)))
-    //                 .withName(logKey + "/goToPosition_waitForMechanism " + position);
-    //     else
-    //         return followGoal(() -> position)
-    //                 .withDeadline(
-    //                         Commands.waitUntil(
-    //                                         () ->
-    //                                                 MathUtil.isNear(
-    //                                                         position, getIdealPosition(), 1e-9))
-    //                                 .withName(logKey + "/goToPosition_waitForProfile " + position));
-    // }
 }
