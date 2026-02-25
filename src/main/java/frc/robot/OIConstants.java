@@ -112,12 +112,12 @@ public class OIConstants {
 
     public static final class Intake {
         public static final Trigger REVERSE = OPERATOR_CONTROLLER.leftBumper();
-        public static final Trigger FORWARD = OPERATOR_CONTROLLER.rightBumper();
+        // public static final Trigger FORWARD = OPERATOR_CONTROLLER.rightBumper();
         
     }
 
     public static final class Spindexer{
-        public static final Trigger FEED = UNBOUND; //TODO set val
+        public static final Trigger FEED = OPERATOR_CONTROLLER.y(); 
         public static final Trigger SHOOT = UNBOUND; //TODO set val
     }
 

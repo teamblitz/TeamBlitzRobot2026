@@ -25,7 +25,7 @@ public class Shooter extends SubsystemBase {
 	
         shooter = new TalonFX(30);
         feeder = new TalonFX(1);
-        deepFeed = new TalonFX(32);
+        deepFeed = new TalonFX(31);
         this.drive = drive;
 	}
 
@@ -99,8 +99,8 @@ public class Shooter extends SubsystemBase {
                 .andThen(Commands.waitSeconds(1))//TODO set values to run
                 .finallyDo(
                     () -> {
-                        shooter.set(0);
-                        deepFeed.set(0);
+                        shooter.set(0.1);
+                        deepFeed.set(0.1);
                     }
                 );
 
