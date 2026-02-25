@@ -115,7 +115,6 @@ public final class Constants {
                 CENTER_TO_MODULE.get(FR),
                 CENTER_TO_MODULE.get(BL),
                 CENTER_TO_MODULE.get(BR));
-
         /* Current Limits
          *
          * Current Limits attempt to prevent the motor from burning out under a stall condition, and prevent the breaker from being tripped.
@@ -388,7 +387,7 @@ public final class Constants {
 
     public static final class Spindexer {
         public static final double SPINDEXER_MAX_SPEED = compBot() ? 80 : 25; //TODO set val
-        public static final int CAN_ID = 40;
+        public static final int CAN_ID = 23;
     }
 
     public static final class Shooter {

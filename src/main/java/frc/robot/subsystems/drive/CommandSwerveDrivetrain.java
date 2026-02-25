@@ -21,6 +21,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.numbers.N3;
@@ -120,6 +121,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         configureAutoBuilder();
 
         new DriveSysId(this);
+
+                ChassisSpeeds discretizedSpeeds =
+                ChassisSpeeds.discretize(speeds, Constants.LOOP_PERIOD_SEC);
+
+        SwerveModuleState[] swerveModuleStates = Constants.Drive.KINEMATICS.toSwerveModuleStates(discretizedSpeeds);
     }
 
     private void configureAutoBuilder() {

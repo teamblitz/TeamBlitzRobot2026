@@ -24,8 +24,8 @@ public class Shooter extends SubsystemBase {
 	public Shooter(CommandSwerveDrivetrain drive) {
 	
         shooter = new TalonFX(30);
-        feeder = new TalonFX(1);
-        deepFeed = new TalonFX(32);
+        feeder = new TalonFX(31);
+        deepFeed = new TalonFX(1);
         this.drive = drive;
 	}
 

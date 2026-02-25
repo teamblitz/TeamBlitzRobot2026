@@ -13,12 +13,10 @@ import org.littletonrobotics.junction.Logger;
 
 public class IntakeIOKraken implements IntakeIO {
     public final TalonFX grabball;
-    public final TalonFX intakeup;
 
     public IntakeIOKraken() {
-        grabball = new TalonFX(INTAKEMOTOR_ID); // TODO SET VALUE
-        intakeup = new TalonFX(ANGLEMOTOR_ID); 
-
+        grabball = new TalonFX(24); // TODO SET VALUE
+        
         TalonFXConfiguration config = new TalonFXConfiguration();
 
         config.CurrentLimits.withStatorCurrentLimit(CURRENT_LIMIT);
@@ -31,7 +29,6 @@ public class IntakeIOKraken implements IntakeIO {
         
 
         grabball.getConfigurator().apply(config);
-        intakeup.getConfigurator().apply(config);
     }
         
     
@@ -39,7 +36,6 @@ public class IntakeIOKraken implements IntakeIO {
     @Override
     public void setSpeed(double speed) {
         grabball.set(speed);
-        intakeup.set(speed);
 
     }
 

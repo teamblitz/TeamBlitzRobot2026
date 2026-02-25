@@ -28,15 +28,19 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.lib.math.AllianceFlipUtil;
 import frc.lib.reefscape.ScoringPositions;
+import frc.robot.Constants.Spindexer;
 import frc.robot.commands.*;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOKraken;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.commands.DriveCommands;
 
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.spindexer.SpindexerIO;
+import frc.robot.subsystems.spindexer.SpindexerIOKraken;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -54,7 +58,10 @@ public class RobotContainer {
     private CommandSwerveDrivetrain drive;
     private Vision vision;
     private Intake intake;
+    private IntakeIO intakeIO;
     private Shooter shooter;
+    private frc.robot.subsystems.spindexer.Spindexer spindexer;
+    private SpindexerIO spindexerIO;
     private AutoCommands autoCommands;
     private DriveCommands driveCommands;
 
@@ -84,7 +91,13 @@ public class RobotContainer {
 
         vision = new Vision(drive);
 
+        intakeIO = new IntakeIOKraken();
+
+        spindexerIO = new SpindexerIOKraken();
+
+        intake = new Intake(intakeIO);
         shooter = new Shooter(drive);
+        spindexer = new frc.robot.subsystems.spindexer.Spindexer(spindexerIO);
 
     }
 
@@ -118,8 +131,10 @@ public class RobotContainer {
        
 
        
-        OIConstants.Intake.REVERSE.whileTrue(intake.reverse());
-        OIConstants.Shooter.SHOOT.whileTrue(shooter.shootTest());
+        OIConstants.Intake.REVERSE.whileTrue(intake.reverse()); //left bumper
+        OIConstants.Intake.FORWARD.whileTrue(intake.forward()); //right bumper
+        OIConstants.Shooter.SHOOT.whileTrue(shooter.shootTest()); //Left Trigger
+        OIConstants.Spindexer.FEED.whileTrue(spindexer.feed()); //a
         
         OIConstants.Drive.ALIGN_LEFT.whileTrue(new DeferredCommand(
                 () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(
@@ -136,17 +151,17 @@ public class RobotContainer {
     //Which alliance, autochoosing, match timer,
     //FYI the actual "Dashboard" is elastic(WPILIB)
     private void configureDashboard() {
-//        var tab = Shuffleboard.getTab("tuning");
-//
-//        tab.add(
-//                "Phoenix SignalLogger",
-//                runEnd(SignalLogger::start, SignalLogger::stop).ignoringDisable(true));
-//
-//        tab.add("drive/resetOdometry", Commands.runOnce(() -> drive.resetPose(new Pose2d())));
-//
-//        tab.add(
-//                "wheel radius characterization",
-//                DriveCharacterizationCommands.characterizeWheelDiameter(drive));
+       var tab = Shuffleboard.getTab("tuning");
+
+       tab.add(
+               "Phoenix SignalLogger",
+               runEnd(SignalLogger::start, SignalLogger::stop).ignoringDisable(true));
+
+       tab.add("drive/resetOdometry", Commands.runOnce(() -> drive.resetPose(new Pose2d())));
+
+       tab.add(
+               "wheel radius characterization",
+               DriveCharacterizationCommands.characterizeWheelDiameter(drive));
 
         new Trigger(() -> DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)
                         == DriverStation.Alliance.Blue)
@@ -168,6 +183,7 @@ public class RobotContainer {
                 .ignoringDisable(true)
                 .onlyIf(Robot::isSimulation)
                 .schedule();
+
     }
     //Configures autonomuous copmmands and autochooser
     private void configureAutonomous() {

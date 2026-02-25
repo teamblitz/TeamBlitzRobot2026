@@ -117,7 +117,7 @@ public class OIConstants {
     }
 
     public static final class Spindexer{
-        public static final Trigger FEED = UNBOUND; //TODO set val
+        public static final Trigger FEED = OPERATOR_CONTROLLER.a(); //TODO set val
         public static final Trigger SHOOT = UNBOUND; //TODO set val
     }
 
@@ -125,40 +125,30 @@ public class OIConstants {
         public static final DoubleSupplier MANUAL =
                 () -> MathUtil.applyDeadband(-OPERATOR_CONTROLLER.getRightY(), .1);
 
-        public static final Trigger WRIST_UP = OPERATOR_CONTROLLER.a();
-        public static final Trigger WRIST_DOWN = OPERATOR_CONTROLLER.b();
+        public static final Trigger WRIST_UP = UNBOUND;
+        public static final Trigger WRIST_DOWN = UNBOUND;
     }
 
-    public static final class Elevator {
-        public static final DoubleSupplier MANUAL =
-                () -> .3 * MathUtil.applyDeadband(-OPERATOR_CONTROLLER.getLeftY(), .1);
-    }
 
-    public static final class SuperStructure {
-        public static final Trigger SCORE = DRIVE_CONTROLLER.button(2);
+    // public static final class SuperStructure {
+    //     public static final Trigger SCORE = DRIVE_CONTROLLER.button(2);
 
-        public static final Trigger L1 = OPERATOR_CONTROLLER.povDown();
-        public static final Trigger L2 = OPERATOR_CONTROLLER.povLeft();
-        public static final Trigger L3 = OPERATOR_CONTROLLER.povUp();
-        public static final Trigger L4 = OPERATOR_CONTROLLER.povRight();
+    //     public static final Trigger L1 = OPERATOR_CONTROLLER.povDown();
+    //     public static final Trigger L2 = OPERATOR_CONTROLLER.povLeft();
+    //     public static final Trigger L3 = OPERATOR_CONTROLLER.povUp();
+    //     public static final Trigger L4 = OPERATOR_CONTROLLER.povRight();
 
-        public static final Trigger HANDOFF = OPERATOR_CONTROLLER.y();
-        public static final Trigger TEMP_L4_DUNK = OPERATOR_CONTROLLER.back();
+    //     public static final Trigger HANDOFF = OPERATOR_CONTROLLER.y();
+    //     public static final Trigger TEMP_L4_DUNK = OPERATOR_CONTROLLER.back();
 
-        public static final Trigger KICK_BOTTOM_ALGAE = OPERATOR_CONTROLLER.a();
-        public static final Trigger KICK_TOP_ALGAE = OPERATOR_CONTROLLER.b();
+    //     public static final Trigger KICK_BOTTOM_ALGAE = OPERATOR_CONTROLLER.a();
+    //     public static final Trigger KICK_TOP_ALGAE = OPERATOR_CONTROLLER.b();
 
-        public static final Trigger MANUAL_MODE = new Trigger(
-                () -> Elevator.MANUAL.getAsDouble() != 0 || Wrist.MANUAL.getAsDouble() != 0);
-    }
+    //     public static final Trigger MANUAL_MODE = new Trigger(
+    //             () -> Elevator.MANUAL.getAsDouble() != 0 || Wrist.MANUAL.getAsDouble() != 0);
+    // }
 
-    public static final class Winch {
-        public static final Trigger WINCH_MAN_UP = DRIVE_CONTROLLER.button(7);
-        public static final Trigger WINCH_MAN_DOWN = DRIVE_CONTROLLER.button(8);
 
-        public static final Trigger FUNNEL_UP = UNBOUND;
-        public static final Trigger FUNNEL_DOWN = UNBOUND;
-    }
 
     public static final class Shooter {
         public static final Trigger SHOOT = OPERATOR_CONTROLLER.leftTrigger();

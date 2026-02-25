@@ -13,7 +13,7 @@ public class WristIOKraken implements WristIO {
     public final TalonFX wrist;
 
     public WristIOKraken() {
-        wrist = new TalonFX(0); // TODO SET VALUE
+        wrist = new TalonFX(21); // TODO SET VALUE
 
         TalonFXConfiguration config = new TalonFXConfiguration();
 
