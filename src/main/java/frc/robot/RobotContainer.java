@@ -39,8 +39,15 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.commands.DriveCommands;
 
 import frc.robot.subsystems.shooter.Shooter;
+
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIO;
+import frc.robot.subsystems.wrist.Wrist;
+import frc.robot.subsystems.wrist.WristIO;
+import frc.robot.subsystems.spindexer.*;
 import frc.robot.subsystems.spindexer.SpindexerIO;
 import frc.robot.subsystems.spindexer.SpindexerIOKraken;
+
 
 import org.littletonrobotics.junction.Logger;
 
@@ -64,6 +71,8 @@ public class RobotContainer {
     private SpindexerIO spindexerIO;
     private AutoCommands autoCommands;
     private DriveCommands driveCommands;
+    private Wrist wrist;
+    private WristIO wristIO;
 
     /* ***** --- Autonomous --- ***** */
     private AutoChooser autoChooser;
@@ -97,7 +106,11 @@ public class RobotContainer {
 
         intake = new Intake(intakeIO);
         shooter = new Shooter(drive);
+
         spindexer = new frc.robot.subsystems.spindexer.Spindexer(spindexerIO);
+
+        wrist = new Wrist(wristIO);
+
 
     }
 
@@ -131,10 +144,12 @@ public class RobotContainer {
        
 
        
+
         OIConstants.Intake.REVERSE.whileTrue(intake.reverse()); //left bumper
         OIConstants.Intake.FORWARD.whileTrue(intake.forward()); //right bumper
         OIConstants.Shooter.SHOOT.whileTrue(shooter.shootTest()); //Left Trigger
         OIConstants.Spindexer.FEED.whileTrue(spindexer.feed()); //a
+
         
         OIConstants.Drive.ALIGN_LEFT.whileTrue(new DeferredCommand(
                 () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(

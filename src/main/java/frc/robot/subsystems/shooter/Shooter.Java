@@ -24,8 +24,10 @@ public class Shooter extends SubsystemBase {
 	public Shooter(CommandSwerveDrivetrain drive) {
 	
         shooter = new TalonFX(30);
+
         feeder = new TalonFX(31);
         deepFeed = new TalonFX(1);
+
         this.drive = drive;
 	}
 
@@ -99,8 +101,8 @@ public class Shooter extends SubsystemBase {
                 .andThen(Commands.waitSeconds(1))//TODO set values to run
                 .finallyDo(
                     () -> {
-                        shooter.set(0);
-                        deepFeed.set(0);
+                        shooter.set(0.1);
+                        deepFeed.set(0.1);
                     }
                 );
 
