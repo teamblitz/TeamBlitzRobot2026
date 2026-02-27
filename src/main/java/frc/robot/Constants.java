@@ -183,9 +183,9 @@ public final class Constants {
         /* Module Specific Constants */
         /* Front Left Module - Module 0 */
         public static final class Mod0 {
-            public static final int DRIVE_MOTOR_ID = 6;
-            public static final int ANGLE_MOTOR_ID = 7;
-            public static final int CAN_CODER_ID = 2;
+            public static final int DRIVE_MOTOR_ID = 4;
+            public static final int ANGLE_MOTOR_ID = 5;
+            public static final int CAN_CODER_ID = 0;
             public static final Rotation2d ANGLE_OFFSET =
                     Rotation2d.fromDegrees(ROBOT == Robot.CompBot ? 148.89 : 0);
             public static final SwerveModuleConstants CONSTANTS =
@@ -195,9 +195,9 @@ public final class Constants {
 
         /* Front Right Module - Module 1 */
         public static final class Mod1 {
-            public static final int DRIVE_MOTOR_ID = 8;
-            public static final int ANGLE_MOTOR_ID = 9;
-            public static final int CAN_CODER_ID = 3;
+            public static final int DRIVE_MOTOR_ID = 6;
+            public static final int ANGLE_MOTOR_ID = 7;
+            public static final int CAN_CODER_ID = 1;
             public static final Rotation2d ANGLE_OFFSET =
                     Rotation2d.fromDegrees(ROBOT == Robot.CompBot ? 113.56 : 0);
             public static final SwerveModuleConstants CONSTANTS =
@@ -207,9 +207,9 @@ public final class Constants {
 
         /* Back Left Module - Module 2 */
         public static final class Mod2 {
-            public static final int DRIVE_MOTOR_ID = 10;
-            public static final int ANGLE_MOTOR_ID = 11;
-            public static final int CAN_CODER_ID = 4;
+            public static final int DRIVE_MOTOR_ID = 8;
+            public static final int ANGLE_MOTOR_ID = 9;
+            public static final int CAN_CODER_ID = 2;
             public static final Rotation2d ANGLE_OFFSET =
                     Rotation2d.fromDegrees(ROBOT == Robot.CompBot ? 177.19 : 0);
             public static final SwerveModuleConstants CONSTANTS =
@@ -219,9 +219,9 @@ public final class Constants {
 
         /* Back Right Module - Module 3 */
         public static final class Mod3 {
-            public static final int DRIVE_MOTOR_ID = 12;
-            public static final int ANGLE_MOTOR_ID = 13;
-            public static final int CAN_CODER_ID = 5;
+            public static final int DRIVE_MOTOR_ID = 10;
+            public static final int ANGLE_MOTOR_ID = 11;
+            public static final int CAN_CODER_ID = 3;
             public static final Rotation2d ANGLE_OFFSET =
                     Rotation2d.fromDegrees(ROBOT == Robot.CompBot ? 129.73 : 0);
             public static final SwerveModuleConstants CONSTANTS =
@@ -256,8 +256,8 @@ public final class Constants {
     }
     public static final class Elevator {
 
-        public static final int RIGHT_ID = 20;
-        public static final int LEFT_ID = 21;
+        public static final int RIGHT_ID = 90;
+        public static final int LEFT_ID = 91;
 
         public static final double MIN_POS = compBot() ? 0 : .001;
         public static final double MAX_POS = compBot() ? 1.489501953125 : 1.48;
@@ -308,8 +308,8 @@ public final class Constants {
     }
 
     public static final class Wrist {
-        public static final int WRIST_ID = 30;
-        public static final int ABS_ENCODER_ID = 31;
+        public static final int WRIST_ID = 12;
+        public static final int ABS_ENCODER_ID = 13;
         public static final double WRIST_GEAR_RATIO = (9.0) * (5.0) * (54.0 / 16.0);
 
         public static final double OPEN_LOOP_RAMP = .25;
@@ -427,8 +427,8 @@ public final class Constants {
     }
 
     public static final class Intake {
-        public static final int INTAKEMOTOR_ID = 40;
-        public static final int ANGLEMOTOR_ID = 40;
+        public static final int INTAKEMOTOR_ID = 14;
+        public static final int ANGLEMOTOR_ID = 15;
         public static final boolean INVERTED = compBot() ? true : false;
         public static final int CURRENT_LIMIT = compBot() ? 80 : 25;
         public static final double HANDOFF_SPEED = compBot() ? .8 : .5;
