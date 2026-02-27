@@ -5,7 +5,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Shooter.*;
-import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
+import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.swerveModule.SwerveModule;
 import frc.lib.math.AllianceFlipUtil;
 import edu.wpi.first.math.geometry.*;
 
@@ -19,16 +20,16 @@ public class Shooter extends SubsystemBase {
     private final TalonFX shooter;
     private final TalonFX feeder;
     private final TalonFX deepFeed;
-    private final CommandSwerveDrivetrain drive;
+    private final Drive drive;
 
-	public Shooter(CommandSwerveDrivetrain drive) {
+	public Shooter(Drive drive) {
 	
         shooter = new TalonFX(30);
 
         feeder = new TalonFX(31);
         deepFeed = new TalonFX(1);
 
-        this.drive = drive;
+        this.drive= drive;
 	}
 
 	@Override
@@ -45,13 +46,13 @@ public class Shooter extends SubsystemBase {
      * @return velocity, the required velocity
      * 
      */
-    public double getVelocity () {
+     public double getVelocity () {
         //pose is just where the robot is at the time
-        var pose = drive.getState().Pose;
+        var pose = drive.getPose();
         //First part of the equation, calculating distance
         double distance = Math.sqrt(
             Math.pow((Constants.Shooter.HUB_X - pose.getX()), 2) + Math.pow((Constants.Shooter.HUB_Y - pose.getY()), 2)
-        );
+     );
         double velocity;
 
         //Second part of the equation, converting distance to required velocty
@@ -61,14 +62,15 @@ public class Shooter extends SubsystemBase {
         );
         return velocity;
     }
-
+ 
     //Convert velocity to Rotations per second, because talon uses that for some reason
-    public double getRPS () {
+     public double getRPS () {
         double RPS;
         RPS = (getVelocity())/
             (Math.PI * Constants.Shooter.WHEEL_DIAMETER);
         return RPS;
     }
+    
 
     public VelocityVoltage getVoltage() {
         VelocityVoltage voltage = new VelocityVoltage(getRPS());

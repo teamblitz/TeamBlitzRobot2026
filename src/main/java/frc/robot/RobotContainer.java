@@ -30,15 +30,17 @@ import frc.lib.math.AllianceFlipUtil;
 import frc.lib.reefscape.ScoringPositions;
 import frc.robot.Constants.Spindexer;
 import frc.robot.commands.*;
-import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
+import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.gyro.GyroIOPigeon;
+import frc.robot.subsystems.drive.range.RangeSensorIOFusion;
+import frc.robot.subsystems.drive.swerveModule.SwerveModule;
+import frc.robot.subsystems.drive.swerveModule.SwerveModuleConfiguration;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOKraken;
 import frc.robot.subsystems.vision.Vision;
-import frc.robot.commands.DriveCommands;
-
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.commands.TeleopSwerve;
 
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
@@ -62,7 +64,8 @@ import java.util.Set;
 public class RobotContainer {
 
     /* ***** --- Subsystems --- ***** */
-    private CommandSwerveDrivetrain drive;
+    private Drive drive;
+    private SwerveModule swerveModule;
     private Vision vision;
     private Intake intake;
     private IntakeIO intakeIO;
@@ -70,7 +73,7 @@ public class RobotContainer {
     private frc.robot.subsystems.spindexer.Spindexer spindexer;
     private SpindexerIO spindexerIO;
     private AutoCommands autoCommands;
-    private DriveCommands driveCommands;
+    //private DriveCommands driveCommands;
     private Wrist wrist;
     private WristIO wristIO;
 
@@ -95,8 +98,19 @@ public class RobotContainer {
     }
 
     private void configureSubsystems() {
-        drive = TunerConstants.createDrivetrain();
-        driveCommands = new DriveCommands(drive);
+        drive = new Drive(
+                                    new SwerveModuleConfiguration(
+                                            SwerveModuleConfiguration.MotorType.KRAKEN,
+                                            SwerveModuleConfiguration.MotorType.KRAKEN,
+                                            SwerveModuleConfiguration.EncoderType.CANCODER),
+                                    Constants.Drive.Mod0.CONSTANTS,
+                                    Constants.Drive.Mod1.CONSTANTS,
+                                    Constants.Drive.Mod2.CONSTANTS,
+                                    Constants.Drive.Mod3.CONSTANTS,
+                                    new GyroIOPigeon(),
+                                    new RangeSensorIOFusion());
+
+       // driveCommands = new DriveCommands(drive);
 
         vision = new Vision(drive);
 
@@ -114,28 +128,24 @@ public class RobotContainer {
 
     }
 
-    //Creating a new driving system so that our robot understands our joystick and controls
+    //Creating a new driving system so that our robot understands our joystick and control
     private void setDefaultCommands() {
-        drive.setDefaultCommand(driveCommands
-                .joystickDrive(
-                        OIConstants.Drive.X_TRANSLATION,
-                        OIConstants.Drive.Y_TRANSLATION,
-                        OIConstants.Drive.ROTATION_SPEED,
-                        () -> 5,
-                        () -> 10,
-                        () -> 2 * Math.PI,
-                        true)
-                .onlyWhile(RobotState::isTeleop)
-                .onlyIf(RobotState::isTeleop)
-                .withName("Joystick Drive"));
-
-        
+        drive.setDefaultCommand(
+                new TeleopSwerve(
+                                drive,
+                                OIConstants.Drive.X_TRANSLATION,
+                                OIConstants.Drive.Y_TRANSLATION,
+                                OIConstants.Drive.ROTATION_SPEED,
+                                () -> false,
+                                () -> Double.NaN,
+                                () -> true)
+                        .unless(RobotState::isTest)
+                        .until(RobotState::isTest)
+                        .withName("TeleopSwerve"));
     }
-
     //Configures our button bindings to the robot commands.
     private void configureTriggerBindings() {
-        OIConstants.Drive.RESET_GYRO.onTrue(Commands.runOnce(() -> drive.resetRotation(
-                AllianceFlipUtil.shouldFlip() ? Rotation2d.k180deg : Rotation2d.kZero)));
+        OIConstants.Drive.RESET_GYRO.onTrue(Commands.runOnce(drive::zeroGyro));
         //        OIConstants.Drive.X_BREAK.onTrue(drive.park());
         //
         //        OIConstants.Drive.BRAKE.onTrue(Commands.runOnce(() -> drive.setBrakeMode(true)));
@@ -172,11 +182,11 @@ public class RobotContainer {
                "Phoenix SignalLogger",
                runEnd(SignalLogger::start, SignalLogger::stop).ignoringDisable(true));
 
-       tab.add("drive/resetOdometry", Commands.runOnce(() -> drive.resetPose(new Pose2d())));
+       tab.add("drive/resetOdometry", Commands.runOnce(() -> drive.resetOdometry(new Pose2d())));
 
-       tab.add(
-               "wheel radius characterization",
-               DriveCharacterizationCommands.characterizeWheelDiameter(drive));
+//        tab.add(
+//                "wheel radius characterization",
+//                DriveCharacterizationCommands.characterizeWheelDiameter(drive));
 
         new Trigger(() -> DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)
                         == DriverStation.Alliance.Blue)
@@ -211,12 +221,13 @@ public class RobotContainer {
     //Configures the Autochooser, which is selected in the dashboard(elastic)
     public Command getAutonomousCommand() {
         Logger.recordOutput("selectedAuto", autoChooser.selectedCommand().getName());
-        return Commands.sequence(
-                        Commands.runOnce(() -> drive.resetRotation(
-                                AllianceFlipUtil.shouldFlip()
-                                        ? Rotation2d.kZero
-                                        : Rotation2d.k180deg)),
-                        autoChooser.selectedCommandScheduler())
-                .withName("Auto Command");
+        return Commands.none();
+        // return Commands.sequence(
+        //                 Commands.runOnce(() -> drive.resetRotation(
+        //                         AllianceFlipUtil.shouldFlip()
+        //                                 ? Rotation2d.kZero
+        //                                 : Rotation2d.k180deg)),
+        //                 autoChooser.selectedCommandScheduler())
+        //         .withName("Auto Command");
     }
 }

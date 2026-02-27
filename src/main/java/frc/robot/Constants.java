@@ -11,6 +11,7 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 
 import com.ctre.phoenix6.signals.InvertedValue;
+import frc.lib.util.SwerveModuleConstants;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 
@@ -78,10 +79,11 @@ public final class Constants {
         public static final int PIGEON_ID = 14;
         public static final int FUSION_TIME_OF_FLIGHT_ID = 0;
 
-        public static final COTSSwerveConstants CHOSEN_MODULE = COTSSwerveConstants.SDSMK4i(
-                compBot()
-                        ? COTSSwerveConstants.driveGearRatios.SDSMK4i_L3
-                        : COTSSwerveConstants.driveGearRatios.SDSMK4i_L2);
+        public static final COTSSwerveConstants CHOSEN_MODULE =
+                COTSSwerveConstants.SDSMK4i(
+                        compBot()
+                                ? COTSSwerveConstants.driveGearRatios.SDSMK4i_L3
+                                : COTSSwerveConstants.driveGearRatios.SDSMK4i_L2);
 
         /* Drivetrain Constants */
         public static final double TRACK_WIDTH = Units.inchesToMeters(24.25);
@@ -104,17 +106,20 @@ public final class Constants {
         public static final int BL = 2; // Back Left Module Index
         public static final int BR = 3; // Back Right Module Index
 
-        public static final List<Translation2d> CENTER_TO_MODULE = Arrays.asList(
-                new Translation2d(WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
-                new Translation2d(WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
-                new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
-                new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0));
+        public static final List<Translation2d> CENTER_TO_MODULE =
+                Arrays.asList(
+                        new Translation2d(WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
+                        new Translation2d(WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
+                        new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
+                        new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0));
 
-        public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(
-                CENTER_TO_MODULE.get(FL),
-                CENTER_TO_MODULE.get(FR),
-                CENTER_TO_MODULE.get(BL),
-                CENTER_TO_MODULE.get(BR));
+        public static final SwerveDriveKinematics KINEMATICS =
+                new SwerveDriveKinematics(
+                        CENTER_TO_MODULE.get(FL),
+                        CENTER_TO_MODULE.get(FR),
+                        CENTER_TO_MODULE.get(BL),
+                        CENTER_TO_MODULE.get(BR));
+
         /* Current Limits
          *
          * Current Limits attempt to prevent the motor from burning out under a stall condition, and prevent the breaker from being tripped.
@@ -165,36 +170,90 @@ public final class Constants {
         public static final double MAX_SPEED = 4.6; // TODO: This must be tuned to specific robot
 
         /**
-         * Theoretical value can be calculated by dividing MAX_LINEAR_SPEED by the distance between the center of
-         * rotation and the wheel.
+         * Theoretical value can be calculated by dividing MAX_LINEAR_SPEED by the distance between
+         * the center of rotation and the wheel.
          */
         public static final double MAX_ANGULAR_VELOCITY =
                 10.0; // TODO: This must be tuned to specific robot
 
+        /* Brake Modes */
+        public static final boolean ANGLE_BRAKE_MODE = false;
+        public static final boolean DRIVE_BRAKE_MODE = true;
+
+        /* Module Specific Constants */
+        /* Front Left Module - Module 0 */
+        public static final class Mod0 {
+            public static final int DRIVE_MOTOR_ID = 6;
+            public static final int ANGLE_MOTOR_ID = 7;
+            public static final int CAN_CODER_ID = 2;
+            public static final Rotation2d ANGLE_OFFSET =
+                    Rotation2d.fromDegrees(ROBOT == Robot.CompBot ? 148.89 : 0);
+            public static final SwerveModuleConstants CONSTANTS =
+                    new SwerveModuleConstants(
+                            DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET);
+        }
+
+        /* Front Right Module - Module 1 */
+        public static final class Mod1 {
+            public static final int DRIVE_MOTOR_ID = 8;
+            public static final int ANGLE_MOTOR_ID = 9;
+            public static final int CAN_CODER_ID = 3;
+            public static final Rotation2d ANGLE_OFFSET =
+                    Rotation2d.fromDegrees(ROBOT == Robot.CompBot ? 113.56 : 0);
+            public static final SwerveModuleConstants CONSTANTS =
+                    new SwerveModuleConstants(
+                            DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET);
+        }
+
+        /* Back Left Module - Module 2 */
+        public static final class Mod2 {
+            public static final int DRIVE_MOTOR_ID = 10;
+            public static final int ANGLE_MOTOR_ID = 11;
+            public static final int CAN_CODER_ID = 4;
+            public static final Rotation2d ANGLE_OFFSET =
+                    Rotation2d.fromDegrees(ROBOT == Robot.CompBot ? 177.19 : 0);
+            public static final SwerveModuleConstants CONSTANTS =
+                    new SwerveModuleConstants(
+                            DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET);
+        }
+
+        /* Back Right Module - Module 3 */
+        public static final class Mod3 {
+            public static final int DRIVE_MOTOR_ID = 12;
+            public static final int ANGLE_MOTOR_ID = 13;
+            public static final int CAN_CODER_ID = 5;
+            public static final Rotation2d ANGLE_OFFSET =
+                    Rotation2d.fromDegrees(ROBOT == Robot.CompBot ? 129.73 : 0);
+            public static final SwerveModuleConstants CONSTANTS =
+                    new SwerveModuleConstants(
+                            DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET);
+        }
+
         public static final double MASS = Units.lbsToKilograms(115 + 20);
-        public static final double MOI = (1 / 12.0)
-                * MASS
-                * (WHEEL_BASE * WHEEL_BASE
-                        + TRACK_WIDTH * TRACK_WIDTH); // TODO: EMPIRICALLY MEASURE MOI
+        public static final double MOI =
+                (1 / 12.0)
+                        * MASS
+                        * (WHEEL_BASE * WHEEL_BASE
+                                + TRACK_WIDTH * TRACK_WIDTH); // TODO: EMPIRICALLY MEASURE MOI
         public static final double MAX_MODULE_ANGULAR_VELOCITY =
                 Units.rotationsToRadians(10.0); // CONFIG
 
-        public static final RobotConfig PHYSICAL_CONSTANTS = new RobotConfig(
-                MASS,
-                MOI,
-                new ModuleConfig(
-                        WHEEL_CIRCUMFERENCE / (2 * Math.PI),
-                        MAX_SPEED,
-                        1.2, // TODO, MEASURE WHEEL COEFFICIENT OF FRICTION,
-                        DCMotor.getKrakenX60Foc(1).withReduction(DRIVE_GEAR_RATIO),
-                        60,
-                        1),
-                CENTER_TO_MODULE.get(FL),
-                CENTER_TO_MODULE.get(FR),
-                CENTER_TO_MODULE.get(BL),
-                CENTER_TO_MODULE.get(BR));
+        public static final RobotConfig PHYSICAL_CONSTANTS =
+                new RobotConfig(
+                        MASS,
+                        MOI,
+                        new ModuleConfig(
+                                WHEEL_CIRCUMFERENCE / (2 * Math.PI),
+                                MAX_SPEED,
+                                1.2, // TODO, MEASURE WHEEL COEFFICIENT OF FRICTION,
+                                DCMotor.getKrakenX60Foc(1).withReduction(DRIVE_GEAR_RATIO),
+                                60,
+                                1),
+                        CENTER_TO_MODULE.get(FL),
+                        CENTER_TO_MODULE.get(FR),
+                        CENTER_TO_MODULE.get(BL),
+                        CENTER_TO_MODULE.get(BR));
     }
-
     public static final class Elevator {
 
         public static final int RIGHT_ID = 20;
