@@ -60,7 +60,7 @@ public class ShooterIOKraken implements ShooterIO {
   
     //     Logger.recordOutput("shooter/shooterCANID", shooter.getDeviceID());
     //     Logger.recordOutput("shooter/feederCANID", feeder.getDeviceID());
-    //     Logger.recordOutput("shooter/deepFeedCANID", deepFeed.getDeviceID());
+    //     Logger.recordOutput("shooter/deepFeedCANID", deepFeed.getDeviceID());  
     // }
 }
 

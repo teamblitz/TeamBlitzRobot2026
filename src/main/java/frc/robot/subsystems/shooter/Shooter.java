@@ -113,7 +113,7 @@ public class Shooter extends SubsystemBase {
                 .andThen(Commands.waitSeconds(5))
                 .andThen(() -> deepFeed.set(0.6))
                 .andThen(Commands.waitSeconds(1))//TODO set values to run
-                .andThen(
+                .finallyDo(
                     () -> {
                         shooter.set(0);
                         deepFeed.set(0);

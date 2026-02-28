@@ -151,8 +151,8 @@ public class RobotContainer {
         OIConstants.Intake.REVERSE.whileTrue(intake.reverse()); //left bumper
         OIConstants.Intake.FORWARD.whileTrue(intake.forward()); //right bumper
         OIConstants.Shooter.SHOOT.whileTrue(shooter.shootTest()
-                .andThen(spindexer.shoot())); //Left Trigger
-        OIConstants.Spindexer.FEED.whileTrue(spindexer.feed()); //a
+                .alongWith(spindexer.feed())); //Left Trigger
+        OIConstants.Spindexer.FEED.whileTrue(spindexer.feed()); //y
         
         
         OIConstants.Drive.ALIGN_LEFT.whileTrue(new DeferredCommand(

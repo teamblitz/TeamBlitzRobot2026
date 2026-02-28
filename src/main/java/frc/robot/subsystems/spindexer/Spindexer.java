@@ -3,7 +3,7 @@ package frc.robot.subsystems.spindexer;
 import static frc.robot.Constants.Intake.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
-
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.BlitzSubsystem;
 import frc.robot.Robot;
 
@@ -28,14 +28,22 @@ public class Spindexer extends BlitzSubsystem {
     }
 
     public Command feed() {
-        return startEnd(() -> io.setSpeed(-0.3), () -> io.setSpeed(0));
+        // return startEnd(() -> io.setSpeed(-0.3), () -> io.setSpeed(0));
+
+        return runOnce(() -> io.setSpeed(-1))
+                .andThen(Commands.waitSeconds(1))
+                .finallyDo (
+                    () -> {
+                        io.setSpeed(0);
+                    }
+                );       
     }
 
     public Command shoot() {
         return startEnd(() -> io.setSpeed(0.3), () -> io.setSpeed(0));
     }
     public Command setSpeed(double speed) {
-        return startEnd(() -> io.setSpeed(speed), () -> io.setSpeed(0));
+        return startEnd(() -> io.setSpeed(speed), () -> io.setSpeed(0)); //xxx
     }
 }
 
