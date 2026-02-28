@@ -1,16 +1,14 @@
 package frc.robot.subsystems.wrist;
-import frc.robot.Constants.WristConstants;
 
 import org.littletonrobotics.junction.AutoLog;
-
 
 public interface WristIO {
 
     @AutoLog
     public static class WristInputs {
-        //rotations per minute
+        // Rotations per minute
         public static double rpm;
-        //Electrical current, not current position
+        // Electrical current, not current position
         public static double current;
         public static double absoluteEncoderPosition;
         public static double velocityRadiansPerSecond;
@@ -20,9 +18,8 @@ public interface WristIO {
 
     default void setSpeed(double speed) {}
 
-    default void setMotionMagic(double position) {}
+    // Position in rotations, cruiseVelocity in rotations per second
+    default void setMotionMagic(double position, double cruiseVelocity) {}
 
     default void stop() {}
-
-
 }
