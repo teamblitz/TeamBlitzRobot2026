@@ -3,6 +3,8 @@ package frc.robot.subsystems.spindexer;
 import static frc.robot.Constants.Spindexer.*;
 import static frc.robot.Constants.Intake.*;
 
+import frc.robot.subsystems.shooter.Shooter;
+
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.ControlRequest;
@@ -15,7 +17,7 @@ public class SpindexerIOKraken implements SpindexerIO {
     public final TalonFX spindexer;
 
     public SpindexerIOKraken() {
-        spindexer = new TalonFX(CAN_ID); // TODO SET VALUE
+        spindexer = new TalonFX(SPINDEXER_ID); // TODO SET VALUE
 
         TalonFXConfiguration config = new TalonFXConfiguration();
 

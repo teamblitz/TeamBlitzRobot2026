@@ -42,11 +42,8 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.commands.TeleopSwerve;
 
-import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.wrist.Wrist;
 import frc.robot.subsystems.wrist.WristIO;
-import frc.robot.subsystems.spindexer.*;
 import frc.robot.subsystems.spindexer.SpindexerIO;
 import frc.robot.subsystems.spindexer.SpindexerIOKraken;
 
@@ -151,15 +148,12 @@ public class RobotContainer {
         //        OIConstants.Drive.BRAKE.onTrue(Commands.runOnce(() -> drive.setBrakeMode(true)));
         //        OIConstants.Drive.COAST.onTrue(Commands.runOnce(() -> drive.setBrakeMode(false)));
 
-       
-
-       
-
         OIConstants.Intake.REVERSE.whileTrue(intake.reverse()); //left bumper
         OIConstants.Intake.FORWARD.whileTrue(intake.forward()); //right bumper
-        OIConstants.Shooter.SHOOT.whileTrue(shooter.shootTest()); //Left Trigger
+        OIConstants.Shooter.SHOOT.whileTrue(shooter.shootTest()
+                .andThen(spindexer.shoot())); //Left Trigger
         OIConstants.Spindexer.FEED.whileTrue(spindexer.feed()); //a
-
+        
         
         OIConstants.Drive.ALIGN_LEFT.whileTrue(new DeferredCommand(
                 () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(
