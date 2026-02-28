@@ -7,6 +7,7 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
@@ -22,11 +23,12 @@ public class WristIOKraken implements WristIO {
     public final TalonFX wrist;
     public final CANcoder absoluteEncoder;
 
-    private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0).withSlot(0);
+    private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0).withSlot(0).withEnableFOC(true);
+    private final VoltageOut voltageOut = new VoltageOut(0).withEnableFOC(true);
     private final NeutralOut neutralRequest = new NeutralOut();
 
     public WristIOKraken() {
-        wrist = new TalonFX(30);
+        wrist = new TalonFX(40);
         absoluteEncoder = new CANcoder(ABS_ENCODER_ID);
 
         // --- CANcoder config ---
@@ -52,10 +54,10 @@ public class WristIOKraken implements WristIO {
                                 : InvertedValue.CounterClockwise_Positive);
 
         // FusedCANcoder — fuses absolute encoder with motor's relative encoder
-        config.Feedback.FeedbackRemoteSensorID = absoluteEncoder.getDeviceID();
-        config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+        // config.Feedback.FeedbackRemoteSensorID = absoluteEncoder.getDeviceID();
+        // config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
         // config.Feedback.SensorToMechanismRatio = SENSOR_TO_MECHANISM_RATIO; // e.g. 45.0 for 45:1 reduction
-        config.Feedback.RotorToSensorRatio = ROTOR_TO_SENSOR_RATIO;         // usually 1.0 if encoder is on output shaft
+        // config.Feedback.RotorToSensorRatio = ROTOR_TO_SENSOR_RATIO;         // usually 1.0 if encoder is on output shaft
 
         // PID gains for Motion Magic (slot 0)
         config.Slot0.kP = KP;   // tune — start around 10-40
@@ -95,7 +97,9 @@ public class WristIOKraken implements WristIO {
         // mmConfig.MotionMagicJerk = 0;
         // wrist.getConfigurator().apply(mmConfig);
 
-        wrist.setControl(motionMagicRequest.withPosition(position / 2 * Math.PI));
+        // wrist.setControl(motionMagicRequest.withPosition(position / 2 * Math.PI));
+        // wrist.setPosition(position, 2);
+        wrist.setControl(motionMagicRequest.withPosition(position));
     }
 
     @Override

@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import frc.robot.subsystems.wrist.WristIOKraken;
 import org.littletonrobotics.junction.Logger;
+import org.apache.commons.math3.exception.ZeroException;
 import org.littletonrobotics.junction.AutoLogOutput;
 
 
@@ -58,8 +59,10 @@ public class Wrist extends BlitzSubsystem {
             io.setMotionMagic(goal.get().position);
 
             // System.out.println("Running MotionMagic");
-            System.out.println(goal.get().position);
-
+            // System.out.println(goal.get().position);
+            System.out.println("getPosition() " + getPosition());
+            System.out.println("getIdealPosition() " + getIdealPosition());
+            
 
             setpoint = future_setpoint;
         }
@@ -76,12 +79,20 @@ public class Wrist extends BlitzSubsystem {
 
     // Moves the wrist up manually while held
     public Command move_up() {
-        return startEnd(() -> io.setSpeed(0.3), () -> io.setSpeed(0));
+        // return startEnd(() -> io.setMotionMagic(1.64), () -> io.setSpeed(0));
+        return Commands.runOnce(() -> {
+            io.setMotionMagic(0.75);
+            System.out.println("Finishes move");
+        });
     }
 
     // Moves the wrist down manually while held (negative = opposite direction)
     public Command move_down() {
-        return startEnd(() -> io.setSpeed(-0.3), () -> io.setSpeed(0));
+        // return startEnd(() -> io.setSpeed(-0.3), () -> io.setSpeed(0));
+        return Commands.runOnce(() -> {
+            io.setMotionMagic(0);
+        });
+        
     }
 
     public Command setSpeed(double speed) {
@@ -101,28 +112,34 @@ public class Wrist extends BlitzSubsystem {
     // Sends the motor to a position at the given cruise velocity,
     // and waits until the wrist is close enough to the target
     public Command goToPosition(double position) {
-        return followGoal(() -> position)
+        return followGoal(position)
                 .withDeadline(
                         Commands.waitUntil(
-                                () -> MathUtil.isNear(position, getPosition(), TOLERANCE)))
+                                () -> MathUtil.isNear(position, getIdealPosition(), TOLERANCE)))
                 .withName(logKey + "/goToPosition_waitForMechanism " + position);
     }
 
-    public Command followGoal(DoubleSupplier goal) {
+    public Command followGoal(double goal) {
         return run(() -> {
                     // Update cruise velocity so periodic() uses it when calling setMotionMagic
                     // this.cruiseVelocity = cruiseVelocity;
 
                     // Create a new goal state if we don't have one or the target changed
-                    if (this.goal.isEmpty() || this.goal.get().position != goal.getAsDouble()) {
+                    if (this.goal.isEmpty() || this.goal.get().position != goal) {
                         System.out.println("**************Running");
                         this.goal = Optional.of(
                                 new TrapezoidProfile.State(
-                                        MathUtil.clamp(goal.getAsDouble(), EXTENDED_POS, ZERO_POS),
+                                        MathUtil.clamp(goal, EXTENDED_POS, ZERO_POS),
                                         0));
                     }
                 })
-                .handleInterrupt(() -> this.goal = Optional.of(setpoint))
+                .handleInterrupt(() -> 
+                {
+                System.out.println("*****************************HandleInterrupt " + this.goal.get());
+                this.goal = Optional.of(setpoint);
+
+            
+    })
                 .beforeStarting(refreshCurrentState());
     }
 

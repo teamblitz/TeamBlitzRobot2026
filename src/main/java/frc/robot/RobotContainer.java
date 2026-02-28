@@ -129,6 +129,7 @@ public class RobotContainer {
         OIConstants.Wrist.WRIST_UP.onTrue(wrist.goToIdle());
 
         OIConstants.Wrist.MAN_UP.whileTrue(wrist.move_up());
+        OIConstants.Wrist.MAN_DOWN.whileTrue(wrist.move_down());
        
 
        

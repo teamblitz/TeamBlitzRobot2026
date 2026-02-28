@@ -127,6 +127,7 @@ public class OIConstants {
         public static final Trigger WRIST_DOWN = OPERATOR_CONTROLLER.b();
 
         public static final Trigger MAN_UP = OPERATOR_CONTROLLER.x();
+        public static final Trigger MAN_DOWN = OPERATOR_CONTROLLER.y();
     }
 
     public static final class Elevator {
