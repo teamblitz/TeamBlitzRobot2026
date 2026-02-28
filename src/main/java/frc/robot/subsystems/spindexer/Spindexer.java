@@ -39,8 +39,8 @@ public class Spindexer extends BlitzSubsystem {
                 );       
     }
 
-    public Command shoot() {
-        return startEnd(() -> io.setSpeed(0.3), () -> io.setSpeed(0));
+    public Command reverse() {
+        return startEnd(() -> io.setSpeed(1), () -> io.setSpeed(0));
     }
     public Command setSpeed(double speed) {
         return startEnd(() -> io.setSpeed(speed), () -> io.setSpeed(0)); //xxx

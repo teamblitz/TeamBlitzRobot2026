@@ -158,7 +158,7 @@ public class RobotContainer {
                     .alongWith(Commands.waitSeconds(0.2).andThen(spindexer.feed()))
             )
         );
-        OIConstants.Spindexer.FEED.whileTrue(spindexer.feed()); //y
+        OIConstants.Spindexer.FEED.whileTrue(spindexer.reverse()); //y
         
         
         OIConstants.Drive.ALIGN_LEFT.whileTrue(new DeferredCommand(

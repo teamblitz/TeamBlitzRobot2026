@@ -59,10 +59,12 @@ public final class Constants {
         SimBot
     }
 
-    public static final Robot ROBOT = frc.robot.Robot.isReal() ? Robot.CompBot : Robot.SimBot;
+//     public static final Robot ROBOT = frc.robot.Robot.isReal() ? Robot.CompBot : Robot.SimBot;
+        public static final Robot ROBOT = Robot.CompBot;
 
     public static boolean compBot() {
-        return ROBOT == Robot.CompBot;
+        // return ROBOT == Robot.CompBot;
+        return true;
     }
 
     public static boolean devBot() {
@@ -187,7 +189,7 @@ public final class Constants {
             public static final int ANGLE_MOTOR_ID = 5;
             public static final int CAN_CODER_ID = 0;
             public static final Rotation2d ANGLE_OFFSET =
-                    Rotation2d.fromDegrees(ROBOT == Robot.CompBot ? -124.8 : 0);
+                    Rotation2d.fromDegrees(ROBOT == Robot.CompBot ? 58.18 : 0);
             public static final SwerveModuleConstants CONSTANTS =
                     new SwerveModuleConstants(
                             DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET);
@@ -199,7 +201,7 @@ public final class Constants {
             public static final int ANGLE_MOTOR_ID = 7;
             public static final int CAN_CODER_ID = 1;
             public static final Rotation2d ANGLE_OFFSET =
-                    Rotation2d.fromDegrees(ROBOT == Robot.CompBot ? 41.1 : 0);
+                    Rotation2d.fromDegrees(ROBOT == Robot.CompBot ? -143.7 : 0);
             public static final SwerveModuleConstants CONSTANTS =
                     new SwerveModuleConstants(
                             DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET);
@@ -211,7 +213,7 @@ public final class Constants {
             public static final int ANGLE_MOTOR_ID = 9;
             public static final int CAN_CODER_ID = 2;
             public static final Rotation2d ANGLE_OFFSET =
-                    Rotation2d.fromDegrees(ROBOT == Robot.CompBot ? 5.27 : 0);
+                    Rotation2d.fromDegrees(ROBOT == Robot.CompBot ? -176.48 : 0);
             public static final SwerveModuleConstants CONSTANTS =
                     new SwerveModuleConstants(
                             DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET);
@@ -223,7 +225,7 @@ public final class Constants {
             public static final int ANGLE_MOTOR_ID = 11;
             public static final int CAN_CODER_ID = 3;
             public static final Rotation2d ANGLE_OFFSET =
-                    Rotation2d.fromDegrees(ROBOT == Robot.CompBot ? -158.46 : 0);
+                    Rotation2d.fromDegrees(ROBOT == Robot.CompBot ? 22.59 : 0);
             public static final SwerveModuleConstants CONSTANTS =
                     new SwerveModuleConstants(
                             DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET);
