@@ -55,7 +55,7 @@ public class WristIOKraken implements WristIO {
 
         // FusedCANcoder — fuses absolute encoder with motor's relative encoder
         config.Feedback.FeedbackRemoteSensorID = absoluteEncoder.getDeviceID();
-        config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+        config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;  //Fused if we want pro
         // config.Feedback.SensorToMechanismRatio = SENSOR_TO_MECHANISM_RATIO; // e.g. 45.0 for 45:1 reduction
         // config.Feedback.RotorToSensorRatio = ROTOR_TO_SENSOR_RATIO;         // usually 1.0 if encoder is on output shaft
 
