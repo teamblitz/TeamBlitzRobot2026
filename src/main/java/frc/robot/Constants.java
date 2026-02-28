@@ -270,6 +270,16 @@ public final class Constants {
                  Units.rotationsToRadians(8);
         public static final double MAX_JERK = MAX_ACCEL * 8;
 
+        public static final double ROTOR_TO_SENSOR_RATIO = 1.0;
+        public static final double MAGNET_OFFSET = 0.5;
+
+        public static final double KP = 0;
+        public static final double KI = 0;
+        public static final double KD = 0;
+        public static final double KG = 0;
+        public static final double KV = 0;
+ 
+
 
         public static final class PidGains {
             public static final double KP = 2;
