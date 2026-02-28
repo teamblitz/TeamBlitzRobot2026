@@ -3,8 +3,10 @@ import frc.robot.Constants.WristConstants;
 
 import org.littletonrobotics.junction.AutoLog;
 
+
 public interface WristIO {
 
+    @AutoLog
     public static class WristInputs {
         //rotations per minute
         public static double rpm;
@@ -17,4 +19,10 @@ public interface WristIO {
     default void updateInputs(WristInputs inputs) {}
 
     default void setSpeed(double speed) {}
+
+    default void setMotionMagic(double position) {}
+
+    default void stop() {}
+
+
 }

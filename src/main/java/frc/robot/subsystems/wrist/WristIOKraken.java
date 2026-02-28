@@ -28,7 +28,7 @@ public class WristIOKraken implements WristIO {
 
 
     public WristIOKraken() {
-        wrist = new TalonFX(1); 
+        wrist = new TalonFX(30); 
         absoluteEncoder = new CANcoder(ABS_ENCODER_ID);
 
         TalonFXConfiguration config = new TalonFXConfiguration();

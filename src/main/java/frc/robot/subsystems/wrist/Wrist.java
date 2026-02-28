@@ -4,12 +4,16 @@ import static frc.robot.Constants.WristConstants.*;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.BlitzSubsystem;
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import frc.robot.subsystems.wrist.WristIOKraken;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.AutoLogOutput;
+
 
 public class Wrist extends BlitzSubsystem {
     private final WristIO io;
@@ -18,7 +22,12 @@ public class Wrist extends BlitzSubsystem {
         super("Wrist");
 
         this.io = io;
+
+        setpoint = new TrapezoidProfile.State(getPosition(), 0.0);
+        goal = Optional.empty();
     }
+
+    private final WristInputsAutoLogged inputs = new WristInputsAutoLogged();
 
     private final TrapezoidProfile.Constraints constraints = 
     new TrapezoidProfile.Constraints(MAX_VELOCITY, MAX_ACCEL);
@@ -26,11 +35,33 @@ public class Wrist extends BlitzSubsystem {
     private Optional<TrapezoidProfile.State> goal;
     private TrapezoidProfile.State setpoint;
 
+    private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
+
     @Override
     public void periodic() {
         super.periodic();
+
+           io.updateInputs(inputs);
+        Logger.processInputs(logKey, inputs);
+
+        if (goal.isPresent() && DriverStation.isEnabled()) {
+            TrapezoidProfile.State future_setpoint =
+                    profile.calculate(0.02, setpoint, goal.get());
+             io.setMotionMagic(goal.get().position);
+
+            setpoint = future_setpoint;
+        }
+
+        if (DriverStation.isDisabled()) {
+            // Reset profile while disabled
+            setpoint = new TrapezoidProfile.State(getPosition(), 0);
+            goal = Optional.empty();
+
+            // Stop arm
+            io.stop();
     }
 
+    }
     public Command move_up() {
         return startEnd(()-> io.setSpeed(0.3), () -> io.setSpeed(0));
     }
@@ -47,6 +78,14 @@ public class Wrist extends BlitzSubsystem {
     public double getPosition() {
         //Return the position of the encoder
         return WristIO.WristInputs.absoluteEncoderPosition;
+    }
+
+        @AutoLogOutput(key = "wrist/idealPosition")
+    public double getIdealPosition() {
+        if (goal.isPresent()) {
+            return setpoint.position;
+        }
+        return getPosition();
     }
 
     //Sends the motor to a position by running followGoal until the deadline is called
@@ -106,4 +145,4 @@ public class Wrist extends BlitzSubsystem {
     //                                                         position, getIdealPosition(), 1e-9))
     //                                 .withName(logKey + "/goToPosition_waitForProfile " + position));
     // }
-}
+ }

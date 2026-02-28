@@ -119,9 +119,15 @@ public class RobotContainer {
         //Tells Wrist to move to position MAX, or the max position
         //The reason for the .onTrue, is because the trigger is a constant boolean value. This jsut says
         // to only run the cpommand once and not break the bot.
-        OIConstants.Wrist.WRIST_UP.onTrue(Commands.runOnce(() -> wrist.goToPositon(ZERO_POS)));
+        OIConstants.Wrist.WRIST_UP.onTrue(Commands.runOnce(() -> {
+            System.out.println("*************working");
+            wrist.goToPositon(ZERO_POS);
+        }
+        ));
 
         OIConstants.Wrist.WRIST_DOWN.onTrue(Commands.runOnce(() -> wrist.goToPositon(EXTENDED_POS)));
+
+        OIConstants.Wrist.MAN_UP.whileTrue(wrist.move_up());
        
 
        
