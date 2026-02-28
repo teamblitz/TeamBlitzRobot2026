@@ -31,7 +31,7 @@ public class Shooter extends SubsystemBase {
         shooter = new TalonFX(30);
 
         feeder = new TalonFX(31);
-        deepFeed = new TalonFX(1);
+        deepFeed = new TalonFX(32);
 
         this.drive= drive;
 
