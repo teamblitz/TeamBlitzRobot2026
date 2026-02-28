@@ -248,7 +248,7 @@ public final class Constants {
     }
 
     public static final class WristConstants {
-        public static final int WRIST_ID = 40;
+        public static final int WRIST_ID = 30;
         public static final int ABS_ENCODER_ID = 2;
  //       public static final double WRIST_GEAR_RATIO = (9.0) * (5.0) * (54.0 / 16.0);
 
@@ -270,14 +270,14 @@ public final class Constants {
                  Units.rotationsToRadians(1);
         public static final double MAX_JERK = MAX_ACCEL * 8;
 
-        public static final double ROTOR_TO_SENSOR_RATIO = 1.0;
+        public static final double ROTOR_TO_SENSOR_RATIO = 3.0;
         public static final double MAGNET_OFFSET = 0.5;
 
-        public static final double KP = 1;
-        public static final double KI = 0;
-        public static final double KD = 0;//0.1;
+        public static final double KP = 40;
+        public static final double KI = 0.2;
+        public static final double KD = 0.1;
         public static final double KG = 0;
-        public static final double KV = 0;//0.12;
+        public static final double KV = 0.12;
  
 
 
@@ -379,7 +379,7 @@ public final class Constants {
     }
 
     public static final class Intake {
-        public static final int CAN_ID = 30;
+        public static final int CAN_ID = 40;
         public static final boolean INVERTED = compBot() ? true : false;
         public static final int CURRENT_LIMIT = compBot() ? 80 : 25;
         public static final double HANDOFF_SPEED = compBot() ? .8 : .5;

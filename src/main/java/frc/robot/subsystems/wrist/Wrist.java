@@ -81,7 +81,7 @@ public class Wrist extends BlitzSubsystem {
     public Command move_up() {
         // return startEnd(() -> io.setMotionMagic(1.64), () -> io.setSpeed(0));
         return Commands.runOnce(() -> {
-            io.setMotionMagic(0.75);
+            io.setMotionMagic(1);
             System.out.println("Finishes move");
         });
     }
