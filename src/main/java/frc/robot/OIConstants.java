@@ -119,11 +119,11 @@ public class OIConstants {
     }
     
     public static final class Climber {
-        public static final Trigger DEPLOY_CLIMBER = DRIVE_CONTROLLER.button(4); // TODO BIND
-        public static final Trigger RESTOW_CLIMBER = DRIVE_CONTROLLER.button(6);
+        public static final Trigger DEPLOY_CLIMBER = UNBOUND; 
+        public static final Trigger RESTOW_CLIMBER = UNBOUND;
 
-        public static final Trigger CLIMBER_UP_MAN = DRIVE_CONTROLLER.button(9);
-        public static final Trigger CLIMBER_DOWN_MAN = DRIVE_CONTROLLER.button(10);
+        public static final Trigger CLIMBER_UP_MAN = UNBOUND;
+        public static final Trigger CLIMBER_DOWN_MAN = UNBOUND;
     }
 
     //    public static final class TestMode {
@@ -182,8 +182,8 @@ public class OIConstants {
     }
 
     public static final class Intake {
-        public static final Trigger REVERSE = OPERATOR_CONTROLLER.leftBumper();
-        public static final Trigger FORWARD = OPERATOR_CONTROLLER.rightBumper();
+        public static final Trigger REVERSE = OPERATOR_CONTROLLER.rightBumper();
+        public static final Trigger FORWARD = OPERATOR_CONTROLLER.rightTrigger();
         
     }
 
@@ -197,7 +197,7 @@ public class OIConstants {
         public static final DoubleSupplier MANUAL =
                 () -> MathUtil.applyDeadband(-OPERATOR_CONTROLLER.getRightY(), .1);
 
-        public static final Trigger WRIST_UP = UNBOUND;
-        public static final Trigger WRIST_DOWN = UNBOUND;
+        public static final Trigger WRIST_UP = OPERATOR_CONTROLLER.b();
+        public static final Trigger WRIST_DOWN = OPERATOR_CONTROLLER.a();
     }
 }

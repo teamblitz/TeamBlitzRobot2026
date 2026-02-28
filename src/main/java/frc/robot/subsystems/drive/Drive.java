@@ -76,9 +76,9 @@ public class Drive extends BlitzSubsystem {
     private final ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Drive");
     private final ShuffleboardTab tuningTab = Shuffleboard.getTab("DriveTuning");
 
-    private final LoggedTunableNumber angleP = new LoggedTunableNumber("drive/angle/kP", ANGLE_KP);
-    private final LoggedTunableNumber angleI = new LoggedTunableNumber("drive/angle/kI", ANGLE_KI);
-    private final LoggedTunableNumber angleD = new LoggedTunableNumber("drive/angle/kD", ANGLE_KD);
+//     private final LoggedTunableNumber angleP = new LoggedTunableNumber("drive/angle/kP", ANGLE_KP);
+//     private final LoggedTunableNumber angleI = new LoggedTunableNumber("drive/angle/kI", ANGLE_KI);
+//     private final LoggedTunableNumber angleD = new LoggedTunableNumber("drive/angle/kD", ANGLE_KD);
 
     private final LoggedTunableNumber driveP = new LoggedTunableNumber("drive/drive/kP", ANGLE_KP);
     private final LoggedTunableNumber driveI = new LoggedTunableNumber("drive/drive/kI", ANGLE_KI);
@@ -702,15 +702,15 @@ public class Drive extends BlitzSubsystem {
 
         Logger.recordOutput(logKey + "/modules", getModuleStates());
 
-        LoggedTunableNumber.ifChanged(
-                hashCode(),
-                (pid) -> {
-                    for (SwerveModule module : swerveModules)
-                        module.configAnglePid(pid[0], pid[1], pid[2]);
-                },
-                angleP,
-                angleI,
-                angleD);
+        // LoggedTunableNumber.ifChanged(
+        //         hashCode(),
+        //         (pid) -> {
+        //             for (SwerveModule module : swerveModules)
+        //                 module.configAnglePid(pid[0], pid[1], pid[2]);
+        //         },
+        //         angleP,
+        //         angleI,
+        //         angleD);
 
         LoggedTunableNumber.ifChanged(
                 hashCode(),
