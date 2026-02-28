@@ -110,6 +110,7 @@ public class Wrist extends BlitzSubsystem {
 
                     // Create a new goal state if we don't have one or the target changed
                     if (this.goal.isEmpty() || this.goal.get().position != goal.getAsDouble()) {
+                        System.out.println("**************Running");
                         this.goal = Optional.of(
                                 new TrapezoidProfile.State(
                                         MathUtil.clamp(goal.getAsDouble(), EXTENDED_POS, ZERO_POS),
