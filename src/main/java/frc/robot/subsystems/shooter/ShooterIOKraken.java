@@ -19,7 +19,7 @@ public class ShooterIOKraken implements ShooterIO {
     public ShooterIOKraken() {
 
         shooter = new TalonFX(30);//TODO Set motor val
-        feeder = new TalonFX(31);//TODO Set motor va
+        feeder = new TalonFX(31);//TODO Set motor val
         
         //Follower feeder = new Follower(30, false);
         deepFeed = new TalonFX(32);//TODO Set motor val

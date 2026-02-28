@@ -4,14 +4,19 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.Spindexer;
 import frc.robot.Constants.Shooter.*;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.swerveModule.SwerveModule;
 import frc.lib.math.AllianceFlipUtil;
 import edu.wpi.first.math.geometry.*;
-
+import frc.robot.subsystems.spindexer.SpindexerIOKraken;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import static frc.robot.Constants.Spindexer.SPINDEXER_ID;
+
+import javax.print.attribute.standard.PrinterURI;
+
 import com.ctre.phoenix6.controls.VelocityVoltage;
 
 public class Shooter extends SubsystemBase {
@@ -101,12 +106,11 @@ public class Shooter extends SubsystemBase {
                 .andThen(Commands.waitSeconds(5))
                 .andThen(() -> deepFeed.set(1))
                 .andThen(Commands.waitSeconds(1))//TODO set values to run
-                .finallyDo(
+                .andThen(
                     () -> {
                         shooter.set(0.1);
                         deepFeed.set(0.1);
-                    }
-                );
+                    });
 
     }
 }

@@ -120,12 +120,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
         configureAutoBuilder();
 
-        new DriveSysId(this);
+         new DriveSysId(this);
 
-                ChassisSpeeds discretizedSpeeds =
-                ChassisSpeeds.discretize(speeds, Constants.LOOP_PERIOD_SEC);
+                 ChassisSpeeds discretizedSpeeds =
+                 ChassisSpeeds.discretize(speeds, Constants.LOOP_PERIOD_SEC);
 
-        SwerveModuleState[] swerveModuleStates = Constants.Drive.KINEMATICS.toSwerveModuleStates(discretizedSpeeds);
+         SwerveModuleState[] swerveModuleStates = Constants.Drive.KINEMATICS.toSwerveModuleStates(discretizedSpeeds);
     }
 
     private void configureAutoBuilder() {
