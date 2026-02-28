@@ -87,15 +87,15 @@ public class WristIOKraken implements WristIO {
     }
 
     @Override
-    public void setMotionMagic(double position, double cruiseVelocity) {
+    public void setMotionMagic(double position) {
         // Update cruise velocity dynamically via the configurator
-        var mmConfig = new com.ctre.phoenix6.configs.MotionMagicConfigs();
-        mmConfig.MotionMagicCruiseVelocity = cruiseVelocity;
-        mmConfig.MotionMagicAcceleration = MAX_ACCEL;
-        mmConfig.MotionMagicJerk = 0;
-        wrist.getConfigurator().apply(mmConfig);
+        // var mmConfig = new com.ctre.phoenix6.configs.MotionMagicConfigs();
+        // mmConfig.MotionMagicCruiseVelocity = MAX_VELOCITY;
+        // mmConfig.MotionMagicAcceleration = MAX_ACCEL;
+        // mmConfig.MotionMagicJerk = 0;
+        // wrist.getConfigurator().apply(mmConfig);
 
-        wrist.setControl(motionMagicRequest.withPosition(position));
+        wrist.setControl(motionMagicRequest.withPosition(position / 2 * Math.PI));
     }
 
     @Override

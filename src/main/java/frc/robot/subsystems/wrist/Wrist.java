@@ -54,7 +54,12 @@ public class Wrist extends BlitzSubsystem {
 
             // Use setpoint.position (the profiled step), not goal (the final target)
             // Also pass cruiseVelocity so Motion Magic knows how fast to move
-            io.setMotionMagic(setpoint.position, cruiseVelocity);
+            // io.setMotionMagic(goal.get().position);
+            io.setMotionMagic(goal.get().position);
+
+            // System.out.println("Running MotionMagic");
+            System.out.println(goal.get().position);
+
 
             setpoint = future_setpoint;
         }
@@ -85,28 +90,28 @@ public class Wrist extends BlitzSubsystem {
 
     // Moves the wrist to the idle (up) position
     public Command goToIdle() {
-        return goToPosition(ZERO_POS, -0.1);
+        return goToPosition(ZERO_POS);
     }
 
     // Moves the wrist to the down position
     public Command goToDown() {
-        return goToPosition(EXTENDED_POS, 0.1);
+        return goToPosition(EXTENDED_POS);
     }
 
     // Sends the motor to a position at the given cruise velocity,
     // and waits until the wrist is close enough to the target
-    public Command goToPosition(double position, double cruiseVelocity) {
-        return followGoal(() -> position, cruiseVelocity)
+    public Command goToPosition(double position) {
+        return followGoal(() -> position)
                 .withDeadline(
                         Commands.waitUntil(
                                 () -> MathUtil.isNear(position, getPosition(), TOLERANCE)))
                 .withName(logKey + "/goToPosition_waitForMechanism " + position);
     }
 
-    public Command followGoal(DoubleSupplier goal, double cruiseVelocity) {
+    public Command followGoal(DoubleSupplier goal) {
         return run(() -> {
                     // Update cruise velocity so periodic() uses it when calling setMotionMagic
-                    this.cruiseVelocity = cruiseVelocity;
+                    // this.cruiseVelocity = cruiseVelocity;
 
                     // Create a new goal state if we don't have one or the target changed
                     if (this.goal.isEmpty() || this.goal.get().position != goal.getAsDouble()) {

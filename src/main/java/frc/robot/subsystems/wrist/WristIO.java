@@ -19,7 +19,7 @@ public interface WristIO {
     default void setSpeed(double speed) {}
 
     // Position in rotations, cruiseVelocity in rotations per second
-    default void setMotionMagic(double position, double cruiseVelocity) {}
+    default void setMotionMagic(double position) {}
 
     default void stop() {}
 }
