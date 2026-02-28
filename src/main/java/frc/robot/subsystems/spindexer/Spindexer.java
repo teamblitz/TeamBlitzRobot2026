@@ -28,11 +28,11 @@ public class Spindexer extends BlitzSubsystem {
     }
 
     public Command feed() {
-        return startEnd(() -> io.setSpeed(0.3), () -> io.setSpeed(0));
+        return startEnd(() -> io.setSpeed(-0.3), () -> io.setSpeed(0));
     }
 
     public Command shoot() {
-        return startEnd(() -> io.setSpeed(-0.3), () -> io.setSpeed(0));
+        return startEnd(() -> io.setSpeed(0.3), () -> io.setSpeed(0));
     }
     public Command setSpeed(double speed) {
         return startEnd(() -> io.setSpeed(speed), () -> io.setSpeed(0));

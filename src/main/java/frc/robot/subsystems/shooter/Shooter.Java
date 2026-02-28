@@ -17,7 +17,11 @@ import static frc.robot.Constants.Spindexer.SPINDEXER_ID;
 
 import javax.print.attribute.standard.PrinterURI;
 
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+
+import com.ctre.phoenix6.controls.Follower;
+
 
 public class Shooter extends SubsystemBase {
 	//private final ShooterIO io;
@@ -35,6 +39,9 @@ public class Shooter extends SubsystemBase {
         deepFeed = new TalonFX(1);
 
         this.drive= drive;
+
+        feeder.setControl(new Follower(shooter.getDeviceID(), MotorAlignmentValue.Opposed)); // May need to be Inverted
+
 	}
 
 	@Override
@@ -102,15 +109,16 @@ public class Shooter extends SubsystemBase {
     public Command shootTest() {
         return runOnce(() -> shooter.set(-1))
                 .andThen(Commands.waitSeconds(1))
-                .andThen(() -> deepFeed.set(1))
+                .andThen(() -> deepFeed.set(0.6))
                 .andThen(Commands.waitSeconds(5))
-                .andThen(() -> deepFeed.set(1))
+                .andThen(() -> deepFeed.set(0.6))
                 .andThen(Commands.waitSeconds(1))//TODO set values to run
                 .andThen(
                     () -> {
-                        shooter.set(0.1);
-                        deepFeed.set(0.1);
-                    });
+                        shooter.set(0);
+                        deepFeed.set(0);
+                    }
+                );
 
     }
 }
