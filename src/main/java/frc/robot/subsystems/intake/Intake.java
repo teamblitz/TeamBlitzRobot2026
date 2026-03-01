@@ -25,20 +25,12 @@ public class Intake extends BlitzSubsystem {
         
     }
 
+    public Command forward() {
+        return runEnd(() -> io.setSpeed(0.3), () -> io.setSpeed(0));
+    }
+
     public Command reverse() {
-        return setSpeed(REVERSE_SPEED);
-    }
-
-    public Command kick_algae() {
-        return setSpeed(ALGAE_REMOVAL);
-    }
-
-    public Command shoot_coral() {
-        return setSpeed(SHOOT_CORAL);
-    }
-
-    public Command coral_l1() {
-        return setSpeed(L1);
+        return runEnd(() -> io.setSpeed(-0.3), () -> io.setSpeed(0));
     }
 
     private Command stop() {

@@ -111,23 +111,21 @@ public class OIConstants {
     }
 
     public static final class Intake {
-        public static final Trigger HANDOFF = UNBOUND;
-        public static final Trigger ALGAE_REMOVAL = UNBOUND;
-        public static final Trigger REVERSE = OPERATOR_CONTROLLER.leftBumper();
-        public static final Trigger SHOOT_CORAL = OPERATOR_CONTROLLER.rightBumper();
-        public static final Trigger INTAKE_ALGAE = OPERATOR_CONTROLLER.leftTrigger();
-        public static final Trigger EJECT_ALGAE = OPERATOR_CONTROLLER.rightTrigger();
+        public static final Trigger FORWARD = OPERATOR_CONTROLLER.a();
+        public static final Trigger REVERSE = OPERATOR_CONTROLLER.b();
     }
 
     public static final class Wrist {
         public static final DoubleSupplier MANUAL =
                 () -> MathUtil.applyDeadband(-OPERATOR_CONTROLLER.getRightY(), .1);
 
-        public static final Trigger WRIST_UP = OPERATOR_CONTROLLER.a();
-        public static final Trigger WRIST_DOWN = OPERATOR_CONTROLLER.b();
+//        public static final Trigger WRIST_UP = OPERATOR_CONTROLLER.a();
+//        public static final Trigger WRIST_DOWN = OPERATOR_CONTROLLER.b();
 
-        public static final Trigger MAN_UP = OPERATOR_CONTROLLER.x();
-        public static final Trigger MAN_DOWN = OPERATOR_CONTROLLER.y();
+        public static final Trigger UP = OPERATOR_CONTROLLER.x();
+        public static final Trigger DOWN = OPERATOR_CONTROLLER.y();
+
+//        public static final Trigger UP_TEST = OPERATOR_CONTROLLER.a();
     }
 
     public static final class Elevator {

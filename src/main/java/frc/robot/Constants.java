@@ -254,30 +254,32 @@ public final class Constants {
 
   //      public static final double OPEN_LOOP_RAMP = .25;
         public static final int CURRENT_LIMIT_WRIST = 60;
-   //     public static final boolean INVERTED = false;
+        public static final boolean INVERTED = false;
 
 
    //TODO TUNE MAXIMUM AND MINIMUM POSITIONS WHEN WE HAVE THE BOT
-        public static final double ZERO_POS = Units.degreesToRadians(compBot() ? 94 : 90);//TODO set this val to absolute encoder position(CTR Tuner)
-        public static final double EXTENDED_POS = Units.degreesToRadians(-90);//TODO set this val to absolute encoder value when this is extended
+//        public static final double ZERO_POS = Units.degreesToRadians(compBot() ? 94 : 90);//TODO set this val to absolute encoder position(CTR Tuner)
+        public static final double ZERO_POS = 0.0;
+//        public static final double EXTENDED_POS = Units.degreesToRadians(-90);//TODO set this val to absolute encoder value when this is extended
+        public static final double EXTENDED_POS = 0.5;
 
         public static final double ABS_ENCODER_ZERO = Math.toRadians(306.71 + 90);
-        public static final double TOLERANCE = Units.degreesToRadians(10);
+//        public static final double TOLERANCE = Units.degreesToRadians(10);
+        public static final double TOLERANCE = 10.0 / 360.0;
 
-        public static final double MAX_VELOCITY =
-                 Units.rotationsToRadians(1);
-        public static final double MAX_ACCEL =
-                 Units.rotationsToRadians(1);
+        public static final double MAX_VELOCITY = 3.0;
+        public static final double MAX_ACCEL = 6.0;
         public static final double MAX_JERK = MAX_ACCEL * 8;
 
         public static final double ROTOR_TO_SENSOR_RATIO = 3.0;
-        public static final double MAGNET_OFFSET = 0.5;
+        public static final double MAGNET_OFFSET = 0.003418;
 
-        public static final double KP = 40;
-        public static final double KI = 0.2;
-        public static final double KD = 0.1;
+        public static final double KP = 20;
+        public static final double KI = 0;
+        public static final double KD = 0.5;
         public static final double KG = 0;
         public static final double KV = 0.12;
+        public static final double KS = 0.25;
  
 
 

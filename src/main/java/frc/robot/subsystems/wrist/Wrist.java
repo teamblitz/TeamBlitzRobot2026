@@ -27,6 +27,8 @@ public class Wrist extends BlitzSubsystem {
 
         setpoint = new TrapezoidProfile.State(getPosition(), 0.0);
         goal = Optional.empty();
+
+        setDefaultCommand((goToIdle()));
     }
 
     private final WristInputsAutoLogged inputs = new WristInputsAutoLogged();
@@ -39,46 +41,30 @@ public class Wrist extends BlitzSubsystem {
 
     private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
 
-    // Stores the cruise velocity to pass to Motion Magic, set by followGoal
     private double cruiseVelocity = MAX_VELOCITY;
 
     @Override
     public void periodic() {
         super.periodic();
-
         io.updateInputs(inputs);
         Logger.processInputs(logKey, inputs);
 
         if (goal.isPresent() && DriverStation.isEnabled()) {
-            TrapezoidProfile.State future_setpoint =
-                    profile.calculate(0.02, setpoint, goal.get());
-
-            // Use setpoint.position (the profiled step), not goal (the final target)
-            // Also pass cruiseVelocity so Motion Magic knows how fast to move
-            // io.setMotionMagic(goal.get().position);
+            System.out.println("Sending Motion Magic to: " + goal.get().position);
             io.setMotionMagic(goal.get().position);
-
-            // System.out.println("Running MotionMagic");
-            // System.out.println(goal.get().position);
-            System.out.println("getPosition() " + getPosition());
-            System.out.println("getIdealPosition() " + getIdealPosition());
-            
-
-            setpoint = future_setpoint;
         }
 
         if (DriverStation.isDisabled()) {
-            // Reset profile while disabled
-            setpoint = new TrapezoidProfile.State(getPosition(), 0);
             goal = Optional.empty();
-
-            // Stop wrist
             io.stop();
         }
     }
 
-    // Moves the wrist up manually while held
-    public Command move_up() {
+    public Command upTest() {
+        return startEnd(() -> io.setSpeed(0.5), () -> io.setSpeed(0));
+    }
+
+   /* public Command move_up() {
         // return startEnd(() -> io.setMotionMagic(1.64), () -> io.setSpeed(0));
         return Commands.runOnce(() -> {
             io.setMotionMagic(1);
@@ -86,84 +72,72 @@ public class Wrist extends BlitzSubsystem {
         });
     }
 
-    // Moves the wrist down manually while held (negative = opposite direction)
     public Command move_down() {
         // return startEnd(() -> io.setSpeed(-0.3), () -> io.setSpeed(0));
         return Commands.runOnce(() -> {
             io.setMotionMagic(0);
         });
         
-    }
+    } */ //Do not use
 
     public Command setSpeed(double speed) {
         return startEnd(() -> io.setSpeed(speed), () -> io.setSpeed(0));
     }
 
-    // Moves the wrist to the idle (up) position
     public Command goToIdle() {
         return goToPosition(ZERO_POS);
     }
 
-    // Moves the wrist to the down position
     public Command goToDown() {
-        return goToPosition(EXTENDED_POS);
+        return followGoal(EXTENDED_POS);
     }
 
-    // Sends the motor to a position at the given cruise velocity,
-    // and waits until the wrist is close enough to the target
     public Command goToPosition(double position) {
         return followGoal(position)
                 .withDeadline(
-                        Commands.waitUntil(
-                                () -> MathUtil.isNear(position, getIdealPosition(), TOLERANCE)))
+                        Commands.waitUntil(() -> {
+                            boolean near = MathUtil.isNear(position, getPosition(), TOLERANCE);
+                            System.out.println("position: " + getPosition() + " target: " + position + " near: " + near);
+                            return near;
+                        }))
                 .withName(logKey + "/goToPosition_waitForMechanism " + position);
     }
 
     public Command followGoal(double goal) {
         return run(() -> {
-                    // Update cruise velocity so periodic() uses it when calling setMotionMagic
-                    // this.cruiseVelocity = cruiseVelocity;
-
-                    // Create a new goal state if we don't have one or the target changed
-                    if (this.goal.isEmpty() || this.goal.get().position != goal) {
-                        System.out.println("**************Running");
-                        this.goal = Optional.of(
-                                new TrapezoidProfile.State(
-                                        MathUtil.clamp(goal, EXTENDED_POS, ZERO_POS),
-                                        0));
-                    }
+            if (this.goal.isEmpty() || this.goal.get().position != goal) {
+                System.out.println("**************Setting goal to " + goal);
+                this.goal = Optional.of(
+                        new TrapezoidProfile.State(
+                                MathUtil.clamp(goal, Math.min(EXTENDED_POS, ZERO_POS), Math.max(EXTENDED_POS, ZERO_POS)), 0));
+            }
+        })
+                .handleInterrupt(() -> {
+                    System.out.println("Interrupted, goal was: " + this.goal.map(s -> String.valueOf(s.position)).orElse("empty"));
+                    this.goal = Optional.empty();
                 })
-                .handleInterrupt(() -> 
-                {
-                System.out.println("*****************************HandleInterrupt " + this.goal.get());
-                this.goal = Optional.of(setpoint);
-
-            
-    })
+                .beforeStarting(() -> System.out.println("followGoal starting"))
                 .beforeStarting(refreshCurrentState());
     }
 
-    // Refreshes the current state by creating a new setpoint only if there isn't a current one
     private Command refreshCurrentState() {
         return runOnce(() -> setpoint = new TrapezoidProfile.State(getPosition(), getVelocity()))
                 .onlyIf(() -> setpoint == null || goal.isEmpty());
     }
 
-    // Gets the current position of the wrist from the absolute encoder
     public double getPosition() {
-        return WristIO.WristInputs.absoluteEncoderPosition;
+        return inputs.absoluteEncoderPosition;
     }
 
     @AutoLogOutput(key = "wrist/idealPosition")
     public double getIdealPosition() {
-        if (goal.isPresent()) {
-            return setpoint.position;
-        }
+//        if (goal.isPresent()) {
+//            return setpoint.position;
+//        }
         return getPosition();
     }
 
-    // Gets the current velocity in radians per second
     public double getVelocity() {
-        return WristIO.WristInputs.velocityRadiansPerSecond;
+        return inputs.velocityRadiansPerSecond;
     }
 }

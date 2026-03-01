@@ -88,6 +88,7 @@ public class RobotContainer {
         //intake = new Intake(Constants.compBot() ? new IntakeIOKraken() : new IntakeIOSpark());
 
         wrist = new Wrist(new WristIOKraken());
+        intake = new Intake(new IntakeIOKraken());
 
     }
 
@@ -125,12 +126,20 @@ public class RobotContainer {
         // }
         // ));
 
-        OIConstants.Wrist.WRIST_DOWN.onTrue(wrist.goToDown());
-        OIConstants.Wrist.WRIST_UP.onTrue(wrist.goToIdle());
+//        OIConstants.Wrist.WRIST_DOWN.onTrue(wrist.goToDown());
+//        OIConstants.Wrist.WRIST_UP.onTrue(wrist.goToIdle());
 
-        OIConstants.Wrist.MAN_UP.whileTrue(wrist.move_up());
-        OIConstants.Wrist.MAN_DOWN.whileTrue(wrist.move_down());
-       
+        OIConstants.Wrist.DOWN.whileTrue(
+            Commands.parallel(
+            wrist.goToDown(),
+            intake.forward()
+            )
+        ); // y
+
+        OIConstants.Intake.FORWARD.whileTrue(intake.forward()); // a
+        OIConstants.Intake.REVERSE.whileTrue(intake.reverse()); // b
+
+//        OIConstants.Wrist.UP_TEST.whileTrue(wrist.upTest());
 
        
         // OIConstants.Intake.REVERSE.whileTrue(intake.reverse());
