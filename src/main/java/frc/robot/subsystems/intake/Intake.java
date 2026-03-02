@@ -21,16 +21,19 @@ public class Intake extends BlitzSubsystem {
     @Override
     public void periodic() {
         super.periodic();
+
+
     }
+
     public Command forward() {
-        return runEnd(() -> io.setSpeed(0.5), () -> io.setSpeed(0));
+        return runEnd(() -> io.setSpeed(0.3), () -> io.setSpeed(0));
     }
 
     public Command reverse() {
         return runEnd(() -> io.setSpeed(-0.3), () -> io.setSpeed(0));
     }
 
-    public Command stop() {
+    private Command stop() {
         return runOnce(() -> io.setSpeed(0));
     }
 

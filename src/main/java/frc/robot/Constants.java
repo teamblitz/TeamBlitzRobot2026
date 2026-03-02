@@ -309,26 +309,39 @@ public final class Constants {
         }
     }
 
-    public static final class Wrist {
-        public static final int WRIST_ID = 12;
-        public static final int ABS_ENCODER_ID = 13;
-        public static final double WRIST_GEAR_RATIO = (9.0) * (5.0) * (54.0 / 16.0);
+    public static final class WristConstants {
+        public static final int WRIST_ID = 30;
+        public static final int ABS_ENCODER_ID = 2;
+        //       public static final double WRIST_GEAR_RATIO = (9.0) * (5.0) * (54.0 / 16.0);
 
-        public static final double OPEN_LOOP_RAMP = .25;
-        public static final int CURRENT_LIMIT = 60;
+        //      public static final double OPEN_LOOP_RAMP = .25;
+        public static final int CURRENT_LIMIT_WRIST = 5; //TODO make this value higher after initial testing
         public static final boolean INVERTED = false;
 
-        public static final double MAX_POS = Units.degreesToRadians(compBot() ? 94 : 90);
-        public static final double MIN_POS = Units.degreesToRadians(-90);
+
+        //TODO TUNE MAXIMUM AND MINIMUM POSITIONS WHEN WE HAVE THE BOT
+//        public static final double ZERO_POS = Units.degreesToRadians(compBot() ? 94 : 90);
+        public static final double ZERO_POS = 0.0;
+        //        public static final double EXTENDED_POS = Units.degreesToRadians(-90);//TODO set this val to absolute encoder value when this is extended
+        public static final double EXTENDED_POS = 0.5; //TODO tune on actual bot in reference to the zero position
 
         public static final double ABS_ENCODER_ZERO = Math.toRadians(306.71 + 90);
-        public static final double TOLERANCE = Units.degreesToRadians(2.5);
+        //        public static final double TOLERANCE = Units.degreesToRadians(10);
+        public static final double TOLERANCE = 10.0 / 360.0;
 
-        public static final double MAX_VELOCITY =
-                Constants.compBot() ? Units.rotationsToRadians(4) : Units.degreesToRadians(180);
-        public static final double MAX_ACCEL =
-                Constants.compBot() ? Units.rotationsToRadians(8) : Units.degreesToRadians(360);
+        public static final double MAX_VELOCITY = 3.0; //TODO tune on actual bot
+        public static final double MAX_ACCEL = 6.0; //TODO tune on actual bot
         public static final double MAX_JERK = MAX_ACCEL * 8;
+
+        public static final double ROTOR_TO_SENSOR_RATIO = 3.0;
+        public static final double MAGNET_OFFSET = 0.003418;  //TODO tune on actual bot
+
+        public static final double KP = 20; //TODO tune KP, KD, KV, and KS on actual bot
+        public static final double KI = 0;
+        public static final double KD = 0.5;
+        public static final double KG = 0;
+        public static final double KV = 0.12;
+        public static final double KS = 0.25;
 
 
         public static final class PidGains {

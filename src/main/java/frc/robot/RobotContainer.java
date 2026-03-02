@@ -170,6 +170,16 @@ public class RobotContainer {
                 () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(
                         PositionConstants.getClosestFace(drive.getPose())[1])),
                 Set.of(drive)));
+
+        OIConstants.Wrist.DOWN.whileTrue(
+                Commands.parallel(
+                        wrist.goToDown(),
+                        intake.forward()
+                )
+        ); // y
+
+        OIConstants.Intake.FORWARD.whileTrue(intake.forward()); // a
+        OIConstants.Intake.REVERSE.whileTrue(intake.reverse()); // b
     }
 
     //Configures the FRC dashboard and tells the robot several things:
@@ -202,12 +212,12 @@ public class RobotContainer {
                         })
                         .ignoringDisable(true));
 
-        Commands.run(() -> {
-                    PositionConstants.getClosestFace(drive.getPose());
-                })
-                .ignoringDisable(true)
-                .onlyIf(Robot::isSimulation)
-                .schedule();
+//        Commands.run(() -> {
+//                    PositionConstants.getClosestFace(drive.getPose());
+//                })
+//                .ignoringDisable(true)
+//                .onlyIf(Robot::isSimulation)
+//                .schedule();
 
     }
     //Configures autonomuous copmmands and autochooser
