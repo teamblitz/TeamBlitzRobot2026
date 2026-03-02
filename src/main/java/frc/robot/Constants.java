@@ -253,7 +253,7 @@ public final class Constants {
  //       public static final double WRIST_GEAR_RATIO = (9.0) * (5.0) * (54.0 / 16.0);
 
   //      public static final double OPEN_LOOP_RAMP = .25;
-        public static final int CURRENT_LIMIT_WRIST = 60;
+        public static final int CURRENT_LIMIT_WRIST = 5; //TODO make this value higher after initial testing
         public static final boolean INVERTED = false;
 
 

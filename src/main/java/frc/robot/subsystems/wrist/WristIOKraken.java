@@ -41,7 +41,7 @@ public class WristIOKraken implements WristIO {
 
         TalonFXConfiguration config = new TalonFXConfiguration();
 
-        config.CurrentLimits.withStatorCurrentLimit(CURRENT_LIMIT_WRIST);
+        config.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT_WRIST;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
         config.MotorOutput
