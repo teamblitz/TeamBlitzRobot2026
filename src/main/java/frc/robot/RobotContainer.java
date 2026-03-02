@@ -48,6 +48,7 @@ import frc.robot.subsystems.spindexer.SpindexerIO;
 import frc.robot.subsystems.spindexer.SpindexerIOKraken;
 
 
+import frc.robot.subsystems.wrist.WristIOKraken;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
@@ -73,6 +74,7 @@ public class RobotContainer {
     //private DriveCommands driveCommands;
     private Wrist wrist;
     private WristIO wristIO;
+    private WristIOKraken wristIOKraken;
 
     /* ***** --- Autonomous --- ***** */
     private AutoChooser autoChooser;
@@ -120,7 +122,7 @@ public class RobotContainer {
 
         spindexer = new frc.robot.subsystems.spindexer.Spindexer(spindexerIO);
 
-        wrist = new Wrist(wristIO);
+        wrist = new Wrist(new WristIOKraken());
 
 
     }
