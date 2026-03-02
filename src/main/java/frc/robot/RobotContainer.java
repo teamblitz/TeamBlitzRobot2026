@@ -124,6 +124,8 @@ public class RobotContainer {
 
         wrist = new Wrist(new WristIOKraken());
 
+        autoCommands = new AutoCommands(drive, intake, spindexer, shooter);
+
 
     }
 
@@ -222,10 +224,13 @@ public class RobotContainer {
 //                .schedule();
 
     }
-    //Configures autonomuous copmmands and autochooser
+    //Configures autonomuous cpmmands and autochooser
     private void configureAutonomous() {
         autoChooser = new AutoChooser();
         SmartDashboard.putData("autoChooser", autoChooser);
+
+        autoChooser.addCmd("None", autoCommands::getNoAuto);
+        autoChooser.addRoutine("Shoot Only", autoCommands::autoShoot);
 
         //EXAMPLE
         // autoChooser.addRoutine("leaveRight", () -> autoCommands.leave("leaveRight"));
@@ -233,7 +238,8 @@ public class RobotContainer {
     //Configures the Autochooser, which is selected in the dashboard(elastic)
     public Command getAutonomousCommand() {
         Logger.recordOutput("selectedAuto", autoChooser.selectedCommand().getName());
-        return Commands.none();
+        return autoChooser.selectedCommandScheduler();
+//        return Commands.none();
         // return Commands.sequence(
         //                 Commands.runOnce(() -> drive.resetRotation(
         //                         AllianceFlipUtil.shouldFlip()

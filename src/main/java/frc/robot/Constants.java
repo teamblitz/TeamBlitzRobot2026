@@ -310,12 +310,12 @@ public final class Constants {
     }
 
     public static final class WristConstants {
-        public static final int WRIST_ID = 30;
-        public static final int ABS_ENCODER_ID = 2;
+        public static final int WRIST_ID = 21;
+        public static final int ABS_ENCODER_ID = 22;
         //       public static final double WRIST_GEAR_RATIO = (9.0) * (5.0) * (54.0 / 16.0);
 
         //      public static final double OPEN_LOOP_RAMP = .25;
-        public static final int CURRENT_LIMIT_WRIST = 5; //TODO make this value higher after initial testing
+        public static final int CURRENT_LIMIT_WRIST = 40; //TODO make this value higher after initial testing
         public static final boolean INVERTED = false;
 
 
@@ -323,25 +323,25 @@ public final class Constants {
 //        public static final double ZERO_POS = Units.degreesToRadians(compBot() ? 94 : 90);
         public static final double ZERO_POS = 0.0;
         //        public static final double EXTENDED_POS = Units.degreesToRadians(-90);//TODO set this val to absolute encoder value when this is extended
-        public static final double EXTENDED_POS = 0.5; //TODO tune on actual bot in reference to the zero position
+        public static final double EXTENDED_POS = 0.15; //TODO tune on actual bot in reference to the zero position
 
         public static final double ABS_ENCODER_ZERO = Math.toRadians(306.71 + 90);
         //        public static final double TOLERANCE = Units.degreesToRadians(10);
         public static final double TOLERANCE = 10.0 / 360.0;
 
-        public static final double MAX_VELOCITY = 3.0; //TODO tune on actual bot
-        public static final double MAX_ACCEL = 6.0; //TODO tune on actual bot
+        public static final double MAX_VELOCITY = 1.5; //TODO tune on actual bot
+        public static final double MAX_ACCEL = 3; //TODO tune on actual bot
         public static final double MAX_JERK = MAX_ACCEL * 8;
 
-        public static final double ROTOR_TO_SENSOR_RATIO = 3.0;
-        public static final double MAGNET_OFFSET = 0.003418;  //TODO tune on actual bot
+        public static final double ROTOR_TO_SENSOR_RATIO = 9.0;
+        public static final double MAGNET_OFFSET = -0.257324;  //TODO tune on actual bot
 
-        public static final double KP = 20; //TODO tune KP, KD, KV, and KS on actual bot
+        public static final double KP = 40; //TODO tune KP, KD, KV, and KS on actual bot
         public static final double KI = 0;
-        public static final double KD = 0.5;
-        public static final double KG = 0;
+        public static final double KD = 4;
+        public static final double KG = 0.5;
         public static final double KV = 0.12;
-        public static final double KS = 0.25;
+        public static final double KS = 0.6;
 
 
         public static final class PidGains {
@@ -464,7 +464,11 @@ public final class Constants {
         public static final int SPINDEXER_ID = 23;
     }
 
-    public static final class Shooter {
+    public static final class ShooterConstants {
+        public static final int TOP_SHOOTER_ID = 30;
+        public static final int BOTTOM_SHOOTER_ID = 31;
+        public static final int FEEDER_ID = 32;
+
         public static final double SHOOTER_HEIGHT = 0.4826;
         public static final double HUB_X = (!Constants.DISABLE_HAL && DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
          ? 182.11 : 469.11;

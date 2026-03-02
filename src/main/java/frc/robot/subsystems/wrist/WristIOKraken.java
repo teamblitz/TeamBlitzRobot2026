@@ -11,10 +11,7 @@ import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.ctre.phoenix6.signals.*;
 
 import edu.wpi.first.math.MathUtil;
 import org.littletonrobotics.junction.Logger;
@@ -29,7 +26,7 @@ public class WristIOKraken implements WristIO {
     private final NeutralOut neutralRequest = new NeutralOut();
 
     public WristIOKraken() {
-        wrist = new TalonFX(30);
+        wrist = new TalonFX(21);
         absoluteEncoder = new CANcoder(ABS_ENCODER_ID);
 
         CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
@@ -67,6 +64,8 @@ public class WristIOKraken implements WristIO {
         config.MotionMagic.MotionMagicCruiseVelocity = MAX_VELOCITY;
         config.MotionMagic.MotionMagicAcceleration = MAX_ACCEL;
         config.MotionMagic.MotionMagicJerk = 0;
+
+        config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
 
         wrist.getConfigurator().apply(config);
     }
