@@ -82,14 +82,16 @@ public class OIConstants {
         public static final Trigger COAST = UNBOUND;
         public static final Trigger BRAKE = UNBOUND;
 
-        public static final Trigger ALIGN_LEFT =
-                new Trigger(() -> DRIVE_CONTROLLER.getHID().getPOV() > 180);
+//        public static final Trigger ALIGN_LEFT =
+//                new Trigger(() -> DRIVE_CONTROLLER.getHID().getPOV() > 180);
+         public static final Trigger ALIGN_LEFT = UNBOUND;
 
-        public static final Trigger ALIGN_RIGHT =
-                new Trigger(
-                        () ->
-                                DRIVE_CONTROLLER.getHID().getPOV() < 180
-                                        && DRIVE_CONTROLLER.getHID().getPOV() > 0);
+//        public static final Trigger ALIGN_RIGHT =
+//                new Trigger(
+//                        () ->
+//                                DRIVE_CONTROLLER.getHID().getPOV() < 180
+//                                        && DRIVE_CONTROLLER.getHID().getPOV() > 0);
+         public static final Trigger ALIGN_RIGHT = UNBOUND;
     }
 
 
