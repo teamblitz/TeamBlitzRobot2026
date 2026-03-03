@@ -9,7 +9,6 @@ import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.lib.monitor.HardwareWatchdog;
 import frc.lib.util.SwerveModuleConstants;
 import frc.robot.Constants;
 
@@ -30,8 +29,6 @@ public class AngleMotorIOSpark implements AngleMotorIO {
         encoder = motor.getEncoder();
         pidController = motor.getClosedLoopController();
         configAngleMotor();
-
-        HardwareWatchdog.getInstance().registerSpark(motor, this.getClass());
     }
 
     @Override
@@ -46,11 +43,11 @@ public class AngleMotorIOSpark implements AngleMotorIO {
     }
 
     @Override
-     public void configurePID(double p, double i, double d) {
-        //motor.configure(
-              //  new SparkMaxConfig().apply(new ClosedLoopConfig().pid(p, i, d)),
-               // ResetMode.kNoResetSafeParameters,
-               // PersistMode.kNoPersistParameters);
+    public void configurePID(double p, double i, double d) {
+        motor.configure(
+                new SparkMaxConfig().apply(new ClosedLoopConfig().pid(p, i, d)),
+                ResetMode.kNoResetSafeParameters,
+                PersistMode.kNoPersistParameters);
     }
 
     @Override
@@ -73,7 +70,7 @@ public class AngleMotorIOSpark implements AngleMotorIO {
                         // the module
                         * 360)); // 1/360 rotations is 1 degree, 1 rotation is 360 degrees.
 
-        //motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+        motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
         configurePID(Constants.Drive.ANGLE_KP, Constants.Drive.ANGLE_KI, Constants.Drive.ANGLE_KD);
     }

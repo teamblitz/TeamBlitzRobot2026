@@ -5,7 +5,6 @@ import com.revrobotics.spark.*;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import frc.lib.monitor.HardwareWatchdog;
 import frc.lib.util.SwerveModuleConstants;
 import frc.robot.Constants;
 
@@ -25,8 +24,6 @@ public class DriveMotorIOSpark implements DriveMotorIO {
         encoder = motor.getEncoder();
         pidController = motor.getClosedLoopController();
         configDriveMotor();
-
-        HardwareWatchdog.getInstance().registerSpark(motor, this.getClass());
     }
 
     @Override

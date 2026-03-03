@@ -2,9 +2,7 @@ package frc.robot.subsystems.drive.gyro;
 
 import static edu.wpi.first.units.Units.*;
 
-import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.Pigeon2;
-import frc.lib.monitor.HardwareWatchdog;
 import frc.robot.Constants;
 
 public class GyroIOPigeon implements GyroIO {
@@ -28,9 +26,7 @@ public class GyroIOPigeon implements GyroIO {
     private final double[] rateArray = new double[3];
 
     public GyroIOPigeon() {
-        gyro = new Pigeon2(Constants.Drive.PIGEON_ID, new CANBus("drive"));
-
-        HardwareWatchdog.getInstance().registerCTREDevice(gyro, this.getClass());
+        gyro = new Pigeon2(Constants.Drive.PIGEON_ID, "drive");
     }
 
     @Override

@@ -3,6 +3,7 @@ package frc.robot.subsystems.drive.gyro;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
+
 import java.util.function.Supplier;
 
 public class GyroIOSim implements GyroIO {

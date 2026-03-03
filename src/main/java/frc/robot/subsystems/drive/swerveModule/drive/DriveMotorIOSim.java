@@ -14,12 +14,11 @@ public class DriveMotorIOSim implements DriveMotorIO {
     public DriveMotorIOSim() {
         RobotModeTriggers.disabled()
                 .onTrue(
-                        Commands.runOnce(
-                                        () -> {
-                                            velocity = 0;
-                                            needsUpdate = true;
-                                        })
-                                .ignoringDisable(true));
+                        Commands.runOnce(() -> {
+                            velocity = 0;
+                            needsUpdate = true;
+                        }).ignoringDisable(true)
+                );
     }
 
     @Override

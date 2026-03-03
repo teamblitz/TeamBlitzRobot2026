@@ -2,7 +2,6 @@ package frc.robot.subsystems.drive.swerveModule.encoder;
 
 import com.reduxrobotics.sensors.canandmag.Canandmag;
 import com.reduxrobotics.sensors.canandmag.CanandmagSettings;
-import frc.lib.monitor.HardwareWatchdog;
 
 public class EncoderIOHelium implements EncoderIO {
 
@@ -16,8 +15,6 @@ public class EncoderIOHelium implements EncoderIO {
         // helium CANAndCoder is by default CCW+ looking from the face. So we invert the value here
         settings.setInvertDirection(!invert);
         encoder.setSettings(settings);
-
-        HardwareWatchdog.getInstance().registerReduxDevice(encoder, this.getClass());
     }
 
     @Override
