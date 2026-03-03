@@ -57,6 +57,9 @@ public class Wrist extends BlitzSubsystem {
             goal = Optional.empty();
             io.stop();
         }
+
+
+
     }
 
     public Command upTest() {
@@ -84,7 +87,7 @@ public class Wrist extends BlitzSubsystem {
     }
 
     public Command goToIdle() {
-        return goToPosition(ZERO_POS);
+        return goToPosition(IDLE_POS);
     }
 
     public Command goToDown() {
@@ -108,7 +111,7 @@ public class Wrist extends BlitzSubsystem {
                 System.out.println("**************Setting goal to " + goal);
                 this.goal = Optional.of(
                         new TrapezoidProfile.State(
-                                MathUtil.clamp(goal, Math.min(EXTENDED_POS, ZERO_POS), Math.max(EXTENDED_POS, ZERO_POS)), 0));
+                                MathUtil.clamp(goal, Math.min(EXTENDED_POS, IDLE_POS), Math.max(EXTENDED_POS, IDLE_POS)), 0));
             }
         })
                 .handleInterrupt(() -> {

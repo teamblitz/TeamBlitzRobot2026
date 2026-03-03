@@ -315,33 +315,38 @@ public final class Constants {
         //       public static final double WRIST_GEAR_RATIO = (9.0) * (5.0) * (54.0 / 16.0);
 
         //      public static final double OPEN_LOOP_RAMP = .25;
-        public static final int CURRENT_LIMIT_WRIST = 40; //TODO make this value higher after initial testing
+        public static final int CURRENT_LIMIT_WRIST = 30; //TODO make this value higher after initial testing
         public static final boolean INVERTED = false;
 
 
         //TODO TUNE MAXIMUM AND MINIMUM POSITIONS WHEN WE HAVE THE BOT
 //        public static final double ZERO_POS = Units.degreesToRadians(compBot() ? 94 : 90);
-        public static final double ZERO_POS = 0.0;
+        public static final double IDLE_POS = 0.118408203125;
         //        public static final double EXTENDED_POS = Units.degreesToRadians(-90);//TODO set this val to absolute encoder value when this is extended
-        public static final double EXTENDED_POS = 0.15; //TODO tune on actual bot in reference to the zero position
+        public static final double EXTENDED_POS = 0.3; //TODO tune on actual bot in reference to the zero position
+
+        public static final double OFFSET = IDLE_POS + 0.25;
 
         public static final double ABS_ENCODER_ZERO = Math.toRadians(306.71 + 90);
         //        public static final double TOLERANCE = Units.degreesToRadians(10);
-        public static final double TOLERANCE = 10.0 / 360.0;
+        public static final double TOLERANCE = 0.05;
 
-        public static final double MAX_VELOCITY = 1.5; //TODO tune on actual bot
-        public static final double MAX_ACCEL = 3; //TODO tune on actual bot
+        public static final double MAX_VELOCITY = 1; //TODO tune on actual bot
+        public static final double MAX_ACCEL = 2; //TODO tune on actual bot
         public static final double MAX_JERK = MAX_ACCEL * 8;
 
         public static final double ROTOR_TO_SENSOR_RATIO = 9.0;
-        public static final double MAGNET_OFFSET = -0.257324;  //TODO tune on actual bot
+        public static final double MAGNET_OFFSET = -0.144775390625;  //TODO tune on actual bot
 
-        public static final double KP = 40; //TODO tune KP, KD, KV, and KS on actual bot
+        public static final double KP = 10; //TODO tune KP, KD, KV, and KS on actual bot
         public static final double KI = 0;
-        public static final double KD = 4;
-        public static final double KG = 0.5;
+        public static final double KD = 1;
+        public static final double KG = 0.0;
         public static final double KV = 0.12;
-        public static final double KS = 0.6;
+        public static final double KS = 0.0;
+
+        public static final double SOFT_LIMIT_FORWARD = 0.25; //Sets the bounds for where the wrist can go
+        public static final double SOFT_LIMIT_REVERSE = 0.0; //Sets the bounds for where the wrist can go
 
 
         public static final class PidGains {
