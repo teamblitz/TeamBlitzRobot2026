@@ -31,7 +31,7 @@ public class WristIOKraken implements WristIO {
 
         CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
         encoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-        encoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.73;
+        // encoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.73;
         // Set this to the negated raw reading when wrist is at the zero position
         encoderConfig.MagnetSensor.MagnetOffset = MAGNET_OFFSET;
         absoluteEncoder.getConfigurator().apply(encoderConfig);
@@ -65,7 +65,8 @@ public class WristIOKraken implements WristIO {
         config.MotionMagic.MotionMagicAcceleration = MAX_ACCEL;
         config.MotionMagic.MotionMagicJerk = 0;
 
-        config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
+        // config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
+        // config.Slot0.GravityArmPositionOffset = IDLE_POS;
         config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
         config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = SOFT_LIMIT_FORWARD; // small buffer past zero
         config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;

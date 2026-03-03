@@ -329,7 +329,7 @@ public final class Constants {
 
         public static final double ABS_ENCODER_ZERO = Math.toRadians(306.71 + 90);
         //        public static final double TOLERANCE = Units.degreesToRadians(10);
-        public static final double TOLERANCE = 0.05;
+        public static final double TOLERANCE = 0.005;
 
         public static final double MAX_VELOCITY = 1; //TODO tune on actual bot
         public static final double MAX_ACCEL = 2; //TODO tune on actual bot
@@ -338,11 +338,11 @@ public final class Constants {
         public static final double ROTOR_TO_SENSOR_RATIO = 9.0;
         public static final double MAGNET_OFFSET = -0.144775390625;  //TODO tune on actual bot
 
-        public static final double KP = 10; //TODO tune KP, KD, KV, and KS on actual bot
+        public static final double KP = 2; //TODO tune KP, KD, KV, and KS on actual bot
         public static final double KI = 0;
-        public static final double KD = 1;
-        public static final double KG = 0.0;
-        public static final double KV = 0.12;
+        public static final double KD = 0;
+        public static final double KG = 0;
+        public static final double KV = 0;
         public static final double KS = 0.0;
 
         public static final double SOFT_LIMIT_FORWARD = 0.25; //Sets the bounds for where the wrist can go
