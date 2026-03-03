@@ -429,9 +429,9 @@ public class Drive extends BlitzSubsystem {
                         .withName("DriveAngular Dynamic Reverse"));
 
 
-        for (ScoringPositions.Branch branch : ScoringPositions.Branch.values()) {
-            SmartDashboard.putData(branch.name(), driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(branch)));
-        }
+//        for (ScoringPositions.Branch branch : ScoringPositions.Branch.values()) {
+//            SmartDashboard.putData(branch.name(), driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(branch)));
+
     }
 
     public void drive(
@@ -790,9 +790,9 @@ public class Drive extends BlitzSubsystem {
             mod.periodic();
         }
         gyroIO.updateInputs(gyroInputs);
-        rangeIO.updateInputs(rangeInputs);
+//        rangeIO.updateInputs(rangeInputs);
         Logger.processInputs("gyro", gyroInputs);
-        Logger.processInputs("drive/range", rangeInputs);
+//        Logger.processInputs("drive/range", rangeInputs);
 
         swerveOdometry.update(getYaw(), getModulePositions());
         poseEstimator.update(getYaw(), getModulePositions());
