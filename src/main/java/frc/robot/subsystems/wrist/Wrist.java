@@ -24,7 +24,7 @@ public class Wrist extends BlitzSubsystem {
 
         this.io = io;
 
-        setpoint = new TrapezoidProfile.State(getPosition(), 0.0);
+//        setpoint = new TrapezoidProfile.State(getPosition(), 0.0);
         goal = Optional.empty();
 
         setDefaultCommand((goToIdle()));
@@ -32,15 +32,15 @@ public class Wrist extends BlitzSubsystem {
 
     private final WristInputsAutoLogged inputs = new WristInputsAutoLogged();
 
-    private final TrapezoidProfile.Constraints constraints =
-            new TrapezoidProfile.Constraints(MAX_VELOCITY, MAX_ACCEL);
+//    private final TrapezoidProfile.Constraints constraints =
+//            new TrapezoidProfile.Constraints(MAX_VELOCITY, MAX_ACCEL);
 
     private Optional<TrapezoidProfile.State> goal;
-    private TrapezoidProfile.State setpoint;
+//    private TrapezoidProfile.State setpoint;
 
-    private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
+//    private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
 
-    private double cruiseVelocity = MAX_VELOCITY;
+//    private double cruiseVelocity = MAX_VELOCITY;
 
     @Override
     public void periodic() {
@@ -109,23 +109,21 @@ public class Wrist extends BlitzSubsystem {
         return run(() -> {
             if (this.goal.isEmpty() || this.goal.get().position != goal) {
                 System.out.println("**************Setting goal to " + goal);
-                this.goal = Optional.of(
-                        new TrapezoidProfile.State(
-                                MathUtil.clamp(goal, Math.min(EXTENDED_POS, IDLE_POS), Math.max(EXTENDED_POS, IDLE_POS)), 0));
+                this.goal = Optional.of(new TrapezoidProfile.State(
+                        MathUtil.clamp(goal, Math.min(EXTENDED_POS, IDLE_POS), Math.max(EXTENDED_POS, IDLE_POS)), 0));
             }
         })
                 .handleInterrupt(() -> {
                     System.out.println("Interrupted, goal was: " + this.goal.map(s -> String.valueOf(s.position)).orElse("empty"));
                     this.goal = Optional.empty();
                 })
-                .beforeStarting(() -> System.out.println("followGoal starting"))
-                .beforeStarting(refreshCurrentState());
+                .beforeStarting(() -> System.out.println("followGoal starting"));
     }
 
-    private Command refreshCurrentState() {
-        return runOnce(() -> setpoint = new TrapezoidProfile.State(getPosition(), getVelocity()))
-                .onlyIf(() -> setpoint == null || goal.isEmpty());
-    }
+//    private Command refreshCurrentState() {
+//        return runOnce(() -> setpoint = new TrapezoidProfile.State(getPosition(), getVelocity()))
+//                .onlyIf(() -> setpoint == null || goal.isEmpty());
+//    }
 
     public double getPosition() {
         return inputs.absoluteEncoderPosition;

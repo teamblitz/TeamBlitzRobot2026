@@ -180,7 +180,7 @@ public class RobotContainer {
                         wrist.goToDown(),
                         intake.forward()
                 )
-        ); // y
+        ); //
 
         OIConstants.Intake.FORWARD.whileTrue(intake.forward()); // a
         OIConstants.Intake.REVERSE.whileTrue(intake.reverse()); // b

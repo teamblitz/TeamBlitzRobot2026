@@ -31,7 +31,7 @@ public class Spindexer extends BlitzSubsystem {
         // return startEnd(() -> io.setSpeed(-0.3), () -> io.setSpeed(0));
 
         return runOnce(() -> io.setSpeed(-1))
-                .andThen(Commands.waitSeconds(1))
+                .andThen(Commands.waitSeconds(30))
                 .finallyDo (
                     () -> {
                         io.setSpeed(0);

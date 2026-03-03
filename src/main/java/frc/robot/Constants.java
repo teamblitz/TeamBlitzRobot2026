@@ -189,7 +189,7 @@ public final class Constants {
             public static final int ANGLE_MOTOR_ID = 5;
             public static final int CAN_CODER_ID = 0;
             public static final Rotation2d ANGLE_OFFSET =
-                    Rotation2d.fromDegrees(ROBOT == Robot.CompBot ? 55.81 : 0);
+                    Rotation2d.fromDegrees(ROBOT == Robot.CompBot ? -123.046875 : 0);
             public static final SwerveModuleConstants CONSTANTS =
                     new SwerveModuleConstants(
                             DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET);
@@ -201,7 +201,7 @@ public final class Constants {
             public static final int ANGLE_MOTOR_ID = 7;
             public static final int CAN_CODER_ID = 1;
             public static final Rotation2d ANGLE_OFFSET =
-                    Rotation2d.fromDegrees(ROBOT == Robot.CompBot ? -136.68 : 0);
+                    Rotation2d.fromDegrees(ROBOT == Robot.CompBot ? 39.7265625 : 0);
             public static final SwerveModuleConstants CONSTANTS =
                     new SwerveModuleConstants(
                             DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET);
@@ -213,7 +213,7 @@ public final class Constants {
             public static final int ANGLE_MOTOR_ID = 9;
             public static final int CAN_CODER_ID = 2;
             public static final Rotation2d ANGLE_OFFSET =
-                    Rotation2d.fromDegrees(ROBOT == Robot.CompBot ? -176.66 : 0);
+                    Rotation2d.fromDegrees(ROBOT == Robot.CompBot ? 5.361328125 : 0);
             public static final SwerveModuleConstants CONSTANTS =
                     new SwerveModuleConstants(
                             DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET);
@@ -225,7 +225,7 @@ public final class Constants {
             public static final int ANGLE_MOTOR_ID = 11;
             public static final int CAN_CODER_ID = 3;
             public static final Rotation2d ANGLE_OFFSET =
-                    Rotation2d.fromDegrees(ROBOT == Robot.CompBot ? 20.83 : 0);
+                    Rotation2d.fromDegrees(ROBOT == Robot.CompBot ? -158.203125 : 0);
             public static final SwerveModuleConstants CONSTANTS =
                     new SwerveModuleConstants(
                             DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET);
@@ -315,7 +315,8 @@ public final class Constants {
         //       public static final double WRIST_GEAR_RATIO = (9.0) * (5.0) * (54.0 / 16.0);
 
         //      public static final double OPEN_LOOP_RAMP = .25;
-        public static final int CURRENT_LIMIT_WRIST = 30; //TODO make this value higher after initial testing
+        public static final int CURRENT_LIMIT_WRIST = 60
+                ; //TODO make this value higher after initial testing
         public static final boolean INVERTED = false;
 
 
@@ -338,15 +339,15 @@ public final class Constants {
         public static final double ROTOR_TO_SENSOR_RATIO = 9.0;
         public static final double MAGNET_OFFSET = -0.144775390625;  //TODO tune on actual bot
 
-        public static final double KP = 2; //TODO tune KP, KD, KV, and KS on actual bot
+        public static final double KP = 20; //TODO tune KP, KD, KV, and KS on actual bot
         public static final double KI = 0;
-        public static final double KD = 0;
-        public static final double KG = 0;
+        public static final double KD = 1;
+        public static final double KG = 1;
         public static final double KV = 0;
-        public static final double KS = 0.0;
+        public static final double KS = 0.5;
 
-        public static final double SOFT_LIMIT_FORWARD = 0.25; //Sets the bounds for where the wrist can go
-        public static final double SOFT_LIMIT_REVERSE = 0.0; //Sets the bounds for where the wrist can go
+        public static final double SOFT_LIMIT_FORWARD = 0.35; //Sets the bounds for where the wrist can go
+        public static final double SOFT_LIMIT_REVERSE = 0.08; //Sets the bounds for where the wrist can go
 
 
         public static final class PidGains {

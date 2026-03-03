@@ -32,6 +32,7 @@ public class WristIOKraken implements WristIO {
         CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
         encoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
         // encoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.73;
+        encoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1;
         // Set this to the negated raw reading when wrist is at the zero position
         encoderConfig.MagnetSensor.MagnetOffset = MAGNET_OFFSET;
         absoluteEncoder.getConfigurator().apply(encoderConfig);
@@ -65,7 +66,7 @@ public class WristIOKraken implements WristIO {
         config.MotionMagic.MotionMagicAcceleration = MAX_ACCEL;
         config.MotionMagic.MotionMagicJerk = 0;
 
-        // config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
+         config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         // config.Slot0.GravityArmPositionOffset = IDLE_POS;
         config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
         config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = SOFT_LIMIT_FORWARD; // small buffer past zero
@@ -81,8 +82,9 @@ public class WristIOKraken implements WristIO {
         inputs.absoluteEncoderPosition = getAbsPosition();
         inputs.current = wrist.getStatorCurrent().getValueAsDouble();
 
-        Logger.recordOutput("wrist/motionMagicEnabled", wrist.getMotionMagicIsRunning().getValue());
-    }
+        Logger.recordOutput("wrist/motorPosition", wrist.getPosition().getValueAsDouble());
+        Logger.recordOutput("wrist/absoluteEncoderPosition", getAbsPosition());
+        Logger.recordOutput("wrist/motionMagicEnabled", wrist.getMotionMagicIsRunning().getValue());    }
 
     @Override
     public void setSpeed(double speed) {
