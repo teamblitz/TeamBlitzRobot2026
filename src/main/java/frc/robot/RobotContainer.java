@@ -139,10 +139,13 @@ public class RobotContainer {
                                 OIConstants.Drive.ROTATION_SPEED,
                                 () -> false,
                                 () -> Double.NaN,
-                                () -> false)
+                                () -> true)
                         .unless(RobotState::isTest)
                         .until(RobotState::isTest)
                         .withName("TeleopSwerve"));
+
+        wrist.setDefaultCommand((wrist.goToIdle()));
+
     }
     //Configures our button bindings to the robot commands.
     private void configureTriggerBindings() {

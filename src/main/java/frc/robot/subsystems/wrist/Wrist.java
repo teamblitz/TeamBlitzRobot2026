@@ -27,7 +27,7 @@ public class Wrist extends BlitzSubsystem {
 //        setpoint = new TrapezoidProfile.State(getPosition(), 0.0);
         goal = Optional.empty();
 
-        setDefaultCommand((goToIdle()));
+//        setDefaultCommand((goToIdle()));
     }
 
     private final WristInputsAutoLogged inputs = new WristInputsAutoLogged();
