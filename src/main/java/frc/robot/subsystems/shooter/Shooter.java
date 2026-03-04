@@ -112,7 +112,7 @@ public class Shooter extends SubsystemBase {
         return runOnce(() -> topShooter.set(-1))
                 .andThen(Commands.waitSeconds(1))
                 .andThen(() -> feeder.set(0.6))
-                .andThen(Commands.waitSeconds(5))
+                .andThen(Commands.waitSeconds(30))
                 .andThen(() -> feeder.set(0.6))
                 .andThen(Commands.waitSeconds(1))//TODO set values to run
                 .finallyDo(

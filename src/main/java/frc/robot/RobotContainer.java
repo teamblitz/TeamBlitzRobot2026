@@ -139,7 +139,7 @@ public class RobotContainer {
                                 OIConstants.Drive.ROTATION_SPEED,
                                 () -> false,
                                 () -> Double.NaN,
-                                () -> true)
+                                () -> false)
                         .unless(RobotState::isTest)
                         .until(RobotState::isTest)
                         .withName("TeleopSwerve"));
@@ -159,7 +159,7 @@ public class RobotContainer {
         OIConstants.Shooter.SHOOT.whileTrue(
             Commands.sequence(
                 shooter.shootTest()
-                    .alongWith(Commands.waitSeconds(0.2).andThen(spindexer.feed()))
+                    .alongWith(Commands.waitSeconds(3.5).andThen(spindexer.feed()))
             )
         );
         OIConstants.Spindexer.FEED.whileTrue(spindexer.reverse()); //y
@@ -184,6 +184,8 @@ public class RobotContainer {
 
         OIConstants.Intake.FORWARD.whileTrue(intake.forward()); // a
         OIConstants.Intake.REVERSE.whileTrue(intake.reverse()); // b
+
+        OIConstants.Shooter.SHOOT_TESTING.whileTrue(shooter.shootTest());
     }
 
     //Configures the FRC dashboard and tells the robot several things:

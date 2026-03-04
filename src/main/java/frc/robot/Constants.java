@@ -324,7 +324,7 @@ public final class Constants {
 //        public static final double ZERO_POS = Units.degreesToRadians(compBot() ? 94 : 90);
         public static final double IDLE_POS = 0.118408203125;
         //        public static final double EXTENDED_POS = Units.degreesToRadians(-90);//TODO set this val to absolute encoder value when this is extended
-        public static final double EXTENDED_POS = 0.3; //TODO tune on actual bot in reference to the zero position
+        public static final double EXTENDED_POS = 0.33; //TODO tune on actual bot in reference to the zero position
 
         public static final double OFFSET = IDLE_POS + 0.25;
 
@@ -482,6 +482,8 @@ public final class Constants {
         public static final double BASIN_H = 72 - SHOOTER_HEIGHT;
         public static final double SHOOTER_ANGLE = 70;
         public static final double WHEEL_DIAMETER = 0.1016;
+
+        public static final double KA = 0.1;
     }
     public static final class Winch {
         public static final int ID = 50;
