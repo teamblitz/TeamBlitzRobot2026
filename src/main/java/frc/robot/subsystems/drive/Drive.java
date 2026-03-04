@@ -225,7 +225,7 @@ public class Drive extends BlitzSubsystem {
         this.gyroIO = gyroIO;
         this.rangeIO = rangeIO;
 
-        keepHeadingPid = new PIDController(.15, 0, 0);
+        keepHeadingPid = new PIDController(0.0026 , 0, 0);
         keepHeadingPid.enableContinuousInput(-180, 180);
         keepHeadingPid.setTolerance(2);
 
