@@ -30,6 +30,8 @@ public class ShooterIOKraken implements ShooterIO {
         TalonFXConfiguration feederConfig = new TalonFXConfiguration();
         feederConfig.MotorOutput.withNeutralMode(NeutralModeValue.Brake)
                 .withInverted(InvertedValue.Clockwise_Positive);
+        feeder.setControl(new Follower(shooter.getDeviceID(), MotorAlignmentValue.Opposed)); // May need to be Inverted
+
 
         shooter.getConfigurator().apply(shooterConfig);
         feeder.getConfigurator().apply(feederConfig);
@@ -47,7 +49,7 @@ public class ShooterIOKraken implements ShooterIO {
 
      @Override
      public void setFeederSpeed(double speed) {
-         feeder.set(speed);
+         deepFeed.set(speed);
      }
 
      @Override

@@ -113,7 +113,7 @@ public class Shooter extends SubsystemBase {
 
 
     public Command shootTest() {
-        return runOnce(() -> io.setShooterSpeed(-1))
+        return runOnce(() -> io.setShooterSpeed(-0.8))
                 .andThen(Commands.waitSeconds(1))
                 .andThen(() -> io.setFeederSpeed(0.6))
                 .andThen(Commands.waitSeconds(30))
