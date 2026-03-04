@@ -8,6 +8,7 @@
 package frc.robot;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
+import static frc.robot.Constants.WristConstants.IDLE_POS;
 
 import choreo.auto.AutoChooser;
 
@@ -143,6 +144,8 @@ public class RobotContainer {
                         .unless(RobotState::isTest)
                         .until(RobotState::isTest)
                         .withName("TeleopSwerve"));
+
+        wrist.setDefaultCommand(wrist.goToIdle());
     }
     //Configures our button bindings to the robot commands.
     private void configureTriggerBindings() {
