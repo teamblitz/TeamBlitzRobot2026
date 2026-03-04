@@ -2,6 +2,7 @@ package frc.robot.subsystems.drive.gyro;
 
 import static edu.wpi.first.units.Units.*;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import frc.robot.Constants;
 
@@ -26,15 +27,15 @@ public class GyroIOPigeon implements GyroIO {
     private final double[] rateArray = new double[3];
 
     public GyroIOPigeon() {
-        gyro = new Pigeon2(Constants.Drive.PIGEON_ID, "drive");
+        gyro = new Pigeon2(Constants.Drive.PIGEON_ID, new CANBus("drive"));
     }
 
     @Override
     public void updateInputs(GyroIOInputs inputs) {
-        inputs.yaw = gyro.getYaw().getValueAsDouble();
+        inputs.yaw = -gyro.getYaw().getValueAsDouble();
         inputs.pitch = gyro.getPitch().getValueAsDouble();
         inputs.roll = gyro.getRoll().getValueAsDouble();
-        inputs.yawRate = gyro.getAngularVelocityZDevice().getValueAsDouble();
+        inputs.yawRate = -gyro.getAngularVelocityZDevice().getValueAsDouble();
         inputs.pitchRate = gyro.getAngularVelocityYDevice().getValueAsDouble();
         inputs.rollRate = gyro.getAngularVelocityXDevice().getValueAsDouble();
         inputs.connected = gyro.isConnected();

@@ -13,11 +13,12 @@ public class CommandFactory {
     //Creates the autoShoot command, which can be called during auto
     public static Command autoShoot(Shooter shooter, Spindexer spindexer) {
 //        return Commands.parallel(shooter.shootTest(), spindexer.feed());
-        return Commands.sequence(
+        return Commands.parallel(
                 shooter.shootTest(),
-                Commands.waitSeconds(0.2),
-                spindexer.feed()
-        )        ;
+                Commands.sequence(
+                    Commands.waitSeconds(5),
+                    spindexer.feed())
+        );
     }
 
 }

@@ -65,7 +65,7 @@ public class OIConstants {
         public static final DoubleSupplier ROTATION_SPEED =
                 () ->
                         (DRIVE_CONTROLLER.getHID().getRawButton(3) ? SUPER_SPIN : SPIN_SPEED)
-                                * SPIN_CURVE.apply(-DRIVE_CONTROLLER.getTwist());
+                                * SPIN_CURVE.apply(DRIVE_CONTROLLER.getTwist());
 
         public static final DoubleSupplier HEADING_CONTROL = () -> Double.NaN;
         //                        0 * Math.hypot(DRIVE_CONTROLLER.getLeftY(),
