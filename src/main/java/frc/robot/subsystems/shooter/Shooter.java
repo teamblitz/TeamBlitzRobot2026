@@ -28,21 +28,25 @@ import com.ctre.phoenix6.controls.Follower;
 public class Shooter extends SubsystemBase {
 	//private final ShooterIO io;
 
-    private final TalonFX topShooter;
-    private final TalonFX bottomShooter;
-    private final TalonFX feeder;
+//    private final TalonFX topShooter;
+//    private final TalonFX bottomShooter;
+//    private final TalonFX feeder;
+    private final ShooterIO io;
     private final Drive drive;
 
-	public Shooter(Drive drive) {
+	public Shooter(ShooterIO io, Drive drive) {
 	
-        topShooter = new TalonFX(TOP_SHOOTER_ID);
+//        topShooter = new TalonFX(TOP_SHOOTER_ID);
+//
+//        bottomShooter = new TalonFX(BOTTOM_SHOOTER_ID);
+//        feeder = new TalonFX(FEEDER_ID);
 
-        bottomShooter = new TalonFX(BOTTOM_SHOOTER_ID);
-        feeder = new TalonFX(FEEDER_ID);
-
+        this.io = io;
         this.drive= drive;
 
-        bottomShooter.setControl(new Follower(topShooter.getDeviceID(), MotorAlignmentValue.Opposed)); // May need to be Inverted
+
+
+//        bottomShooter.setControl(new Follower(topShooter.getDeviceID(), MotorAlignmentValue.Opposed)); // May need to be Inverted
 
 	}
 
@@ -91,36 +95,31 @@ public class Shooter extends SubsystemBase {
         return voltage;
     }
 
-    public Command aimAndShoot() {
-        return runOnce(() -> topShooter.setControl(getVoltage()))
-                .andThen(Commands.waitSeconds(1))
-                .andThen(() -> feeder.set(1))
-                .andThen(Commands.waitSeconds(5))
-                .andThen(() -> feeder.set(1))
-                .andThen(Commands.waitSeconds(1))//TODO set values to run
-                .finallyDo(
-                    () -> {
-                        topShooter.set(0);
-                        feeder.set(0);
-                    }
-                );
-    }
+//    public Command aimAndShoot() {
+//        return runOnce(() -> topShooter.setControl(getVoltage()))
+//                .andThen(Commands.waitSeconds(1))
+//                .andThen(() -> feeder.set(1))
+//                .andThen(Commands.waitSeconds(5))
+//                .andThen(() -> feeder.set(1))
+//                .andThen(Commands.waitSeconds(1))//TODO set values to run
+//                .finallyDo(
+//                    () -> {
+//                        topShooter.set(0);
+//                        feeder.set(0);
+//                    }
+//                );
+//    }
 
 
 
     public Command shootTest() {
-        return runOnce(() -> topShooter.set(-1))
+        return runOnce(() -> io.setShooterSpeed(-1))
                 .andThen(Commands.waitSeconds(1))
-                .andThen(() -> feeder.set(0.6))
+                .andThen(() -> io.setFeederSpeed(0.6))
                 .andThen(Commands.waitSeconds(30))
-                .andThen(() -> feeder.set(0.6))
-                .andThen(Commands.waitSeconds(1))//TODO set values to run
-                .finallyDo(
-                    () -> {
-                        topShooter.set(0);
-                        feeder.set(0);
-                    }
-                );
-
+                .finallyDo(() -> {
+                    io.setShooterSpeed(0);
+                    io.setFeederSpeed(0);
+                });
     }
 }

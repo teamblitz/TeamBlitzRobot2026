@@ -38,6 +38,7 @@ import frc.robot.subsystems.drive.swerveModule.SwerveModuleConfiguration;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOKraken;
+import frc.robot.subsystems.shooter.ShooterIOKraken;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.commands.TeleopSwerve;
@@ -118,7 +119,7 @@ public class RobotContainer {
         spindexerIO = new SpindexerIOKraken();
 
         intake = new Intake(intakeIO);
-        shooter = new Shooter(drive);
+        shooter = new Shooter(new ShooterIOKraken(), drive);
 
         spindexer = new frc.robot.subsystems.spindexer.Spindexer(spindexerIO);
 
@@ -162,7 +163,7 @@ public class RobotContainer {
         OIConstants.Shooter.SHOOT.whileTrue(
             Commands.sequence(
                 shooter.shootTest()
-                    .alongWith(Commands.waitSeconds(3.5).andThen(spindexer.feed()))
+                    .alongWith(Commands.waitSeconds(0.5).andThen(spindexer.feed()))
             )
         );
         OIConstants.Spindexer.FEED.whileTrue(spindexer.reverse()); //y
