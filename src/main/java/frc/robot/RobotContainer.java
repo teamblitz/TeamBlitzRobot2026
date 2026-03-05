@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.lib.math.AllianceFlipUtil;
@@ -110,6 +111,9 @@ public class RobotContainer {
                                     new GyroIOPigeon(),
                                     new RangeSensorIOFusion());
 
+//        RobotModeTriggers.teleop().onTrue(Commands.runOnce(
+//                () -> {drive.getCurrentCommand().cancel();}
+//        ).ignoringDisable(true));
        // driveCommands = new DriveCommands(drive);
 
         vision = new Vision(drive);
@@ -125,7 +129,7 @@ public class RobotContainer {
 
         wrist = new Wrist(new WristIOKraken());
 
-        autoCommands = new AutoCommands(drive, intake, spindexer, shooter);
+//        autoCommands = new AutoCommands(drive, intake, spindexer, shooter);
 
 
     }
@@ -146,6 +150,8 @@ public class RobotContainer {
                         .withName("TeleopSwerve"));
 
         wrist.setDefaultCommand((wrist.goToIdle()));
+
+
 
     }
     //Configures our button bindings to the robot commands.
@@ -232,6 +238,7 @@ public class RobotContainer {
     }
     //Configures autonomuous cpmmands and autochooser
     private void configureAutonomous() {
+        autoCommands = new AutoCommands(drive, intake, spindexer, shooter);
         autoChooser = new AutoChooser();
         SmartDashboard.putData("autoChooser", autoChooser);
 
@@ -244,7 +251,11 @@ public class RobotContainer {
     //Configures the Autochooser, which is selected in the dashboard(elastic)
     public Command getAutonomousCommand() {
         Logger.recordOutput("selectedAuto", autoChooser.selectedCommand().getName());
-        return autoChooser.selectedCommandScheduler();
+//        return autoChooser.selectedCommandScheduler();
+
+        return Commands.sequence(
+                Commands.runOnce(() -> drive.setGyro(AllianceFlipUtil.shouldFlip() ? 0 : 180)),
+                autoChooser.selectedCommandScheduler()).withName("Auto Command");
 //        return Commands.none();
 //         return Commands.sequence(
 //                         Commands.runOnce(() -> drive.resetRotation(
