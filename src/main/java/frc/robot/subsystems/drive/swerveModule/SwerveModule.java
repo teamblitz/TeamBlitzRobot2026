@@ -7,6 +7,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.Timer;
 import frc.lib.util.ModuleStateOptimizer;
 import frc.robot.Constants;
 import frc.robot.subsystems.drive.swerveModule.angle.AngleMotorIO;
@@ -46,6 +47,7 @@ public class SwerveModule {
         this.absoluteEncoder = absoluteEncoder;
 
         // hehe
+        Timer.delay(1.0); //get rid of this later or make the value smaller. used to ensure that the encoder
         absoluteEncoder.updateInputs(encoderInputs);
         resetToAbs();
 
