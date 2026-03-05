@@ -16,7 +16,7 @@ public class CommandFactory {
         return Commands.parallel(
                 shooter.shootTest(),
                 Commands.sequence(
-                    Commands.waitSeconds(5),
+                    Commands.waitSeconds(0.2),
                     spindexer.feed())
         );
     }

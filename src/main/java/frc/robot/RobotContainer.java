@@ -246,12 +246,12 @@ public class RobotContainer {
         Logger.recordOutput("selectedAuto", autoChooser.selectedCommand().getName());
         return autoChooser.selectedCommandScheduler();
 //        return Commands.none();
-        // return Commands.sequence(
-        //                 Commands.runOnce(() -> drive.resetRotation(
-        //                         AllianceFlipUtil.shouldFlip()
-        //                                 ? Rotation2d.kZero
-        //                                 : Rotation2d.k180deg)),
-        //                 autoChooser.selectedCommandScheduler())
-        //         .withName("Auto Command");
+//         return Commands.sequence(
+//                         Commands.runOnce(() -> drive.resetRotation(
+//                                 AllianceFlipUtil.shouldFlip()
+//                                         ? Rotation2d.kZero
+//                                         : Rotation2d.k180deg)),
+//                         autoChooser.selectedCommandScheduler())
+//                 .withName("Auto Command");
     }
 }
