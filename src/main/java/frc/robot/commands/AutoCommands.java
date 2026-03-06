@@ -37,7 +37,7 @@ public class AutoCommands {
     //    private final Command configAutonDefault;
     private final Command configTeleDefault;
 
-    private SwerveSample lastSample;
+    // private SwerveSample lastSample;
 
     public AutoCommands(
             Drive drive, Intake intake, Spindexer spindexer, Shooter shooter) {
@@ -52,13 +52,14 @@ public class AutoCommands {
                 //Getting the current pose(position and rotation)
                 drive::getPose,
                 drive::resetOdometry,
-                sample -> {
-                    // "Don't ask, just cast (the ring into the fire frodo)" - Noah 2024
-                    //
-                    //Telling the bot to follow the trajectory(which is made in choreo)
-                    lastSample = (SwerveSample) sample;
-                    drive.followTrajectory((SwerveSample) sample);
-                },
+                drive::followTrajectory,
+                // sample -> {
+                //     // "Don't ask, just cast (the ring into the fire frodo)" - Noah 2024
+                //     //
+                //     //Telling the bot to follow the trajectory(which is made in choreo)
+                //     lastSample = (SwerveSample) sample;
+                //     drive.followTrajectory((SwerveSample) sample);
+                // },
                 true,
                 drive);
 
@@ -69,27 +70,27 @@ public class AutoCommands {
         //
         //So this changes the robot's default command when autonomous is started. 
         //The default command allows you to change different properties on the bot.
-        RobotModeTriggers.autonomous()
-                .onTrue(Commands.runOnce(() -> drive.setDefaultCommand(Commands.run(
-                        () -> {
-                            if (lastSample != null) {
-                                Logger.recordOutput("drive/auto/doingDefaultPid", Math.random());
-                                drive.followTrajectory(new SwerveSample(
-                                        lastSample.t,
-                                        lastSample.x,
-                                        lastSample.y,
-                                        lastSample.heading,
-                                        0,
-                                        0,
-                                        0,
-                                        0,
-                                        0,
-                                        0,
-                                        lastSample.moduleForcesX(),
-                                        lastSample.moduleForcesY()));
-                            }
-                        },
-                        drive))));
+        // RobotModeTriggers.autonomous()
+        //         .onTrue(Commands.runOnce(() -> drive.setDefaultCommand(Commands.run(
+        //                 () -> {
+        //                     if (lastSample != null) {
+        //                         Logger.recordOutput("drive/auto/doingDefaultPid", Math.random());
+        //                         drive.followTrajectory(new SwerveSample(
+        //                                 lastSample.t,
+        //                                 lastSample.x,
+        //                                 lastSample.y,
+        //                                 lastSample.heading,
+        //                                 0,
+        //                                 0,
+        //                                 0,
+        //                                 0,
+        //                                 0,
+        //                                 0,
+        //                                 lastSample.moduleForcesX(),
+        //                                 lastSample.moduleForcesY()));
+        //                     }
+        //                 },
+        //                 drive))));
 
         // "As funny as it would be for the auto to steal the controls of the robot for the rest of
         // the match,
@@ -139,7 +140,7 @@ public class AutoCommands {
         final var routine = autoFactory.newRoutine("moveAndShoot");
 
         // Load the routine's trajectories
-        AutoTrajectory moveToPos = routine.trajectory("moveToPos");
+        AutoTrajectory moveToPos = routine.trajectory("OutCenter");
 
         // When the routine begins, reset odometry and start the first trajectory
         routine.active().onTrue(
