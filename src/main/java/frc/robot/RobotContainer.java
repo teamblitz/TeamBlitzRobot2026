@@ -261,7 +261,9 @@ public class RobotContainer {
         SmartDashboard.putData("autoChooser", autoChooser);
 
         autoChooser.addCmd("None", autoCommands::getNoAuto);
-        autoChooser.addRoutine("Shoot Only", autoCommands::autoShoot);
+        // autoChooser.addRoutine("Shoot Only", autoCommands::autoShoot);
+        //
+        autoChooser.addRoutine("MoveAndShoot", autoCommands::moveAndShoot);
 
         //EXAMPLE
         // autoChooser.addRoutine("leaveRight", () -> autoCommands.leave("leaveRight"));
