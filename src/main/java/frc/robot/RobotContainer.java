@@ -166,7 +166,13 @@ public class RobotContainer {
         OIConstants.Intake.FORWARD.whileTrue(intake.forward()); //right bumper
         // OIConstants.Shooter.SHOOT.whileTrue(shooter.shootTest()
         //         .alongWith(spindexer.feed())); //Left Trigger
-        OIConstants.Shooter.SHOOT.whileTrue(
+        OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(
+            Commands.sequence(
+                shooter.shootTest()
+                    .alongWith(Commands.waitSeconds(0.5).andThen(spindexer.feed()))
+            )
+        );
+        OIConstants.Shooter.DRIVER_SHOOT.whileTrue(
             Commands.sequence(
                 shooter.shootTest()
                     .alongWith(Commands.waitSeconds(0.5).andThen(spindexer.feed()))

@@ -11,7 +11,10 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Function;
 
 public class OIConstants {
-
+    /*ALL KEYBINDS
+     * Wrist-Down -> y
+     * Spindexer -> Pov_Down
+     */
     public static final double XBOX_STICK_DEADBAND = 0.06;
 
        public static final CommandJoystick DRIVE_CONTROLLER = new CommandJoystick(0);
@@ -36,7 +39,7 @@ public class OIConstants {
         private static final double SPIN_SPEED = Constants.compBot() ? .32 : .4;
         private static final double SUPER_SPIN = 1.0;
         private static final double SLOW_SPEED = .3;
-        public static final double NORMAL_SPEED = .6;
+        public static final double NORMAL_SPEED = 0.6;
         public static final double FAST_SPEED = 1;
 
         private static final SlewRateLimiter DRIVE_MULTIPLIER_LIMITER =
@@ -117,7 +120,8 @@ public class OIConstants {
 
 
     public static final class Shooter {
-        public static final Trigger SHOOT = OPERATOR_CONTROLLER.leftTrigger();
+        public static final Trigger OPERATOR_SHOOT = OPERATOR_CONTROLLER.leftTrigger();
+        public static final Trigger DRIVER_SHOOT = DRIVE_CONTROLLER.button(2);
 
         public static final Trigger SHOOT_TESTING = OPERATOR_CONTROLLER.povRight();
     }
