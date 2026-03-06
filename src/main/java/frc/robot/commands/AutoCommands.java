@@ -135,6 +135,27 @@ public class AutoCommands {
         return routine;
     }
 
+    public AutoRoutine moveAndShoot() {
+        final var routine = autoFactory.newRoutine("moveAndShoot");
+
+        // Load the routine's trajectories
+        AutoTrajectory moveToPos = routine.trajectory("moveToPos");
+
+        // When the routine begins, reset odometry and start the first trajectory
+        routine.active().onTrue(
+                Commands.sequence(
+                        moveToPos.resetOdometry(),
+                        moveToPos.cmd()
+                )
+        );
+
+        moveToPos.done().onTrue(
+                CommandFactory.autoShoot(shooter, spindexer)
+        );
+
+        return routine;
+    }
+
     // public AutoRoutine driveAway (String pathName) {
     //     final var routine = autoFactory.newRoutine("Drive Away");
 
