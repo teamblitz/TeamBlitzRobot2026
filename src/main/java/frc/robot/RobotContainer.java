@@ -178,6 +178,18 @@ public class RobotContainer {
                     .alongWith(Commands.waitSeconds(0.5).andThen(spindexer.feed()))
             )
         );
+        OIConstants.Shooter.OPERATOR_TEAM_FEED.whileTrue(
+                Commands.sequence(
+                shooter.teamFeed()
+                    .alongWith(Commands.waitSeconds(0.5).andThen(spindexer.feed()))
+            ));
+            
+        OIConstants.Shooter.DRIVER_TEAM_FEED.whileTrue(
+                Commands.sequence(
+                shooter.teamFeed()
+                    .alongWith(Commands.waitSeconds(0.5).andThen(spindexer.feed()))
+            ));
+
         OIConstants.Spindexer.FEED.whileTrue(spindexer.reverse()); //y
         
         

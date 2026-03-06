@@ -122,7 +122,8 @@ public class OIConstants {
     public static final class Shooter {
         public static final Trigger OPERATOR_SHOOT = OPERATOR_CONTROLLER.leftTrigger();
         public static final Trigger DRIVER_SHOOT = DRIVE_CONTROLLER.button(2);
-
+        public static final Trigger OPERATOR_TEAM_FEED = OPERATOR_CONTROLLER.rightTrigger();
+        public static final Trigger DRIVER_TEAM_FEED = DRIVE_CONTROLLER.button(6);
         public static final Trigger SHOOT_TESTING = OPERATOR_CONTROLLER.povRight();
     }
     
