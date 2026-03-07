@@ -190,6 +190,18 @@ public class RobotContainer {
                     .alongWith(Commands.waitSeconds(0.5).andThen(spindexer.feed()))
             ));
 
+        OIConstants.Shooter.DRIVE_DEEP.whileTrue(
+                Commands.sequence(
+                shooter.deepFeed()
+                    .alongWith(Commands.waitSeconds(0.5).andThen(spindexer.feed()))
+        ));
+
+        OIConstants.Shooter.OPERATOR_DEEP.whileTrue(
+                Commands.sequence(
+                shooter.deepFeed()
+                    .alongWith(Commands.waitSeconds(0.5).andThen(spindexer.feed()))
+        ));
+
         OIConstants.Spindexer.FEED.whileTrue(spindexer.reverse()); //y
         
         
@@ -213,7 +225,6 @@ public class RobotContainer {
         OIConstants.Intake.FORWARD.whileTrue(intake.forward()); // a
         OIConstants.Intake.REVERSE.whileTrue(intake.reverse()); // b
 
-        OIConstants.Shooter.SHOOT_TESTING.whileTrue(shooter.shootTest());
     }
 
     //Configures the FRC dashboard and tells the robot several things:
