@@ -126,7 +126,8 @@ public class OIConstants {
         public static final Trigger DRIVER_TEAM_FEED = DRIVE_CONTROLLER.button(6);
         public static final Trigger OPERATOR_DEEP = OPERATOR_CONTROLLER.povRight();
         public static final Trigger DRIVE_DEEP = DRIVE_CONTROLLER.button(4);
-        // public static final Trigger SHOOT_TESTING = OPERATOR_CONTROLLER.povRight();
+        public static final Trigger SHOOT_TESTING = OPERATOR_CONTROLLER.povRight();
+        
     }
     
     public static final class Climber {

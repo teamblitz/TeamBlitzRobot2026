@@ -172,6 +172,12 @@ public class RobotContainer {
                     .alongWith(Commands.waitSeconds(0.65).andThen(spindexer.feed()))
             )
         );
+        OIConstants.Shooter.SHOOT_TESTING.whileTrue(
+                Commands.sequence(
+                        shooter.aimAndShoot()
+                        .alongWith(Commands.waitSeconds(0.65)).andThen(spindexer.feed())
+                )
+        );
         OIConstants.Shooter.DRIVER_SHOOT.whileTrue(
             Commands.sequence(
                 shooter.shootTest()
