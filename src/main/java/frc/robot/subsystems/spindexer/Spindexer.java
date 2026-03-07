@@ -8,6 +8,7 @@ import frc.lib.BlitzSubsystem;
 import frc.robot.Robot;
 
 import org.littletonrobotics.junction.Logger;
+import frc.robot.subsystems.spindexer.SpindexerIO;
 
 public class Spindexer extends BlitzSubsystem {
     private final SpindexerIO io;
