@@ -7,8 +7,12 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import frc.robot.Constants.ShooterConstants.*;
 
 import frc.lib.monitor.HardwareWatchdog;
+
+import static frc.robot.Constants.ShooterConstants.RAMP;
+
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterIOKraken implements ShooterIO {
@@ -25,7 +29,7 @@ public class ShooterIOKraken implements ShooterIO {
         TalonFXConfiguration shooterConfig = new TalonFXConfiguration();
         shooterConfig.MotorOutput.withNeutralMode(NeutralModeValue.Coast)
                 .withInverted(InvertedValue.Clockwise_Positive);
-        shooterConfig.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = 0.0;
+        shooterConfig.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = RAMP;
 
         TalonFXConfiguration feederConfig = new TalonFXConfiguration();
         feederConfig.MotorOutput.withNeutralMode(NeutralModeValue.Brake)

@@ -487,6 +487,7 @@ public final class Constants {
         public static final double SHOOTER_ANGLE = 70;
         public static final double WHEEL_DIAMETER = 0.1016;
 
+        public static final double RAMP = 0.15;
         public static final double KA = 0.1;
     }
     public static final class Winch {
