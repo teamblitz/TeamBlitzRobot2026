@@ -169,37 +169,37 @@ public class RobotContainer {
         OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(
             Commands.sequence(
                 shooter.shootTest()
-                    .alongWith(Commands.waitSeconds(0.5).andThen(spindexer.feed()))
+                    .alongWith(Commands.waitSeconds(0.65).andThen(spindexer.feed()))
             )
         );
         OIConstants.Shooter.DRIVER_SHOOT.whileTrue(
             Commands.sequence(
                 shooter.shootTest()
-                    .alongWith(Commands.waitSeconds(0.5).andThen(spindexer.feed()))
+                    .alongWith(Commands.waitSeconds(0.65).andThen(spindexer.feed()))
             )
         );
         OIConstants.Shooter.OPERATOR_TEAM_FEED.whileTrue(
                 Commands.sequence(
                 shooter.teamFeed()
-                    .alongWith(Commands.waitSeconds(0.5).andThen(spindexer.feed()))
+                    .alongWith(Commands.waitSeconds(0.65).andThen(spindexer.feed()))
             ));
             
         OIConstants.Shooter.DRIVER_TEAM_FEED.whileTrue(
                 Commands.sequence(
                 shooter.teamFeed()
-                    .alongWith(Commands.waitSeconds(0.5).andThen(spindexer.feed()))
+                    .alongWith(Commands.waitSeconds(0.65).andThen(spindexer.feed()))
             ));
 
         OIConstants.Shooter.DRIVE_DEEP.whileTrue(
                 Commands.sequence(
                 shooter.deepFeed()
-                    .alongWith(Commands.waitSeconds(0.5).andThen(spindexer.feed()))
+                    .alongWith(Commands.waitSeconds(0.8).andThen(spindexer.feed()))
         ));
 
         OIConstants.Shooter.OPERATOR_DEEP.whileTrue(
                 Commands.sequence(
                 shooter.deepFeed()
-                    .alongWith(Commands.waitSeconds(0.5).andThen(spindexer.feed()))
+                    .alongWith(Commands.waitSeconds(0.8).andThen(spindexer.feed()))
         ));
 
         OIConstants.Spindexer.FEED.whileTrue(spindexer.reverse()); //y
