@@ -136,9 +136,9 @@ public class Shooter extends SubsystemBase {
     }
 
     public Command deepFeed() {
-        return runOnce(() -> io.setShooterSpeed(1))
+        return runOnce(() -> io.setShooterSpeed(0.9))
                 .andThen(Commands.waitSeconds(1.5))
-                .andThen(() -> io.setFeederSpeed(-0.9))
+                .andThen(() -> io.setFeederSpeed(-0.45))
                 .andThen(Commands.waitSeconds(30))
                 .finallyDo(() -> {
                     io.setShooterSpeed(0);
