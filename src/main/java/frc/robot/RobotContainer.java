@@ -282,6 +282,9 @@ public class RobotContainer {
         //
         autoChooser.addRoutine("MoveAndShoot", autoCommands::moveAndShoot);
 
+        autoChooser.addRoutine("RightLeave", autoCommands::leaveRight);
+        autoChooser.addRoutine("LeftLeave", autoCommands::leaveLeft);
+
         //EXAMPLE
         // autoChooser.addRoutine("leaveRight", () -> autoCommands.leave("leaveRight"));
     }

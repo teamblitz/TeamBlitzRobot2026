@@ -157,6 +157,36 @@ public class AutoCommands {
         return routine;
     }
 
+    public AutoRoutine leaveRight() {
+        final var routine = autoFactory.newRoutine("leaveRight");
+
+        AutoTrajectory leaveToMidRight = routine.trajectory("RightLeave");
+
+        routine.active().onTrue(
+            Commands.sequence(
+                leaveToMidRight.resetOdometry(),
+                leaveToMidRight.cmd()
+            )
+        );
+
+        return routine;
+    }
+
+        public AutoRoutine leaveLeft() {
+        final var routine = autoFactory.newRoutine("leaveLeft");
+
+        AutoTrajectory leaveToMidLeft = routine.trajectory("LeftLeave");
+
+        routine.active().onTrue(
+            Commands.sequence(
+                leaveToMidLeft.resetOdometry(),
+                leaveToMidLeft.cmd()
+            )
+        );
+
+        return routine;
+    }
+
     // public AutoRoutine driveAway (String pathName) {
     //     final var routine = autoFactory.newRoutine("Drive Away");
 
