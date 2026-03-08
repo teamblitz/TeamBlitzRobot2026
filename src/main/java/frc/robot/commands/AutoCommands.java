@@ -159,13 +159,14 @@ public class AutoCommands {
 
     public AutoRoutine leaveRight() {
         final var routine = autoFactory.newRoutine("leaveRight");
+        final var traj = routine.trajectory("leaveRight");
 
-        AutoTrajectory leaveToMidRight = routine.trajectory("RightLeave");
+        // AutoTrajectory leaveToMidRight = routine.trajectory("RightLeave");
 
         routine.active().onTrue(
             Commands.sequence(
-                leaveToMidRight.resetOdometry(),
-                leaveToMidRight.cmd()
+                traj.resetOdometry(),
+                traj.cmd().withName("leaveRight")
             )
         );
 
@@ -174,13 +175,14 @@ public class AutoCommands {
 
         public AutoRoutine leaveLeft() {
         final var routine = autoFactory.newRoutine("leaveLeft");
+        final var traj = routine.trajectory("leaveLeft");
 
-        AutoTrajectory leaveToMidLeft = routine.trajectory("LeftLeave");
+        // AutoTrajectory leaveToMidLeft = routine.trajectory("LeftLeave");
 
         routine.active().onTrue(
             Commands.sequence(
-                leaveToMidLeft.resetOdometry(),
-                leaveToMidLeft.cmd()
+                traj.resetOdometry(),
+                traj.cmd().withName("leaveLeft")
             )
         );
 
