@@ -21,26 +21,13 @@ public class Wrist extends BlitzSubsystem {
 
     public Wrist(WristIO io) {
         super("Wrist");
-
         this.io = io;
-
-//        setpoint = new TrapezoidProfile.State(getPosition(), 0.0);
         goal = Optional.empty();
-
-//        setDefaultCommand((goToIdle()));
     }
 
     private final WristInputsAutoLogged inputs = new WristInputsAutoLogged();
 
-//    private final TrapezoidProfile.Constraints constraints =
-//            new TrapezoidProfile.Constraints(MAX_VELOCITY, MAX_ACCEL);
-
     private Optional<TrapezoidProfile.State> goal;
-//    private TrapezoidProfile.State setpoint;
-
-//    private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
-
-//    private double cruiseVelocity = MAX_VELOCITY;
 
     @Override
     public void periodic() {
@@ -65,22 +52,6 @@ public class Wrist extends BlitzSubsystem {
     public Command upTest() {
         return startEnd(() -> io.setSpeed(0.5), () -> io.setSpeed(0));
     }
-
-   /* public Command move_up() {
-        // return startEnd(() -> io.setMotionMagic(1.64), () -> io.setSpeed(0));
-        return Commands.runOnce(() -> {
-            io.setMotionMagic(1);
-            System.out.println("Finishes move");
-        });
-    }
-
-    public Command move_down() {
-        // return startEnd(() -> io.setSpeed(-0.3), () -> io.setSpeed(0));
-        return Commands.runOnce(() -> {
-            io.setMotionMagic(0);
-        });
-
-    } */ //Do not use
 
     public Command setSpeed(double speed) {
         return startEnd(() -> io.setSpeed(speed), () -> io.setSpeed(0));
@@ -120,21 +91,8 @@ public class Wrist extends BlitzSubsystem {
                 .beforeStarting(() -> System.out.println("followGoal starting"));
     }
 
-//    private Command refreshCurrentState() {
-//        return runOnce(() -> setpoint = new TrapezoidProfile.State(getPosition(), getVelocity()))
-//                .onlyIf(() -> setpoint == null || goal.isEmpty());
-//    }
-
     public double getPosition() {
         return inputs.absoluteEncoderPosition;
-    }
-
-    @AutoLogOutput(key = "wrist/idealPosition")
-    public double getIdealPosition() {
-//        if (goal.isPresent()) {
-//            return setpoint.position;
-//        }
-        return getPosition();
     }
 
     public double getVelocity() {

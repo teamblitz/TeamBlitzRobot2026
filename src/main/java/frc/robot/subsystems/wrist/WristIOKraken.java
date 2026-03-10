@@ -31,8 +31,8 @@ public class WristIOKraken implements WristIO {
 
         CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
         encoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-        // encoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.73;
         encoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.9;
+
         // Set this to the negated raw reading when wrist is at the zero position
         encoderConfig.MagnetSensor.MagnetOffset = MAGNET_OFFSET;
         absoluteEncoder.getConfigurator().apply(encoderConfig);
@@ -93,14 +93,6 @@ public class WristIOKraken implements WristIO {
 
     @Override
     public void setMotionMagic(double position) {
-        // var mmConfig = new com.ctre.phoenix6.configs.MotionMagicConfigs();
-        // mmConfig.MotionMagicCruiseVelocity = MAX_VELOCITY;
-        // mmConfig.MotionMagicAcceleration = MAX_ACCEL;
-        // mmConfig.MotionMagicJerk = 0;
-        // wrist.getConfigurator().apply(mmConfig);
-
-        // wrist.setControl(motionMagicRequest.withPosition(position / 2 * Math.PI));
-        // wrist.setPosition(position, 2);
         wrist.setControl(motionMagicRequest.withPosition(position));
     }
 
@@ -110,7 +102,6 @@ public class WristIOKraken implements WristIO {
     }
 
     public double getAbsPosition() {
-//        var encoderPos = absoluteEncoder.getAbsolutePosition().getValueAsDouble();
         return absoluteEncoder.getAbsolutePosition().getValueAsDouble();
     }
 }
