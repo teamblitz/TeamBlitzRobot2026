@@ -6,8 +6,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Spindexer;
 import frc.robot.Constants.ShooterConstants.*;
-import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.drive.swerveModule.SwerveModule;
+import frc.robot.subsystems.Drive.CommandSwerveDrivetrain;
 import frc.lib.math.AllianceFlipUtil;
 import edu.wpi.first.math.geometry.*;
 
@@ -27,13 +26,14 @@ import com.ctre.phoenix6.controls.Follower;
 public class Shooter extends SubsystemBase {
 	//private final ShooterIO io;
 
-   private final TalonFX shooter;
-   private final TalonFX deepFeed;
-   private final TalonFX feeder;
+    private final TalonFX shooter;
+    private final TalonFX deepFeed;
+    private final TalonFX feeder;
     private final ShooterIO io;
-    private final Drive drive;
+    private final CommandSwerveDrivetrain drive;
+    private final Pose2d pose;
 
-	public Shooter(ShooterIO io, Drive drive) {
+	public Shooter(ShooterIO io, CommandSwerveDrivetrain drive) {
 	
         shooter = new TalonFX(30);
         feeder = new TalonFX(31);
@@ -44,6 +44,11 @@ public class Shooter extends SubsystemBase {
 
         this.io = io;
         this.drive= drive;
+
+
+        //Creates a Pose object 
+        //TODO see if this actually does what it is supposed to do
+        pose = drive.getState().Pose;
 
 
 
@@ -66,8 +71,6 @@ public class Shooter extends SubsystemBase {
      * 
      */
      public double getVelocity () {
-        //pose is just where the robot is at the time
-        var pose = drive.getPose();
         //First part of the equation, calculating distance
         double distance = Math.sqrt(
             Math.pow((Constants.ShooterConstants.HUB_X - pose.getX()), 2) + Math.pow((Constants.ShooterConstants.HUB_Y - pose.getY()), 2)

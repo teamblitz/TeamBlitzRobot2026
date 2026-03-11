@@ -31,21 +31,16 @@ import frc.lib.math.AllianceFlipUtil;
 import frc.lib.reefscape.ScoringPositions;
 import frc.robot.Constants.Spindexer;
 import frc.robot.commands.*;
-import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.drive.gyro.GyroIOPigeon;
-import frc.robot.subsystems.drive.range.RangeSensorIOFusion;
-import frc.robot.subsystems.drive.swerveModule.SwerveModule;
-import frc.robot.subsystems.drive.swerveModule.SwerveModuleConfiguration;
+import frc.robot.subsystems.Drive.TunerConstants;
+import frc.robot.subsystems.Drive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOKraken;
 import frc.robot.subsystems.shooter.ShooterIOKraken;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.commands.TeleopSwerve;
 
 import frc.robot.subsystems.wrist.Wrist;
-import frc.robot.subsystems.wrist.WristIO;
 import frc.robot.subsystems.spindexer.SpindexerIO;
 import frc.robot.subsystems.spindexer.SpindexerIOKraken;
 
@@ -64,8 +59,7 @@ import java.util.Set;
 public class RobotContainer {
 
     /* ***** --- Subsystems --- ***** */
-    private Drive drive;
-    private SwerveModule swerveModule;
+    private CommandSwerveDrivetrain drive;
     private Vision vision;
     private Intake intake;
     private IntakeIO intakeIO;
@@ -75,8 +69,6 @@ public class RobotContainer {
     private AutoCommands autoCommands;
     //private DriveCommands driveCommands;
     private Wrist wrist;
-    private WristIO wristIO;
-    private WristIOKraken wristIOKraken;
 
     /* ***** --- Autonomous --- ***** */
     private AutoChooser autoChooser;
@@ -99,24 +91,12 @@ public class RobotContainer {
     }
 
     private void configureSubsystems() {
-        drive = new Drive(
-                                    new SwerveModuleConfiguration(
-                                            SwerveModuleConfiguration.MotorType.KRAKEN,
-                                            SwerveModuleConfiguration.MotorType.KRAKEN,
-                                            SwerveModuleConfiguration.EncoderType.CANCODER),
-                                    Constants.Drive.Mod0.CONSTANTS,
-                                    Constants.Drive.Mod1.CONSTANTS,
-                                    Constants.Drive.Mod2.CONSTANTS,
-                                    Constants.Drive.Mod3.CONSTANTS,
-                                    new GyroIOPigeon(),
-                                    new RangeSensorIOFusion());
+        drive = TunerConstants.createDrivetrain();
 
 //        RobotModeTriggers.teleop().onTrue(Commands.runOnce(
 //                () -> {drive.getCurrentCommand().cancel();}
 //        ).ignoringDisable(true));
        // driveCommands = new DriveCommands(drive);
-
-        vision = new Vision(drive);
 
         intakeIO = new IntakeIOKraken();
 

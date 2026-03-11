@@ -16,7 +16,7 @@ import frc.lib.reefscape.ScoringPositions;
 import frc.lib.reefscape.ScoringPositions.Branch;
 import frc.robot.Constants;
 import frc.robot.PositionConstants;
-import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.Drive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.spindexer.Spindexer;
 import frc.robot.subsystems.shooter.Shooter;
@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class AutoCommands {
-    private final Drive drive;
+    private final CommandSwerveDrivetrain drive;
     private final SwerveDriveKinematics kinematics;
     private final AutoFactory autoFactory;
     private final Intake intake;
@@ -37,10 +37,10 @@ public class AutoCommands {
     //    private final Command configAutonDefault;
     private final Command configTeleDefault;
 
-    // private SwerveSample lastSample;
+    private SwerveSample lastSample;
 
     public AutoCommands(
-            Drive drive, Intake intake, Spindexer spindexer, Shooter shooter) {
+            CommandSwerveDrivetrain drive, Intake intake, Spindexer spindexer, Shooter shooter) {
         this.drive = drive;
         this.intake = intake;
         this.kinematics = Constants.Drive.KINEMATICS;
@@ -51,15 +51,14 @@ public class AutoCommands {
         autoFactory = new AutoFactory(
                 //Getting the current pose(position and rotation)
                 drive::getPose,
-                drive::resetOdometry,
-                drive::followTrajectory,
-                // sample -> {
-                //     // "Don't ask, just cast (the ring into the fire frodo)" - Noah 2024
-                //     //
-                //     //Telling the bot to follow the trajectory(which is made in choreo)
-                //     lastSample = (SwerveSample) sample;
-                //     drive.followTrajectory((SwerveSample) sample);
-                // },
+                drive::resetPose,
+                 sample -> {
+                    // "Don't ask, just cast (the ring into the fire frodo)" - Noah 2024
+                    //
+                    //Telling the bot to follow the trajectory(which is made in choreo)
+                    lastSample = (SwerveSample) sample;
+                    drive.followTrajectory((SwerveSample) sample);
+                },
                 true,
                 drive);
 
