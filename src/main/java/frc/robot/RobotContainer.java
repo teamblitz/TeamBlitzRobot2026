@@ -31,13 +31,12 @@ import frc.lib.math.AllianceFlipUtil;
 import frc.lib.reefscape.ScoringPositions;
 import frc.robot.Constants.Spindexer;
 import frc.robot.commands.*;
-import frc.robot.subsystems.Drive.TunerConstants;
-import frc.robot.subsystems.Drive.CommandSwerveDrivetrain;
+import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
+import frc.robot.subsystems.drive.TunerConstants;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOKraken;
 import frc.robot.subsystems.shooter.ShooterIOKraken;
-import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.shooter.Shooter;
 
 import frc.robot.subsystems.wrist.Wrist;
@@ -60,14 +59,13 @@ public class RobotContainer {
 
     /* ***** --- Subsystems --- ***** */
     private CommandSwerveDrivetrain drive;
-    private Vision vision;
     private Intake intake;
     private IntakeIO intakeIO;
     private Shooter shooter;
     private frc.robot.subsystems.spindexer.Spindexer spindexer;
     private SpindexerIO spindexerIO;
     private AutoCommands autoCommands;
-    //private DriveCommands driveCommands;
+    private DriveCommands driveCommands;
     private Wrist wrist;
 
     /* ***** --- Autonomous --- ***** */
@@ -96,7 +94,7 @@ public class RobotContainer {
 //        RobotModeTriggers.teleop().onTrue(Commands.runOnce(
 //                () -> {drive.getCurrentCommand().cancel();}
 //        ).ignoringDisable(true));
-       // driveCommands = new DriveCommands(drive);
+        driveCommands = new DriveCommands(drive);
 
         intakeIO = new IntakeIOKraken();
 
@@ -116,18 +114,18 @@ public class RobotContainer {
 
     //Creating a new driving system so that our robot understands our joystick and control
     private void setDefaultCommands() {
-        drive.setDefaultCommand(
-                new TeleopSwerve(
-                                drive,
-                                OIConstants.Drive.X_TRANSLATION,
-                                OIConstants.Drive.Y_TRANSLATION,
-                                OIConstants.Drive.ROTATION_SPEED,
-                                () -> false,
-                                () -> Double.NaN,
-                                () -> true)
-                        .unless(RobotState::isTest)
-                        .until(RobotState::isTest)
-                        .withName("TeleopSwerve"));
+        drive.setDefaultCommand(driveCommands
+                .joystickDrive(
+                        OIConstants.Drive.X_TRANSLATION,
+                        OIConstants.Drive.Y_TRANSLATION,
+                        OIConstants.Drive.ROTATION_SPEED,
+                        () -> 5,
+                        () -> 10,
+                        () -> 2 * Math.PI,
+                        true)
+                .onlyWhile(RobotState::isTeleop)
+                .onlyIf(RobotState::isTeleop)
+                .withName("Joystick Drive"));
 
         wrist.setDefaultCommand((wrist.goToIdle()));
 
@@ -136,7 +134,8 @@ public class RobotContainer {
     }
     //Configures our button bindings to the robot commands.
     private void configureTriggerBindings() {
-        OIConstants.Drive.RESET_GYRO.onTrue(Commands.runOnce(drive::zeroGyro));
+        OIConstants.Drive.RESET_GYRO.onTrue(Commands.runOnce(() -> drive.resetRotation(
+                AllianceFlipUtil.shouldFlip() ? Rotation2d.k180deg : Rotation2d.kZero)));
         //        OIConstants.Drive.X_BREAK.onTrue(drive.park());
         //
         //        OIConstants.Drive.BRAKE.onTrue(Commands.runOnce(() -> drive.setBrakeMode(true)));
@@ -223,7 +222,7 @@ public class RobotContainer {
                "Phoenix SignalLogger",
                runEnd(SignalLogger::start, SignalLogger::stop).ignoringDisable(true));
 
-       tab.add("drive/resetOdometry", Commands.runOnce(() -> drive.resetOdometry(new Pose2d())));
+       tab.add("drive/resetOdometry", Commands.runOnce(() -> drive.resetPose(new Pose2d())));
 
 //        tab.add(
 //                "wheel radius characterization",
@@ -273,16 +272,15 @@ public class RobotContainer {
         Logger.recordOutput("selectedAuto", autoChooser.selectedCommand().getName());
 //        return autoChooser.selectedCommandScheduler();
 
+        // return Commands.sequence(
+        //         Commands.runOnce(() -> drive.setGyro(AllianceFlipUtil.shouldFlip() ? 0 : 180)),
+        //         autoChooser.selectedCommandScheduler()).withName("Auto Command");
         return Commands.sequence(
-                Commands.runOnce(() -> drive.setGyro(AllianceFlipUtil.shouldFlip() ? 0 : 180)),
-                autoChooser.selectedCommandScheduler()).withName("Auto Command");
-//        return Commands.none();
-//         return Commands.sequence(
-//                         Commands.runOnce(() -> drive.resetRotation(
-//                                 AllianceFlipUtil.shouldFlip()
-//                                         ? Rotation2d.kZero
-//                                         : Rotation2d.k180deg)),
-//                         autoChooser.selectedCommandScheduler())
-//                 .withName("Auto Command");
+                        Commands.runOnce(() -> drive.resetRotation(
+                                AllianceFlipUtil.shouldFlip()
+                                        ? Rotation2d.kZero
+                                        : Rotation2d.k180deg)),
+                        autoChooser.selectedCommandScheduler())
+                .withName("Auto Command");
     }
 }
