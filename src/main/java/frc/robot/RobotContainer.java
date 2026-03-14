@@ -33,8 +33,8 @@ import frc.lib.math.AllianceFlipUtil;
 import frc.lib.reefscape.ScoringPositions;
 import frc.robot.Constants.Spindexer;
 import frc.robot.commands.*;
-import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
-import frc.robot.subsystems.drive.TunerConstants;
+import frc.robot.subsystems.Drive.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Drive.TunerConstants;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOKraken;
@@ -49,6 +49,14 @@ import frc.robot.subsystems.spindexer.SpindexerIOKraken;
 import frc.robot.subsystems.wrist.WristIOKraken;
 import org.littletonrobotics.junction.Logger;
 
+import static edu.wpi.first.units.Units.*;
+
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveRequest;
+
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+
 import java.util.Set;
 
 /**
@@ -60,7 +68,6 @@ import java.util.Set;
 public class RobotContainer {
 
     /* ***** --- Subsystems --- ***** */
-    private CommandSwerveDrivetrain drive;
     private Intake intake;
     private IntakeIO intakeIO;
     private Shooter shooter;
@@ -72,6 +79,23 @@ public class RobotContainer {
 
     /* ***** --- Autonomous --- ***** */
     private AutoChooser autoChooser;
+
+        /* ***** --- Drive --- ***** */
+        private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+
+    /* Setting up bindings for necessary control of the swerve drive platform */
+    private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+
+    private final Telemetry logger = new Telemetry(MaxSpeed);
+
+    private final CommandJoystick joystick = new CommandJoystick(0);
+
+    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
     public RobotContainer() {
         CameraServer.startAutomaticCapture();
@@ -91,19 +115,19 @@ public class RobotContainer {
     }
 
     private void configureSubsystems() {
-        drive = TunerConstants.createDrivetrain();
+        //drive = TunerConstants.createDrivetrain();
 
 //        RobotModeTriggers.teleop().onTrue(Commands.runOnce(
 //                () -> {drive.getCurrentCommand().cancel();}
 //        ).ignoringDisable(true));
-        driveCommands = new DriveCommands(drive);
+        driveCommands = new DriveCommands(drivetrain);
 
         intakeIO = new IntakeIOKraken();
 
         spindexerIO = new SpindexerIOKraken();
 
         intake = new Intake(intakeIO);
-        shooter = new Shooter(new ShooterIOKraken(), drive);
+        shooter = new Shooter(new ShooterIOKraken(), drivetrain);
 
         spindexer = new frc.robot.subsystems.spindexer.Spindexer(spindexerIO);
 
@@ -116,7 +140,7 @@ public class RobotContainer {
 
     //Creating a new driving system so that our robot understands our joystick and control
     private void setDefaultCommands() {
-        drive.setDefaultCommand(driveCommands
+        drivetrain.setDefaultCommand(driveCommands
                 .joystickDrive(
                         OIConstants.Drive.X_TRANSLATION,
                         OIConstants.Drive.Y_TRANSLATION,
@@ -136,7 +160,7 @@ public class RobotContainer {
     }
     //Configures our button bindings to the robot commands.
     private void configureTriggerBindings() {
-        OIConstants.Drive.RESET_GYRO.onTrue(Commands.runOnce(() -> drive.resetRotation(
+        OIConstants.Drive.RESET_GYRO.onTrue(Commands.runOnce(() -> drivetrain.resetRotation(
                 AllianceFlipUtil.shouldFlip() ? Rotation2d.k180deg : Rotation2d.kZero)));
         //        OIConstants.Drive.X_BREAK.onTrue(drive.park());
         //
@@ -191,16 +215,50 @@ public class RobotContainer {
 
         OIConstants.Spindexer.FEED.whileTrue(spindexer.reverse()); //y
         
-        
-        OIConstants.Drive.ALIGN_LEFT.whileTrue(new DeferredCommand(
-                () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(
-                        PositionConstants.getClosestFace(drive.getPose())[0])),
-                Set.of(drive)));
+         // Note that X is defined as forward according to WPILib convention,
+        // and Y is defined as to the left according to WPILib convention.
+        // drivetrain.setDefaultCommand(
+        //     // Drivetrain will execute this command periodically
+        //     drivetrain.applyRequest(() ->
+        //         drive.withVelocityX(-joystick.getY() * MaxSpeed) // Drive forward with negative Y (forward)
+        //             .withVelocityY(-joystick.getX() * MaxSpeed) // Drive left with negative X (left)
+        //             .withRotationalRate(-joystick.getX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+        //     )
+        // );
 
-        OIConstants.Drive.ALIGN_RIGHT.whileTrue(new DeferredCommand(
-                () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(
-                        PositionConstants.getClosestFace(drive.getPose())[1])),
-                Set.of(drive)));
+        // Idle while the robot is disabled. This ensures the configured
+        // neutral mode is applied to the drive motors while disabled.
+        final var idle = new SwerveRequest.Idle();
+        RobotModeTriggers.disabled().whileTrue(
+            drivetrain.applyRequest(() -> idle).ignoringDisable(true)
+        );
+
+        // joystick.button(10).whileTrue(drivetrain.applyRequest(() -> brake));
+        // joystick.button(12).whileTrue(drivetrain.applyRequest(() ->
+        //     point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
+        // ));
+
+        // Run SysId routines when holding back/start and X/Y.
+        // Note that each routine should be run exactly once in a single log.
+        // joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        // joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        // joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        // joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+
+        // Reset the field-centric heading on left bumper press.
+        //joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+
+        drivetrain.registerTelemetry(logger::telemeterize);
+
+        // OIConstants.Drive.ALIGN_LEFT.whileTrue(new DeferredCommand(
+        //         () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(
+        //                 PositionConstants.getClosestFace(drive.getPose())[0])),
+        //         Set.of(drive)));
+
+        // OIConstants.Drive.ALIGN_RIGHT.whileTrue(new DeferredCommand(
+        //         () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(
+        //                 PositionConstants.getClosestFace(drive.getPose())[1])),
+        //         Set.of(drive)));
 
         OIConstants.Wrist.DOWN.whileTrue(
                 Commands.parallel(
@@ -214,10 +272,10 @@ public class RobotContainer {
 
         //Sys id tests
         //Calls premade commands generated by Tuner X
-        OIConstants.Drive.SYS_ID_QUASISTATIC.whileTrue(drive.sysIdQuasistatic(Direction.kForward));
-        OIConstants.Drive.SYS_ID_DYNAMIC.whileTrue(drive.sysIdDynamic(Direction.kForward));
-        OIConstants.Drive.SYS_ID_QUASISTATIC_REVERSE.whileTrue(drive.sysIdQuasistatic(Direction.kReverse));
-        OIConstants.Drive.SYS_ID_DYNAMIC_REVERSE.whileTrue(drive.sysIdDynamic(Direction.kReverse));        
+        // OIConstants.Drive.SYS_ID_QUASISTATIC.whileTrue(drive.sysIdQuasistatic(Direction.kForward));
+        // OIConstants.Drive.SYS_ID_DYNAMIC.whileTrue(drive.sysIdDynamic(Direction.kForward));
+        // OIConstants.Drive.SYS_ID_QUASISTATIC_REVERSE.whileTrue(drive.sysIdQuasistatic(Direction.kReverse));
+        // OIConstants.Drive.SYS_ID_DYNAMIC_REVERSE.whileTrue(drive.sysIdDynamic(Direction.kReverse));        
     }
 
     //Configures the FRC dashboard and tells the robot several things:
@@ -230,7 +288,7 @@ public class RobotContainer {
                "Phoenix SignalLogger",
                runEnd(SignalLogger::start, SignalLogger::stop).ignoringDisable(true));
 
-       tab.add("drive/resetOdometry", Commands.runOnce(() -> drive.resetPose(new Pose2d())));
+       //tab.add("drive/resetOdometry", Commands.runOnce(() -> drive.resetPose(new Pose2d())));
 
 //        tab.add(
 //                "wheel radius characterization",
@@ -260,7 +318,7 @@ public class RobotContainer {
     }
     //Configures autonomuous cpmmands and autochooser
     private void configureAutonomous() {
-        autoCommands = new AutoCommands(drive, intake, spindexer, shooter);
+        autoCommands = new AutoCommands(drivetrain, intake, spindexer, shooter);
         autoChooser = new AutoChooser();
         SmartDashboard.putData("autoChooser", autoChooser);
 
@@ -284,7 +342,7 @@ public class RobotContainer {
         //         Commands.runOnce(() -> drive.setGyro(AllianceFlipUtil.shouldFlip() ? 0 : 180)),
         //         autoChooser.selectedCommandScheduler()).withName("Auto Command");
         return Commands.sequence(
-                        Commands.runOnce(() -> drive.resetRotation(
+                        Commands.runOnce(() ->drivetrain.resetRotation(
                                 AllianceFlipUtil.shouldFlip()
                                         ? Rotation2d.kZero
                                         : Rotation2d.k180deg)),

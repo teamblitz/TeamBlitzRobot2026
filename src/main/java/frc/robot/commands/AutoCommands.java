@@ -16,7 +16,7 @@ import frc.lib.reefscape.ScoringPositions;
 import frc.lib.reefscape.ScoringPositions.Branch;
 import frc.robot.Constants;
 import frc.robot.PositionConstants;
-import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Drive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.spindexer.Spindexer;
 import frc.robot.subsystems.shooter.Shooter;
@@ -40,7 +40,7 @@ public class AutoCommands {
     private SwerveSample lastSample;
 
     public AutoCommands(
-            CommandSwerveDrivetrain drive, Intake intake, Spindexer spindexer, Shooter shooter) {
+             CommandSwerveDrivetrain drive, Intake intake, Spindexer spindexer, Shooter shooter) {
         this.drive = drive;
         this.intake = intake;
         this.kinematics = Constants.Drive.KINEMATICS;
@@ -48,7 +48,7 @@ public class AutoCommands {
         this.shooter = shooter;
         
         //Defining autofactory and creating a new autofactory
-        autoFactory = new AutoFactory(
+       autoFactory = new AutoFactory(
                 //Getting the current pose(position and rotation)
                 drive::getPose,
                 drive::resetPose,
@@ -59,7 +59,7 @@ public class AutoCommands {
                     lastSample = (SwerveSample) sample;
                     drive.followTrajectory((SwerveSample) sample);
                 },
-                true,
+              true,
                 drive);
 
         Command normalDriveDefault = drive.getDefaultCommand();
