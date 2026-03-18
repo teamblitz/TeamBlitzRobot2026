@@ -106,10 +106,10 @@ public class OIConstants {
 
         //Triggers for out sysID test routines
         //TODO Comment these out for competition.
-        // public static final Trigger SYS_ID_QUASISTATIC = DRIVE_CONTROLLER.button(12);
-        // public static final Trigger SYS_ID_DYNAMIC = DRIVE_CONTROLLER.button(11);
-        // public static final Trigger SYS_ID_QUASISTATIC_REVERSE = DRIVE_CONTROLLER.button(10);
-        // public static final Trigger SYS_ID_DYNAMIC_REVERSE = DRIVE_CONTROLLER.button(9);
+        public static final Trigger SYS_ID_QUASISTATIC = DRIVE_CONTROLLER.button(12);
+        public static final Trigger SYS_ID_DYNAMIC = DRIVE_CONTROLLER.button(11);
+        public static final Trigger SYS_ID_QUASISTATIC_REVERSE = DRIVE_CONTROLLER.button(10);
+        public static final Trigger SYS_ID_DYNAMIC_REVERSE = DRIVE_CONTROLLER.button(9);
 
     }
 
