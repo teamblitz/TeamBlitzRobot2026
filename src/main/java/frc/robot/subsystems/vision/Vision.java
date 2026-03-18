@@ -6,11 +6,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.BlitzSubsystem;
 import frc.lib.util.LimelightHelpers;
 
+import frc.robot.subsystems.Drive.CommandSwerveDrivetrain;
+
 
 
 public class Vision extends SubsystemBase {
     public static final Limelight3 limelight;
     public static SwerveDrivePoseEstimator poseEstimator;
+    private static CommandSwerveDrivetrain drive;
 
     @Override
     public void init() {
@@ -28,7 +31,7 @@ public class Vision extends SubsystemBase {
 
 
     public void getVisionPose() {
-        double robotYaw = gyro.getYaw();
+        double robotYaw = drive.getPigeon2().getYaw();
         LimelightHelpers.SetRobotOrientation("limelight", robotYaw, 0, 0, 0, 0, 0);
 
         LimelightHelpers.PoseEstimate limelightMeasurement = 
