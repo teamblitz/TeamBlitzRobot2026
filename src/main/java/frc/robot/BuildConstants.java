@@ -1,19 +1,17 @@
 package frc.robot;
 
-/**
- * Automatically generated file containing build version information.
- */
+/** Automatically generated file containing build version information. */
 public final class BuildConstants {
-    public static final String MAVEN_GROUP = "";
-    public static final String MAVEN_NAME = "TeamBlitzRobot2025";
-    public static final String VERSION = "unspecified";
-    public static final int GIT_REVISION = 310;
-    public static final String GIT_SHA = "8aaea35f027dfcdcdb0100660a79424611e9a2b7";
-    public static final String GIT_DATE = "2025-10-29 15:28:59 MST";
-    public static final String GIT_BRANCH = "dev";
-    public static final String BUILD_DATE = "2025-11-18 19:32:21 MST";
-    public static final long BUILD_UNIX_TIME = 1763519541997L;
-    public static final int DIRTY = 0;
+  public static final String MAVEN_GROUP = "";
+  public static final String MAVEN_NAME = "TeamBlitzRobot2026";
+  public static final String VERSION = "unspecified";
+  public static final int GIT_REVISION = 94;
+  public static final String GIT_SHA = "cf47623b9e2738da5d14b72d720e9a66641cd36b";
+  public static final String GIT_DATE = "2026-03-10 16:02:36 EDT";
+  public static final String GIT_BRANCH = "dev-advantageKit";
+  public static final String BUILD_DATE = "2026-03-19 21:28:44 EDT";
+  public static final long BUILD_UNIX_TIME = 1773970124964L;
+  public static final int DIRTY = 1;
 
-    private BuildConstants(){}
+  private BuildConstants() {}
 }

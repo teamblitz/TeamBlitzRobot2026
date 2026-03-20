@@ -1,232 +1,149 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
+// Copyright (c) 2021-2026 Littleton Robotics
+// http://github.com/Mechanical-Advantage
+//
+// Use of this source code is governed by a BSD
+// license that can be found in the LICENSE file
+// at the root directory of this project.
 
 package frc.robot;
 
-import com.ctre.phoenix6.SignalLogger;
-
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
-import frc.lib.resources.GCMonitor;
-import frc.lib.resources.ResourceMonitor;
-import frc.lib.util.PeriodicExecutor;
-import frc.robot.subsystems.leds.Leds;
-
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-import org.littletonrobotics.urcl.URCL;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.BiConsumer;
-
+/**
+ * The VM is configured to automatically run this class, and to call the functions corresponding to
+ * each mode, as described in the TimedRobot documentation. If you change the name of this class or
+ * the package after creating this project, you must also update the build.gradle file in the
+ * project.
+ */
 public class Robot extends LoggedRobot {
-    private Command autonomousCommand;
-    private RobotContainer robotContainer;
+  private Command autonomousCommand;
+  private RobotContainer robotContainer;
 
-    @Override
-    @SuppressWarnings("all") // Supress switch warnings
-    public void robotInit() {
-        System.out.println("Robot Start up at: " + Timer.getFPGATimestamp());
-
-        Leds.getInstance(); // Start leds
-
-        // Record metadata
-        Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
-        Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
-        Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
-        Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
-        Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
-        Logger.recordMetadata(
-                "GitDirty",
-                switch (BuildConstants.DIRTY) {
-                    case 0 -> "All changes committed";
-                    case 1 -> "Uncommitted changes";
-                    default -> "Unknown";
-                });
-
-        // Set up data receivers & replay source
-
-        // Running on a real robot, try to log to a USB stick, else log to the roboRIO
-        if (isReal()) {
-            String logDir = Filesystem.getOperatingDirectory().getAbsolutePath();
-            boolean thumbDriveConnected;
-            try {
-                // The /u directory maps to the connected usb drive if one exists.
-                // If /u doesn't work replace it with /media/sda1
-                Path usbDir = Paths.get("/media/sda1").toRealPath();
-                thumbDriveConnected = Files.isWritable(usbDir);
-                if (thumbDriveConnected) {
-                    logDir = usbDir.toString();
-                    System.out.println("USB drive connected, will log to USB drive.");
-                } else {
-                    System.out.printf(
-                            "USB drive not found, will log to the %s directory on the roboRIO.%n",
-                            logDir);
-                }
-            } catch (IOException e) {
-                System.out.printf(
-                        "An IOException occurred when checking for a USB drive, will try to log to %s directory on the roboRIO.%n",
-                        logDir);
-            }
-
-            Logger.addDataReceiver(new WPILOGWriter(logDir));
-            Logger.addDataReceiver(new NT4Publisher());
-
-        } else
-            switch (Constants.SIM_MODE) {
-                    // Running a physics simulator, log to local folder
-                case SIM -> {
-                    Logger.addDataReceiver(new WPILOGWriter(""));
-                    Logger.addDataReceiver(new NT4Publisher());
-                }
-                    // Replaying a log, set up replay source
-                case REPLAY -> {
-                    setUseTiming(false); // Run as fast as possible
-                    String logPath = LogFileUtil.findReplayLog();
-                    Logger.setReplaySource(new WPILOGReader(logPath));
-                    Logger.addDataReceiver(
-                            new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
-                }
-            }
-
-        // Start AdvantageKit logger
-        Logger.registerURCL(URCL.startExternal());
-        Logger.start();
-
-        SignalLogger.enableAutoLogging(true);
-
-        // Log active commands
-        Map<String, Integer> commandCounts = new HashMap<>();
-        BiConsumer<Command, Boolean> logCommandFunction = (Command command, Boolean active) -> {
-            String name = command.getName();
-            int count = commandCounts.getOrDefault(name, 0) + (active ? 1 : -1);
-            commandCounts.put(name, count);
-            Logger.recordOutput(
-                    "CommandsUnique/" + name + "_" + Integer.toHexString(command.hashCode()),
-                    active);
-            Logger.recordOutput("CommandsAll/" + name, count > 0);
-        };
-        CommandScheduler.getInstance().onCommandInitialize((Command command) -> {
-            logCommandFunction.accept(command, true);
-        });
-        CommandScheduler.getInstance().onCommandFinish((Command command) -> {
-            logCommandFunction.accept(command, false);
-        });
-        CommandScheduler.getInstance().onCommandInterrupt((Command command) -> {
-            logCommandFunction.accept(command, false);
+  public Robot() {
+    // Record metadata
+    Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
+    Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+    Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+    Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
+    Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+    Logger.recordMetadata(
+        "GitDirty",
+        switch (BuildConstants.DIRTY) {
+          case 0 -> "All changes committed";
+          case 1 -> "Uncommitted changes";
+          default -> "Unknown";
         });
 
-        Runtime runtime = Runtime.getRuntime();
+    // Set up data receivers & replay source
+    switch (Constants.currentMode) {
+      case REAL:
+        // Running on a real robot, log to a USB stick ("/U/logs")
+        Logger.addDataReceiver(new WPILOGWriter());
+        Logger.addDataReceiver(new NT4Publisher());
+        break;
 
-        GCMonitor.registerGCListener();
+      case SIM:
+        // Running a physics simulator, log to NT
+        Logger.addDataReceiver(new NT4Publisher());
+        break;
 
-        robotContainer = new RobotContainer();
+      case REPLAY:
+        // Replaying a log, set up replay source
+        setUseTiming(false); // Run as fast as possible
+        String logPath = LogFileUtil.findReplayLog();
+        Logger.setReplaySource(new WPILOGReader(logPath));
+        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+        break;
     }
 
-    long robotPeriodicNano = System.nanoTime();
+    // Start AdvantageKit logger
+    Logger.start();
 
-    @Override
-    public void robotPeriodic() {
-        // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-        // commands, running already-scheduled commands, removing finished or interrupted commands,
-        // and running subsystem periodic() methods.  This must be called from the robot's periodic
-        // block in order for anything in the Command-based framework to work.
+    // Instantiate our RobotContainer. This will perform all our button bindings,
+    // and put our autonomous chooser on the dashboard.
+    robotContainer = new RobotContainer();
+  }
 
-        long t0 = System.nanoTime();
+  /** This function is called periodically during all modes. */
+  @Override
+  public void robotPeriodic() {
+    // Optionally switch the thread to high priority to improve loop
+    // timing (see the template project documentation for details)
+    // Threads.setCurrentThreadPriority(true, 99);
 
-        CommandScheduler.getInstance().run();
+    // Runs the Scheduler. This is responsible for polling buttons, adding
+    // newly-scheduled commands, running already-scheduled commands, removing
+    // finished or interrupted commands, and running subsystem periodic() methods.
+    // This must be called from the robot's periodic block in order for anything in
+    // the Command-based framework to work.
+    CommandScheduler.getInstance().run();
 
-        PeriodicExecutor.getInstance().run();
+    // Return to non-RT thread priority (do not modify the first argument)
+    // Threads.setCurrentThreadPriority(false, 10);
+  }
 
-        long t1 = System.nanoTime();
+  /** This function is called once when the robot is disabled. */
+  @Override
+  public void disabledInit() {}
 
-        Logger.recordOutput("cmd_scheduler_run_time_ms", (t1 - t0) * 1e-6);
+  /** This function is called periodically when disabled. */
+  @Override
+  public void disabledPeriodic() {}
 
-        Logger.recordOutput(
-                "robot_periodic_delta_ms", (System.nanoTime() - robotPeriodicNano) * 1e-6);
-        robotPeriodicNano = System.nanoTime();
+  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
+  @Override
+  public void autonomousInit() {
+    autonomousCommand = robotContainer.getAutonomousCommand();
 
-        ResourceMonitor.getInstance().update();
+    // schedule the autonomous command (example)
+    if (autonomousCommand != null) {
+      CommandScheduler.getInstance().schedule(autonomousCommand);
     }
+  }
 
-    /* ***** --- Autonomous --- ***** */
+  /** This function is called periodically during autonomous. */
+  @Override
+  public void autonomousPeriodic() {}
 
-    // Called at the start of autonomous.
-    @Override
-    public void autonomousInit() {
-        autonomousCommand = robotContainer.getAutonomousCommand();
-
-        // schedule autonomous commands
-        if (autonomousCommand != null) {
-            autonomousCommand.schedule();
-        }
+  /** This function is called once when teleop is enabled. */
+  @Override
+  public void teleopInit() {
+    // This makes sure that the autonomous stops running when
+    // teleop starts running. If you want the autonomous to
+    // continue until interrupted by another command, remove
+    // this line or comment it out.
+    if (autonomousCommand != null) {
+      autonomousCommand.cancel();
     }
+  }
 
-    // Called periodically during autonomous
-    @Override
-    public void autonomousPeriodic() {}
+  /** This function is called periodically during operator control. */
+  @Override
+  public void teleopPeriodic() {}
 
-    // Called at the end of autonomous
-    @Override
-    public void autonomousExit() {
-        // Cancel autonomous commands
-        if (autonomousCommand != null) {
-            autonomousCommand.cancel();
-        }
-    }
+  /** This function is called once when test mode is enabled. */
+  @Override
+  public void testInit() {
+    // Cancels all running commands at the start of test mode.
+    CommandScheduler.getInstance().cancelAll();
+  }
 
-    /* ***** --- Teleop --- ***** */
+  /** This function is called periodically during test mode. */
+  @Override
+  public void testPeriodic() {}
 
-    // Called at the start of teleop
-    @Override
-    public void teleopInit() {
-        System.out.println("TeleopInit");
-        if (autonomousCommand != null) {
-            autonomousCommand.cancel();
-        }
-    }
+  /** This function is called once when the robot is first started up. */
+  @Override
+  public void simulationInit() {}
 
-    /* ***** --- Test Mode --- ***** */
-
-    // Called at the start of test mode
-    @Override
-    public void testInit() {
-        // Cancels all running commands at the start of test mode.
-        CommandScheduler.getInstance().cancelAll();
-
-        SignalLogger.setPath("/media/sda1/");
-        System.out.println("STARTING SIGNAL LOGGER");
-        SignalLogger.start();
-    }
-
-    @Override
-    public void testExit() {
-        System.out.println("STOPPING SIGNAL LOGGER");
-        System.out.println(SignalLogger.stop().getName());
-    }
-
-    /* ***** --- Simulation --- ***** */
-
-    // Called when the robot enters simulation
-    @Override
-    public void simulationInit() {
-        DriverStation.silenceJoystickConnectionWarning(true);
-    }
+  /** This function is called periodically whilst in simulation. */
+  @Override
+  public void simulationPeriodic() {}
 }
