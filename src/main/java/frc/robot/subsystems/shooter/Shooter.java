@@ -116,15 +116,31 @@ public class Shooter extends SubsystemBase {
 
 
 
-    public Command shootTest() {
+    // public Command shootTest() {
+    //     return runOnce(() -> io.setShooterSpeed(0.7))
+    //             .andThen(Commands.waitSeconds(1.5))
+    //             .andThen(() -> io.setFeederSpeed(-0.6))
+    //             .andThen(Commands.waitSeconds(30))
+    //             .finallyDo(() -> {
+    //                 io.setShooterSpeed(0);
+    //                 io.setFeederSpeed(0);
+    //             });
+    // }
+
+    public Command shoot () {
+       return runOnce(() -> io.setFeederSpeed(-0.6))
+       .andThen(Commands.waitSeconds(30))
+       .finallyDo(() -> {
+        io.setFeederSpeed(0);
+       });
+    }
+
+    public Command feed () {
         return runOnce(() -> io.setShooterSpeed(0.7))
-                .andThen(Commands.waitSeconds(1.5))
-                .andThen(() -> io.setFeederSpeed(-0.6))
-                .andThen(Commands.waitSeconds(30))
-                .finallyDo(() -> {
-                    io.setShooterSpeed(0);
-                    io.setFeederSpeed(0);
-                });
+        .andThen(Commands.waitSeconds(30))
+        .finallyDo(() -> {
+            io.setShooterSpeed(0);
+        });
     }
 
     public Command teamFeed() {

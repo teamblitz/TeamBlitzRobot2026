@@ -14,9 +14,10 @@ public class CommandFactory {
     public static Command autoShoot(Shooter shooter, Spindexer spindexer) {
 //        return Commands.parallel(shooter.shootTest(), spindexer.feed());
         return Commands.parallel(
-                shooter.shootTest(),
+                shooter.feed(),
                 Commands.sequence(
                     Commands.waitSeconds(0.2),
+                    shooter.shoot(),
                     spindexer.feed())
         );
     }
