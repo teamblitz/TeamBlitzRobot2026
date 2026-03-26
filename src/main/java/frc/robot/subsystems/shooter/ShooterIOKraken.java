@@ -35,7 +35,7 @@ public class ShooterIOKraken implements ShooterIO {
         feederConfig.MotorOutput.withNeutralMode(NeutralModeValue.Brake)
                 .withInverted(InvertedValue.Clockwise_Positive);
 
-        rightShooter.setControl(new Follower(leftShooter.getDeviceID(), MotorAlignmentValue.Opposed)); // May need to be Inverted
+        rightShooter.setControl(new Follower(leftShooter.getDeviceID(), MotorAlignmentValue.Aligned)); // May need to be Inverted
 
 
         leftShooter.getConfigurator().apply(shooterConfig);
