@@ -17,14 +17,14 @@ import org.littletonrobotics.junction.Logger;
 
 public class ShooterIOKraken implements ShooterIO {
     
-    public final TalonFX shooter;
+    public final TalonFX leftShooter;
+    public final TalonFX rightShooter;
     public final TalonFX feeder;
-    public final TalonFX deepFeed;
 
     public ShooterIOKraken() {
-        shooter = new TalonFX(30);
-        feeder = new TalonFX(31);
-        deepFeed = new TalonFX(32);
+        leftShooter = new TalonFX(0);
+        rightShooter = new TalonFX(1);
+        feeder = new TalonFX(2);
 
         TalonFXConfiguration shooterConfig = new TalonFXConfiguration();
         shooterConfig.MotorOutput.withNeutralMode(NeutralModeValue.Coast)
@@ -34,35 +34,36 @@ public class ShooterIOKraken implements ShooterIO {
         TalonFXConfiguration feederConfig = new TalonFXConfiguration();
         feederConfig.MotorOutput.withNeutralMode(NeutralModeValue.Brake)
                 .withInverted(InvertedValue.Clockwise_Positive);
-        feeder.setControl(new Follower(shooter.getDeviceID(), MotorAlignmentValue.Opposed)); // May need to be Inverted
+
+        rightShooter.setControl(new Follower(leftShooter.getDeviceID(), MotorAlignmentValue.Opposed)); // May need to be Inverted
 
 
-        shooter.getConfigurator().apply(shooterConfig);
+        leftShooter.getConfigurator().apply(shooterConfig);
+        rightShooter.getConfigurator().apply(feederConfig);
         feeder.getConfigurator().apply(feederConfig);
-        deepFeed.getConfigurator().apply(feederConfig);
 
-        HardwareWatchdog.getInstance().registerCTREDevice(shooter, this.getClass());
+        HardwareWatchdog.getInstance().registerCTREDevice(leftShooter, this.getClass());
+        HardwareWatchdog.getInstance().registerCTREDevice(rightShooter, this.getClass());
         HardwareWatchdog.getInstance().registerCTREDevice(feeder, this.getClass());
-        HardwareWatchdog.getInstance().registerCTREDevice(deepFeed, this.getClass());
     }
 
      @Override
      public void setShooterSpeed(double speed) {
-         shooter.set(speed);
+         leftShooter.set(speed);
      }
 
      @Override
      public void setFeederSpeed(double speed) {
-         deepFeed.set(speed);
+         feeder.set(speed);
      }
 
      @Override
      public void updateInputs() {
          // TODO: read real sensor values from TalonFX when available. For now, provide placeholders.
   
-         Logger.recordOutput("shooter/shooterCANID", shooter.getDeviceID());
-         Logger.recordOutput("shooter/feederCANID", feeder.getDeviceID());
-         Logger.recordOutput("shooter/deepFeedCANID", deepFeed.getDeviceID());
+         Logger.recordOutput("shooter/shooterCANID", leftShooter.getDeviceID());
+         Logger.recordOutput("shooter/feederCANID", rightShooter.getDeviceID());
+         Logger.recordOutput("shooter/deepFeedCANID", feeder.getDeviceID());
      }
 }
 

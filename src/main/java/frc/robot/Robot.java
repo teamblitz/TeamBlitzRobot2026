@@ -171,62 +171,15 @@ public class Robot extends LoggedRobot {
     // Called at the start of autonomous.
     @Override
     public void autonomousInit() {
-        autonomousCommand = robotContainer.getAutonomousCommand();
 
-        // schedule autonomous commands
-        if (autonomousCommand != null) {
-            autonomousCommand.schedule();
+
         }
     }
 
-    // Called periodically during autonomous
-    @Override
-    public void autonomousPeriodic() {}
 
-    // Called at the end of autonomous
-    @Override
-    public void autonomousExit() {
-        // Cancel autonomous commands
-        if (autonomousCommand != null) {
-            autonomousCommand.cancel();
-        }
-    }
 
-    /* ***** --- Teleop --- ***** */
 
-    // Called at the start of teleop
-    @Override
-    public void teleopInit() {
-        System.out.println("TeleopInit");
-        if (autonomousCommand != null) {
-            autonomousCommand.cancel();
-        }
-    }
 
-    /* ***** --- Test Mode --- ***** */
 
-    // Called at the start of test mode
-    @Override
-    public void testInit() {
-        // Cancels all running commands at the start of test mode.
-        CommandScheduler.getInstance().cancelAll();
 
-        SignalLogger.setPath("/media/sda1/");
-        System.out.println("STARTING SIGNAL LOGGER");
-        SignalLogger.start();
-    }
 
-    @Override
-    public void testExit() {
-        System.out.println("STOPPING SIGNAL LOGGER");
-        System.out.println(SignalLogger.stop().getName());
-    }
-
-    /* ***** --- Simulation --- ***** */
-
-    // Called when the robot enters simulation
-    @Override
-    public void simulationInit() {
-        DriverStation.silenceJoystickConnectionWarning(true);
-    }
-}
