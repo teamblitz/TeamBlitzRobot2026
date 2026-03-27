@@ -9,9 +9,11 @@ import frc.lib.util.LimelightHelpers;
 import frc.robot.subsystems.Drive.CommandSwerveDrivetrain;
 
 public class Vision extends SubsystemBase {
+    // Creates poseEstimator 
     public static SwerveDrivePoseEstimator poseEstimator;
     private static CommandSwerveDrivetrain drive;   
 
+    //TODO see if we need these values
     double tx = LimelightHelpers.getTX("limelight");  // Horizontal offset from crosshair to target in degrees
     double ty = LimelightHelpers.getTY("limelight");  // Vertical offset from crosshair to target in degrees
     double ta = LimelightHelpers.getTA("limelight");  // Target area (0% to 100% of image)
@@ -22,9 +24,10 @@ public class Vision extends SubsystemBase {
 
 public void init() {
 //TODO set the crop window
-LimelightHelpers.setCropWindow("limelight", -0.5, 0.5, -0.5, 0.5);
+// Sets a crop window to imporve perfomance (Values between -1 and 1)
+LimelightHelpers.setCropWindow("limelight", -1, 1, -1, 1);
 
-// Switch to pipeline 0
+// Swiches the limelight to pipline one when in init
 LimelightHelpers.setPipelineIndex("limelight", 0);
 }
 
@@ -35,8 +38,12 @@ LimelightHelpers.setPipelineIndex("limelight", 0);
         getVisionPose();
     }
 
+/*TODO Look at limelight docs for info on this. 
+ Look for Robot Localization with MegaTag2 and
+ FRC Programming with LimelightLib (WPILib Java & C++) */
+
     public void getVisionPose() {
-        // Gets the robots yaw baised on the Pigeon2
+        // Gets the robots yaw (Degrees) baised on the Pigeon2
         double robotYaw = drive.getPigeon2().getYaw().getValueAsDouble();
         // Sets the robots orintation values to 0 when in starting postion
        LimelightHelpers.SetRobotOrientation("limelight", robotYaw, 0.0, 0.0, 0.0, 0.0, 0.0);
