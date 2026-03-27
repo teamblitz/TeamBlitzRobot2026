@@ -8,22 +8,24 @@ import frc.lib.util.LimelightHelpers;
 
 import frc.robot.subsystems.Drive.CommandSwerveDrivetrain;
 
-import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
-import com.qualcomm.hardware.limelightvision.LLStatus;
-import com.qualcomm.hardware.limelightvision.Limelight3;
-
 public class Vision extends SubsystemBase {
-    public static final Limelight3 limelight; // Creates the Limelight3
     public static SwerveDrivePoseEstimator poseEstimator;
-    private static CommandSwerveDrivetrain drive;
+    private static CommandSwerveDrivetrain drive;   
 
-@Override
+    double tx = LimelightHelpers.getTX("limelight");  // Horizontal offset from crosshair to target in degrees
+    double ty = LimelightHelpers.getTY("limelight");  // Vertical offset from crosshair to target in degrees
+    double ta = LimelightHelpers.getTA("limelight");  // Target area (0% to 100% of image)
+    boolean hasTarget = LimelightHelpers.getTV("limelight"); // Do you have a valid target?
+
+    double txnc = LimelightHelpers.getTXNC("limelight");  // Horizontal offset from principal pixel/point to target in degrees
+    double tync = LimelightHelpers.getTYNC("limelight");  // Vertical offset from principal pixel/point to target in degrees
+
 public void init() {
-        
-    limelight = hardwareMap.get(Limelight3.class, "limelight"); //initializes the Limelight3
-    limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
-    limelight.start(); // This tells Limelight to start
+//TODO set the crop window
+LimelightHelpers.setCropWindow("limelight", -0.5, 0.5, -0.5, 0.5);
+
+// Switch to pipeline 0
+LimelightHelpers.setPipelineIndex("limelight", 0);
 }
 
     @Override
@@ -33,22 +35,21 @@ public void init() {
         getVisionPose();
     }
 
-
     public void getVisionPose() {
         // Gets the robots yaw baised on the Pigeon2
         double robotYaw = drive.getPigeon2().getYaw().getValueAsDouble();
         // Sets the robots orintation values to 0 when in starting postion
-        LimelightHelpers.SetRobotOrientation("limelight", robotYaw, 0, 0, 0, 0, 0);
+       LimelightHelpers.SetRobotOrientation("limelight", robotYaw, 0.0, 0.0, 0.0, 0.0, 0.0);
 
-        //Imports tag data
+        //Gets the pose estimate baised on MegaTag2
         LimelightHelpers.PoseEstimate limelightMeasurement = 
             LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
         
         //Estimates whare we are on the field baised on the tag data
-        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
-        poseEstimator.addVisionMeasurement(
-            limelightMeasurement.pose,
-            limelightMeasurement.timestampSeconds
+    poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
+    poseEstimator.addVisionMeasurement(
+        limelightMeasurement.pose,
+        limelightMeasurement.timestampSeconds
         );
     }
 }

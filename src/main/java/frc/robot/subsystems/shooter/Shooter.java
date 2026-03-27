@@ -101,20 +101,16 @@ public class Shooter extends SubsystemBase {
 
    public Command aimAndShoot() {
        return runOnce(() -> shooter.setControl(getVoltage()))
-               .andThen(Commands.waitSeconds(1))
-               .andThen(() -> feeder.set(1))
-               .andThen(Commands.waitSeconds(5))
-               .andThen(() -> feeder.set(1))
-               .andThen(Commands.waitSeconds(1))//TODO set values to run
+               .andThen(Commands.waitSeconds(1.75))
+               .andThen(() -> io.setFeederSpeed(-0.6))
+               .andThen(Commands.waitSeconds(30))
                .finallyDo(
                    () -> {
-                       shooter.set(0);
-                       feeder.set(0);
+                       io.setShooterSpeed(0);
+                       io.setFeederSpeed(0);
                    }
                );
    }
-
-
 
     public Command shootTest() {
         return runOnce(() -> io.setShooterSpeed(0.7))
