@@ -3,7 +3,7 @@ package frc.robot.subsystems.agitator;
 import static frc.robot.Constants.Agitator.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+
 import frc.lib.BlitzSubsystem;
 import frc.robot.Robot;
 
@@ -26,12 +26,8 @@ public class Agitator extends BlitzSubsystem {
     }
 
     public Command forward() {
-        return runOnce(() ->
-                                io.setSpeed(1))
-                        .andThen(Commands.idle())
-                        .finallyDo(() -> {
-                            io.setSpeed(0);
-                        });    }
+        return runEnd(() -> io.setSpeed(0.1), () -> io.setSpeed(0));
+    }
 
     public Command reverse() {
         return runEnd(() -> io.setSpeed(-0.1), () -> io.setSpeed(0));

@@ -28,8 +28,8 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOKraken;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.ShooterIO;
-import frc.robot.subsystems.shooter.ShooterIOKraken;
+
+
 import frc.robot.subsystems.agitator.Agitator;
 
 import frc.robot.Constants.*;
@@ -78,7 +78,7 @@ public class RobotContainer {
 
     private void configureSubsystems() {
 
-        shooter = new Shooter(new ShooterIOKraken());
+
 
 
         intakeIO = new IntakeIOKraken();
@@ -104,7 +104,7 @@ public class RobotContainer {
 
         /*   Shooter   */
         OIConstants.Shooter.SHOOT.whileTrue(
-                Commands.parallel(
+                Commands.sequence(
                         shooter.defaultShoot(SHOOTER_SPEED, FEEDER_SPEED),
                         agitator.forward(),
                         intake.forward()

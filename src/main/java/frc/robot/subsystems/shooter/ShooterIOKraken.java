@@ -34,7 +34,7 @@ public class ShooterIOKraken implements ShooterIO {
         TalonFXConfiguration feederConfig = new TalonFXConfiguration();
         feederConfig.MotorOutput.withNeutralMode(NeutralModeValue.Brake)
                 .withInverted(InvertedValue.Clockwise_Positive);
-        leftShooter.setControl(new Follower(rightShooter.getDeviceID(), MotorAlignmentValue.Aligned)); // May need to be Inverted
+        leftShooter.setControl(new Follower(rightShooter.getDeviceID(), MotorAlignmentValue.Opposed)); // May need to be Inverted
 
 
         rightShooter.getConfigurator().apply(shooterConfig);
