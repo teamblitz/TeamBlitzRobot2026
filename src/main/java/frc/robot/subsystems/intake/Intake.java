@@ -25,12 +25,12 @@ public class Intake extends BlitzSubsystem {
 
     }
 
-    public Command forward() {
+    public Command forward(double speed) {
         return runOnce(() ->
-                                io.setSpeed(1))
-                        .andThen(Commands.idle())
-                        .finallyDo(() -> {
-                            io.setSpeed(0);
+                io.setSpeed(speed))
+                .andThen(Commands.idle())
+                .finallyDo(() -> {
+                    io.setSpeed(0);
                         });
     }
 

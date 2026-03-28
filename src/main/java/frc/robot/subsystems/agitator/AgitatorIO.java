@@ -5,13 +5,13 @@ import org.littletonrobotics.junction.AutoLog;
 public interface AgitatorIO {
 
     @AutoLog
-    public class IntakeInputs {
+    public class AgitatorInputs {
         public double rpm;
         public double current;
 
     }
 
-    default void updateInputs(IntakeInputs inputs) {}
+    default void updateInputs(AgitatorInputs inputs) {}
 
     default void setSpeed(double speed) {}
 }

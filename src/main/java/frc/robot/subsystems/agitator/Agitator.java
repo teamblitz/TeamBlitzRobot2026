@@ -25,13 +25,14 @@ public class Agitator extends BlitzSubsystem {
 
     }
 
-    public Command forward() {
+    public Command forward(double speed) {
         return runOnce(() ->
-                                io.setSpeed(1))
-                        .andThen(Commands.idle())
-                        .finallyDo(() -> {
-                            io.setSpeed(0);
-                        });    }
+                io.setSpeed(speed))
+                .andThen(Commands.idle())
+                .finallyDo(() -> {
+                    io.setSpeed(0);
+                        });
+    }
 
     public Command reverse() {
         return runEnd(() -> io.setSpeed(-0.1), () -> io.setSpeed(0));

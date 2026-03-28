@@ -40,7 +40,7 @@ public class AgitatorIOKraken implements AgitatorIO {
     }
 
     @Override
-    public void updateInputs(IntakeInputs inputs) {
+    public void updateInputs(AgitatorInputs inputs) {
 
 
     }
