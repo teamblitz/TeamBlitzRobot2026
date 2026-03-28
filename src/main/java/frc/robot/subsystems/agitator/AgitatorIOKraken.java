@@ -1,10 +1,6 @@
-package frc.robot.subsystems.spindexer;
+package frc.robot.subsystems.agitator;
 
-import static frc.robot.Constants.Spindexer.*;
 import static frc.robot.Constants.Intake.*;
-
-import frc.robot.subsystems.shooter.Shooter;
-
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.ControlRequest;
@@ -13,11 +9,13 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-public class SpindexerIOKraken implements SpindexerIO {
-    public final TalonFX spindexer;
+import org.littletonrobotics.junction.Logger;
 
-    public SpindexerIOKraken() {
-        spindexer = new TalonFX(SPINDEXER_ID); // TODO SET VALUE
+public class AgitatorIOKraken implements AgitatorIO {
+    public final TalonFX grabball;
+
+    public AgitatorIOKraken() {
+        grabball = new TalonFX(24); // TODO SET VALUE
 
         TalonFXConfiguration config = new TalonFXConfiguration();
 
@@ -29,14 +27,22 @@ public class SpindexerIOKraken implements SpindexerIO {
                                 ? InvertedValue.Clockwise_Positive
                                 : InvertedValue.CounterClockwise_Positive);
 
-        spindexer.getConfigurator().apply(config);
 
-        ControlRequest _threadInterruptStop = new NeutralOut().withUpdateFreqHz(0);
+        grabball.getConfigurator().apply(config);
     }
+
+
 
     @Override
     public void setSpeed(double speed) {
-        spindexer.set(speed);
-    }
-}
+        grabball.set(speed);
 
+    }
+
+    @Override
+    public void updateInputs(AgitatorInputs inputs) {
+
+
+    }
+
+}

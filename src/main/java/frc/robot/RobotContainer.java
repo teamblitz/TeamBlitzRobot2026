@@ -29,8 +29,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.lib.math.AllianceFlipUtil;
 import frc.lib.reefscape.ScoringPositions;
-import frc.robot.Constants.Spindexer;
 import frc.robot.commands.*;
+import frc.robot.subsystems.agitator.AgitatorIO;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.gyro.GyroIOPigeon;
 import frc.robot.subsystems.drive.range.RangeSensorIOFusion;
@@ -43,15 +43,12 @@ import frc.robot.subsystems.shooter.ShooterIOKraken;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.commands.TeleopSwerve;
-
 import frc.robot.subsystems.wrist.Wrist;
 import frc.robot.subsystems.wrist.WristIO;
-import frc.robot.subsystems.spindexer.SpindexerIO;
-import frc.robot.subsystems.spindexer.SpindexerIOKraken;
-
-
 import frc.robot.subsystems.wrist.WristIOKraken;
 import org.littletonrobotics.junction.Logger;
+import frc.robot.subsystems.agitator.Agitator;
+import frc.robot.subsystems.agitator.AgitatorIO;
 
 import java.util.Set;
 
@@ -70,13 +67,12 @@ public class RobotContainer {
     private Intake intake;
     private IntakeIO intakeIO;
     private Shooter shooter;
-    private frc.robot.subsystems.spindexer.Spindexer spindexer;
-    private SpindexerIO spindexerIO;
     private AutoCommands autoCommands;
     //private DriveCommands driveCommands;
     private Wrist wrist;
     private WristIO wristIO;
     private WristIOKraken wristIOKraken;
+    private Agitator agitator;
 
     /* ***** --- Autonomous --- ***** */
     private AutoChooser autoChooser;
@@ -120,14 +116,13 @@ public class RobotContainer {
 
         intakeIO = new IntakeIOKraken();
 
-        spindexerIO = new SpindexerIOKraken();
-
         intake = new Intake(intakeIO);
+
         shooter = new Shooter(new ShooterIOKraken(), drive);
 
-        spindexer = new frc.robot.subsystems.spindexer.Spindexer(spindexerIO);
-
         wrist = new Wrist(new WristIOKraken());
+
+        agitator = new Agitator();
 
 //        autoCommands = new AutoCommands(drive, intake, spindexer, shooter);
 
@@ -166,49 +161,8 @@ public class RobotContainer {
         OIConstants.Intake.FORWARD.whileTrue(intake.forward()); //right bumper
         // OIConstants.Shooter.SHOOT.whileTrue(shooter.shootTest()
         //         .alongWith(spindexer.feed())); //Left Trigger
-        OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(
-            Commands.sequence(
-                shooter.shootTest()
-                    .alongWith(Commands.waitSeconds(0.65).andThen(spindexer.feed()))
-            )
-        );
-        OIConstants.Shooter.SHOOT_TESTING.whileTrue(
-                Commands.sequence(
-                        shooter.aimAndShoot()
-                        .alongWith(Commands.waitSeconds(0.65)).andThen(spindexer.feed())
-                )
-        );
-        OIConstants.Shooter.DRIVER_SHOOT.whileTrue(
-            Commands.sequence(
-                shooter.shootTest()
-                    .alongWith(Commands.waitSeconds(0.65).andThen(spindexer.feed()))
-            )
-        );
-        OIConstants.Shooter.OPERATOR_TEAM_FEED.whileTrue(
-                Commands.sequence(
-                shooter.teamFeed()
-                    .alongWith(Commands.waitSeconds(0.65).andThen(spindexer.feed()))
-            ));
-            
-        OIConstants.Shooter.DRIVER_TEAM_FEED.whileTrue(
-                Commands.sequence(
-                shooter.teamFeed()
-                    .alongWith(Commands.waitSeconds(0.65).andThen(spindexer.feed()))
-            ));
 
-        OIConstants.Shooter.DRIVE_DEEP.whileTrue(
-                Commands.sequence(
-                shooter.deepFeed()
-                    .alongWith(Commands.waitSeconds(0.8).andThen(spindexer.feed()))
-        ));
 
-        OIConstants.Shooter.OPERATOR_DEEP.whileTrue(
-                Commands.sequence(
-                shooter.deepFeed()
-                    .alongWith(Commands.waitSeconds(0.8).andThen(spindexer.feed()))
-        ));
-
-        OIConstants.Spindexer.FEED.whileTrue(spindexer.reverse()); //y
         
         
         OIConstants.Drive.ALIGN_LEFT.whileTrue(new DeferredCommand(
@@ -273,7 +227,7 @@ public class RobotContainer {
     }
     //Configures autonomuous cpmmands and autochooser
     private void configureAutonomous() {
-        autoCommands = new AutoCommands(drive, intake, spindexer, shooter);
+        autoCommands = new AutoCommands(drive, intake, agitator, shooter);
         autoChooser = new AutoChooser();
         SmartDashboard.putData("autoChooser", autoChooser);
 
