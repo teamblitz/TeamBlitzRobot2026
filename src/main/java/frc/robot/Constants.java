@@ -314,52 +314,10 @@ public final class Constants {
         }
     }
 
-    public static final class WristConstants {
-        public static final int WRIST_ID = 21;
-        public static final int ABS_ENCODER_ID = 22;
-        //       public static final double WRIST_GEAR_RATIO = (9.0) * (5.0) * (54.0 / 16.0);
-
-        //      public static final double OPEN_LOOP_RAMP = .25;
-        public static final int CURRENT_LIMIT_WRIST = 80; //TODO make this value higher after initial testing
-        public static final boolean INVERTED = false;
-
-
-        //TODO TUNE MAXIMUM AND MINIMUM POSITIONS WHEN WE HAVE THE BOT
-//        public static final double ZERO_POS = Units.degreesToRadians(compBot() ? 94 : 90);
-        public static final double IDLE_POS = 0.085;
-        //        public static final double EXTENDED_POS = Units.degreesToRadians(-90);//TODO set this val to absolute encoder value when this is extended
-        public static final double EXTENDED_POS = 0.35; //TODO tune on actual bot in reference to the zero position
-
-        public static final double OFFSET = IDLE_POS + 0.25;
-
-        public static final double ABS_ENCODER_ZERO = Math.toRadians(306.71 + 90);
-        //        public static final double TOLERANCE = Units.degreesToRadians(10);
-        public static final double TOLERANCE = 0.005;
-
-        public static final double MAX_VELOCITY = 2; //TODO tune on actual bot
-        public static final double MAX_ACCEL =42; //TODO tune on actual bot
-        public static final double MAX_JERK = MAX_ACCEL * 8;
-
-        public static final double ROTOR_TO_SENSOR_RATIO = 9.0;
-        public static final double MAGNET_OFFSET = -0.144775390625;  //TODO tune on actual bot
-
-        public static final double KP = 20; //TODO tune KP, KD, KV, and KS on actual bot
-        public static final double KI = 0;
-        public static final double KD = 1;
-        public static final double KG = 1;
-        public static final double KV = 0;
-        public static final double KS = 0.5;
-
-        public static final double SOFT_LIMIT_FORWARD = 0.35; //Sets the bounds for where the wrist can go
-        public static final double SOFT_LIMIT_REVERSE = 0.08; //Sets the bounds for where the wrist can go
-
-    }
-
 
 
     public static final class Intake {
-        public static final int INTAKEMOTOR_ID = 14;
-        public static final int ANGLEMOTOR_ID = 15;
+        public static final int INTAKEMOTOR_ID = 0;
         public static final boolean INVERTED = compBot() ? true : false;
         public static final int CURRENT_LIMIT = compBot() ? 80 : 25;
         public static final double HANDOFF_SPEED = compBot() ? .8 : .5;
@@ -376,12 +334,12 @@ public final class Constants {
     }
 
     public static final class ShooterConstants {
-        public static final int RIGHT_SHOOTER_ID = 30;
-        public static final int LEFT_SHOOTER_ID = 31;
-        public static final int FEEDER_ID = 32;
+        public static final int RIGHT_SHOOTER_ID = 1;
+        public static final int LEFT_SHOOTER_ID = 2;
+        public static final int FEEDER_ID = 3;
 
-        public static final double SHOOTER_SPEED = 1;
-        public static final double FEEDER_SPEED = 0.3;
+        public static final double SHOOTER_SPEED = 0.1;
+        public static final double FEEDER_SPEED = 0.1;
 
         public static final double SHOOTER_HEIGHT = 0.4826;
         public static final double HUB_X = (!Constants.DISABLE_HAL && DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
@@ -396,7 +354,7 @@ public final class Constants {
     }
 
     public static final class Agitator {
-        public static final int AGITATOR_ID = 0; //TODO set val
+        public static final int AGITATOR_ID = 4; //TODO set val
         public static final double CURRENT_LIMIT = 0; //TODO set val
         public static final boolean INVERTED = true; //TODO get real val
     }
