@@ -15,7 +15,7 @@ public class IntakeIOKraken implements IntakeIO {
     public final TalonFX grabball;
 
     public IntakeIOKraken() {
-        grabball = new TalonFX(INTAKEMOTOR_ID); // TODO SET VALUE
+        grabball = new TalonFX(24); // TODO SET VALUE
         
         TalonFXConfiguration config = new TalonFXConfiguration();
 
