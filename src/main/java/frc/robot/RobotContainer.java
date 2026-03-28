@@ -309,7 +309,7 @@ public class RobotContainer {
     }
     //Configures autonomuous cpmmands and autochooser
     private void configureAutonomous() {
-        autoCommands = new AutoCommands(drivetrain, intake, spindexer, shooter);
+        autoCommands = new AutoCommands(drivetrain, intake, spindexer, shooter, wrist);
         autoChooser = new AutoChooser();
         SmartDashboard.putData("autoChooser", autoChooser);
 
@@ -320,6 +320,13 @@ public class RobotContainer {
 
         autoChooser.addRoutine("RightLeave", autoCommands::leaveRight);
         autoChooser.addRoutine("LeftLeave", autoCommands::leaveLeft);
+
+        //TODO Needs to be Tested
+        autoChooser.addRoutine("leftShoot", autoCommands::leftShoot);
+        autoChooser.addRoutine("rightShoot", autoCommands::rightShoot);
+
+        //TODO Needs to be Tested
+        autoChooser.addRoutine("leftSingleReload",autoCommands::leftSingleReload);
 
         //EXAMPLE
         // autoChooser.addRoutine("leaveRight", () -> autoCommands.leave("leaveRight"));

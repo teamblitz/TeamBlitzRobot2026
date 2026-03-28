@@ -24,7 +24,7 @@ public class Spindexer extends BlitzSubsystem {
         super.periodic();
     }
 
-    private Command stop() {
+    public Command stop() {
         return runOnce(() -> io.setSpeed(0));
     }
 

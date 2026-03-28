@@ -33,7 +33,7 @@ public class Intake extends BlitzSubsystem {
         return runEnd(() -> io.setSpeed(-0.65), () -> io.setSpeed(0));
     }
 
-    private Command stop() {
+    public Command stop() {
         return runOnce(() -> io.setSpeed(0));
     }
 

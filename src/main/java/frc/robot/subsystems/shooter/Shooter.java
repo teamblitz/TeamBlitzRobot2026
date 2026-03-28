@@ -135,6 +135,13 @@ public class Shooter extends SubsystemBase {
        });
     }
 
+    public Command stop () {
+        return runOnce(() ->
+            io.setFeederSpeed(0))
+            .finallyDo(() -> {io.setShooterSpeed(0);
+            }); 
+    }
+
     public Command feed () {
         return runOnce(() -> io.setShooterSpeed(0.7))
         .andThen(Commands.waitSeconds(30))

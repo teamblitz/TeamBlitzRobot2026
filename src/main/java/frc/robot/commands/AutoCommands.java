@@ -19,7 +19,9 @@ import frc.robot.PositionConstants;
 import frc.robot.subsystems.Drive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.spindexer.Spindexer;
+import frc.robot.subsystems.wrist.Wrist;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.wrist.Wrist;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -33,6 +35,7 @@ public class AutoCommands {
     private final Intake intake;
     private final Spindexer spindexer;
     private final Shooter shooter;
+    private final Wrist wrist;
 
     //    private final Command configAutonDefault;
     private final Command configTeleDefault;
@@ -40,12 +43,13 @@ public class AutoCommands {
     private SwerveSample lastSample;
 
     public AutoCommands(
-             CommandSwerveDrivetrain drive, Intake intake, Spindexer spindexer, Shooter shooter) {
+             CommandSwerveDrivetrain drive, Intake intake, Spindexer spindexer, Shooter shooter, Wrist wrist) {
         this.drive = drive;
         this.intake = intake;
         this.kinematics = Constants.Drive.KINEMATICS;
         this.spindexer = spindexer;
         this.shooter = shooter;
+        this.wrist = wrist;
         
         //Defining autofactory and creating a new autofactory
        autoFactory = new AutoFactory(
@@ -155,6 +159,100 @@ public class AutoCommands {
 
         return routine;
     }
+
+    //TODO needs testing
+    //Creates the leftShoot auto
+    public AutoRoutine leftShoot() {
+        final var routine = autoFactory.newRoutine("leftShoot");
+
+        //loads the routines trajectory
+        final var traj = routine.trajectory("leftShoot");
+
+        //When routine starts it resets the Obometry and starts the trajectory
+        routine.active().onTrue(
+            Commands.sequence(
+                traj.resetOdometry(),
+                traj.cmd().withName("leftShoot")
+            )
+        );
+
+        //When the routine ends starts the shooter
+        traj.done().onTrue(
+            CommandFactory.autoShoot(shooter, spindexer)
+        );
+
+        return routine;
+    }
+
+    //TODO needs Testing
+    public AutoRoutine rightShoot() {
+        final var routine = autoFactory.newRoutine("rightShoot");
+        final var traj = routine.trajectory("rightShoot");
+
+        routine.active().onTrue(
+            Commands.sequence(
+                traj.resetOdometry(),
+                traj.cmd().withName("rightShoot")
+            )
+        );
+
+        traj.done().onTrue(
+            CommandFactory.autoShoot(shooter, spindexer)
+        );
+
+        return routine;
+    }
+    
+    //TODO Needs Testing
+    //Creates the leftSingleReload auto
+    public AutoRoutine leftSingleReload() {
+        final var routine = autoFactory.newRoutine("leftSingleReload");
+
+        //loads the routines trajectory
+        final var traj = routine.trajectory("leftSingleReload");
+
+        //when the routine starts reset the obometry and starts the trajectory
+        routine.active().onTrue(
+            Commands.sequence(
+            traj.resetOdometry(),
+            traj.cmd().withName("leftSingleReload")
+            )
+        );
+
+        //at event marker shoot1
+        traj.atTime("Shoot1").onTrue(
+            Commands.sequence(
+            //Shoots
+            CommandFactory.autoShoot(shooter, spindexer),
+            Commands.waitSeconds(5),
+            //Stops shooting
+            CommandFactory.shooterStop(shooter, spindexer)
+            )
+        );
+
+        //at event marker intakeDown
+        traj.atTime("intakeDown").onTrue(
+            //puts intake down and runs the intake
+            CommandFactory.intakeDown(intake, wrist)
+        );
+
+        //at events marker intakeUp
+        traj.atTime("intakeUp").onTrue(
+            Commands.sequence(
+            //puts intake up and stops running
+            CommandFactory.intakeUp(intake, wrist),
+            Commands.waitSeconds(1)
+            )
+        );
+
+        //when the routine is over, runs the shooter
+        traj.done().onTrue(
+            CommandFactory.autoShoot(shooter, spindexer)
+        );
+
+        return routine;
+    }
+
 
     public AutoRoutine leaveRight() {
         final var routine = autoFactory.newRoutine("leaveRight");
