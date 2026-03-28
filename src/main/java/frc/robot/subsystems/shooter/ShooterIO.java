@@ -13,7 +13,7 @@ public interface ShooterIO {
 
     }
 
-    default void updateInputs(ShooterInputs inputs) {}
+    default void updateInputs() {}
 
     default void setShooterSpeed(double speed) {}
 
