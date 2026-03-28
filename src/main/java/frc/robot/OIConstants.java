@@ -120,14 +120,7 @@ public class OIConstants {
 
 
     public static final class Shooter {
-        public static final Trigger OPERATOR_SHOOT = OPERATOR_CONTROLLER.leftTrigger();
-        public static final Trigger DRIVER_SHOOT = DRIVE_CONTROLLER.button(2);
-        public static final Trigger OPERATOR_TEAM_FEED = OPERATOR_CONTROLLER.povLeft();
-        public static final Trigger DRIVER_TEAM_FEED = DRIVE_CONTROLLER.button(6);
-        public static final Trigger OPERATOR_DEEP = OPERATOR_CONTROLLER.povRight();
-        public static final Trigger DRIVE_DEEP = DRIVE_CONTROLLER.button(4);
-        public static final Trigger SHOOT_TESTING = OPERATOR_CONTROLLER.povRight();
-        
+        public static final Trigger SHOOT = OPERATOR_CONTROLLER.rightTrigger();
     }
     
     public static final class Climber {

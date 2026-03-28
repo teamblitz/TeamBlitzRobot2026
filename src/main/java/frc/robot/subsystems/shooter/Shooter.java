@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.Spindexer;
 import frc.robot.Constants.ShooterConstants.*;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.swerveModule.SwerveModule;
@@ -14,7 +13,6 @@ import edu.wpi.first.math.geometry.*;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import static frc.robot.Constants.ShooterConstants.*;
-import static frc.robot.Constants.Spindexer.SPINDEXER_ID;
 
 import javax.print.attribute.standard.PrinterURI;
 
@@ -22,42 +20,30 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 
 import com.ctre.phoenix6.controls.Follower;
+import org.littletonrobotics.junction.Logger;
 
 
 public class Shooter extends SubsystemBase {
-	//private final ShooterIO io;
 
-   private final TalonFX shooter;
-   private final TalonFX deepFeed;
-   private final TalonFX feeder;
+    private static final String logKey = "Shooter";
+
     private final ShooterIO io;
     private final Drive drive;
+    private final ShooterInputsAutoLogged inputs = new ShooterInputsAutoLogged();
 
-	public Shooter(ShooterIO io, Drive drive) {
-	
-        shooter = new TalonFX(30);
-        feeder = new TalonFX(31);
-        deepFeed = new TalonFX(32);
-//
-//        bottomShooter = new TalonFX(BOTTOM_SHOOTER_ID);
-//        feeder = new TalonFX(FEEDER_ID);
-
+    public Shooter(ShooterIO io, Drive drive) {
         this.io = io;
-        this.drive= drive;
+        this.drive = drive;
+        setName("Shooter");
+    }
+
+    @Override
+    public void periodic() {
+        io.updateInputs(inputs);
+        Logger.processInputs(logKey, inputs);
+    }
 
 
-
-//        bottomShooter.setControl(new Follower(topShooter.getDeviceID(), MotorAlignmentValue.Opposed)); // May need to be Inverted
-
-	}
-
-	@Override
-	public void periodic() {
-		super.periodic();
-		// IO update would be done by a higher-level manager; keep minimal here
-	}
-
-    
     /** This method calculates the required velocity for the ball,
      * given the distance to target.
      * 
@@ -96,50 +82,34 @@ public class Shooter extends SubsystemBase {
         return voltage;
     }
 
-   public Command aimAndShoot() {
-       return runOnce(() -> shooter.setControl(getVoltage()))
-               .andThen(Commands.waitSeconds(1))
-               .andThen(() -> feeder.set(1))
-               .andThen(Commands.waitSeconds(5))
-               .andThen(() -> feeder.set(1))
-               .andThen(Commands.waitSeconds(1))//TODO set values to run
-               .finallyDo(
-                   () -> {
-                       shooter.set(0);
-                       feeder.set(0);
-                   }
-               );
-   }
+//   public Command aimAndShoot() {
+//       return runOnce(() -> io.setControl(getVoltage()))
+//               .andThen(Commands.waitSeconds(1))
+//               .andThen(() -> feeder.set(1))
+//               .andThen(Commands.waitSeconds(5))
+//               .andThen(() -> feeder.set(1))
+//               .andThen(Commands.waitSeconds(1))//TODO set values to run
+//               .finallyDo(
+//                   () -> {
+//                       shooter.set(0);
+//                       feeder.set(0);
+//                   }
+//               );
+//   }
 
 
 
-    public Command shootTest() {
-        return runOnce(() -> io.setShooterSpeed(0.7))
-                .andThen(Commands.waitSeconds(1.5))
-                .andThen(() -> io.setFeederSpeed(-0.6))
-                .andThen(Commands.waitSeconds(30))
-                .finallyDo(() -> {
-                    io.setShooterSpeed(0);
-                    io.setFeederSpeed(0);
-                });
-    }
 
-    public Command teamFeed() {
-        return runOnce(() -> io.setShooterSpeed(0.5))
-                .andThen(Commands.waitSeconds(1.5))
-                .andThen(() -> io.setFeederSpeed(-0.45))
-                .andThen(Commands.waitSeconds(30))
-                .finallyDo(() -> {
-                    io.setShooterSpeed(0);
-                    io.setFeederSpeed(0);
-                });
-    }
 
-    public Command deepFeed() {
-        return runOnce(() -> io.setShooterSpeed(0.95))
-                .andThen(Commands.waitSeconds(1.5))
-                .andThen(() -> io.setFeederSpeed(-0.6))
-                .andThen(Commands.waitSeconds(30))
+
+
+    public Command defaultShoot(double shooterSpeed, double feederSpeed) {
+        return runOnce(() ->
+                        io.setShooterSpeed(shooterSpeed))
+                .andThen(Commands.waitSeconds(0.5))
+                .andThen(() ->
+                        io.setFeederSpeed(feederSpeed))
+                .andThen(Commands.idle())
                 .finallyDo(() -> {
                     io.setShooterSpeed(0);
                     io.setFeederSpeed(0);

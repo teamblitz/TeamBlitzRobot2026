@@ -353,103 +353,9 @@ public final class Constants {
         public static final double SOFT_LIMIT_FORWARD = 0.35; //Sets the bounds for where the wrist can go
         public static final double SOFT_LIMIT_REVERSE = 0.08; //Sets the bounds for where the wrist can go
 
-
-        public static final class PidGains {
-            public static final double KP = 2;
-            public static final double KI = 0;
-            public static final double KD = 0; // 524.32
-        }
-
-        // bad cuz backlash
-        public static final class WristGains {
-            public static final double KS = 0.0080265;
-            public static final double KV = 2.8461;
-            public static final double KA = 0.66332;
-            public static final double KG = 0.2288;
-        }
-
-        public static final class KrakenGains {
-            public static final double KS = 0.3576;
-            public static final double KV = 2.5726 * (2 * Math.PI);
-            public static final double KA = 0.059493 * (2 * Math.PI);
-            public static final double KG = 0.16157;
-            public static final double KP = 6 * 12 * (2 * Math.PI);
-            public static final double KD = 0; // 0.70647
-        }
     }
 
-    // Reset Elevator To Bottom before reset code
-    public static final class SuperstructureSetpoints {
-        public static final SuperstructureState STOW =
-                new SuperstructureState(.001, Math.toRadians(75));
 
-        public static final SuperstructureState WRIST_TRANSIT =
-                new SuperstructureState(0, Math.toRadians(70));
-
-        public static final SuperstructureState L1 =
-                new SuperstructureState(.2, Math.toRadians(60));
-        public static final SuperstructureState L2 =
-                new SuperstructureState(.48, Math.toRadians(60));
-        public static final SuperstructureState L3 =
-                new SuperstructureState(.85, Math.toRadians(60));
-        public static final SuperstructureState L4 =
-                new SuperstructureState(1.48, Math.toRadians(57.5)); // Value is not with Drop
-
-        public static final SuperstructureState KICK_LOW_ALGAE =
-                new SuperstructureState(.48, Math.toRadians(42));
-        public static final SuperstructureState KICK_HIGH_ALGAE =
-                new SuperstructureState(.88, Math.toRadians(40));
-
-        public static final SuperstructureState L4_PLOP =
-                new SuperstructureState(L4.elevatorPosition, Math.toRadians(30));
-
-        public static final SuperstructureState PICKUP_LOW_ALGAE =
-                new SuperstructureState(.48 + .2, Math.toRadians(60));
-        public static final SuperstructureState PICKUP_HIGH_ALGAE =
-                new SuperstructureState(.88 + .2, Math.toRadians(60));
-
-        public static final List<StateWithMode> L4_DUNK = List.of(
-                SetpointMode.WRIST_SYNC.withState(
-                        new SuperstructureState(L4.elevatorPosition, Math.toRadians(0))),
-                SetpointMode.WRIST_SYNC.withState(new SuperstructureState(1.31, Math.toRadians(0))),
-                SetpointMode.WRIST_SYNC.withState(
-                        new SuperstructureState(1.0, Math.toRadians(70))));
-
-        public static final SuperstructureState HANDOFF =
-                new SuperstructureState(.001, Math.toRadians(94));
-
-        public static final double ELEVATOR_MAX_TO_SKIP_TRANSIT = .15;
-
-        public enum SetpointMode {
-            WRIST_FIRST,
-            WRIST_LAST,
-            WRIST_SYNC;
-
-            public StateWithMode withState(SuperstructureState state) {
-                return new StateWithMode(state, this);
-            }
-        }
-
-        public record StateWithMode(SuperstructureState state, SetpointMode mode) {}
-
-        public record SuperstructureState(double elevatorPosition, double wristRotation) {
-            public TrapezoidProfile.State getElevatorState(double velocity) {
-                return new TrapezoidProfile.State(elevatorPosition, velocity);
-            }
-
-            public TrapezoidProfile.State getElevatorState() {
-                return getElevatorState(0);
-            }
-
-            public TrapezoidProfile.State getWristState(double velocity) {
-                return new TrapezoidProfile.State(wristRotation, velocity);
-            }
-
-            public TrapezoidProfile.State getWristState() {
-                return getWristState(0);
-            }
-        }
-    }
 
     public static final class Intake {
         public static final int INTAKEMOTOR_ID = 14;
@@ -469,15 +375,13 @@ public final class Constants {
         public static final double L4_PLOP = .4;
     }
 
-    public static final class Spindexer {
-        public static final double SPINDEXER_MAX_SPEED = compBot() ? 80 : 25; //TODO set val
-        public static final int SPINDEXER_ID = 23;
-    }
-
     public static final class ShooterConstants {
-        public static final int TOP_SHOOTER_ID = 30;
-        public static final int BOTTOM_SHOOTER_ID = 31;
+        public static final int RIGHT_SHOOTER_ID = 30;
+        public static final int LEFT_SHOOTER_ID = 31;
         public static final int FEEDER_ID = 32;
+
+        public static final double SHOOTER_SPEED = 1;
+        public static final double FEEDER_SPEED = 0.3;
 
         public static final double SHOOTER_HEIGHT = 0.4826;
         public static final double HUB_X = (!Constants.DISABLE_HAL && DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
@@ -490,65 +394,13 @@ public final class Constants {
         public static final double RAMP = 0.15;
         public static final double KA = 0.1;
     }
-    public static final class Winch {
-        public static final int ID = 50;
 
-        public static final int CURRENT_LIMIT = 25;
-
-        public static final double MATCH_FUNNEL_UP = 1.35;
-        public static final double MATCH_FUNNEL_DOWN = 0;
-        public static final double PIT_FUNNEL_STOW = 0;
-        public static final double EPSILON = 0.05;
-
-        public static final double WINCH_GEAR_RATIO = 25;
-
-        public static final double KP = 2;
-        public static final double MAX_OUT = .6;
+    public static final class Agitator {
+        public static final int AGITATOR_ID = 0; //TODO set val
+        public static final double CURRENT_LIMIT = 0; //TODO set val
+        public static final boolean INVERTED = true; //TODO get real val
     }
 
-    public static final class Climber {
-        public static final int RIGHT_ID = 60;
-        public static final int LEFT_ID = 61;
-
-        public static final double MAX_POS = Math.toRadians(270);
-        public static final double MIN_POS = Math.toRadians(0);
-
-        public static final double ABS_ENCODER_ZERO =
-                Units.rotationsToRadians(0.9178690729467268 - .75);
-        public static final int ABS_ENCODER_DIO_PORT = 1;
-
-        public static final double DEPLOY_POSITION = Math.toRadians(105); // TODO CONFIG
-        public static final double CLIMB_POSITION = Math.toRadians(230);
-        public static final double RESTOW_POSITION = Math.toRadians(270);
-
-        public static final double STARTING_POSITION = Math.toRadians(270);
-
-        public static final double EPSILON = Math.toRadians(1);
-
-        public static final double CLIMBER_GEAR_RATIO = (9 * 5 * 3) * (24.0 / 12.0);
-
-        public static final class UnloadedGains {
-            public static final double KS = 0.17029;
-            public static final double KV = 5.1394;
-            public static final double KA = 0.064502;
-
-            public static final double KP = 24; // 65.595;
-        }
-
-        public static final class LoadedGains {
-            public static final double KS = 0.17029;
-            public static final double KV = 5.1394;
-            public static final double KA = 0.064502;
-
-            public static final double KP = 100; // 65.595;
-        }
-
-        public static final double MAX_VEL_UNLOADED = Units.degreesToRadians(180 * .6);
-        public static final double MAX_ACCEL_UNLOADED = Units.degreesToRadians(360 * .6);
-
-        public static final double MAX_VEL_LOADED = .5;
-        public static final double MAX_ACCEL_LOADED = 1;
-    }
 
     public static final class Vision {
 
