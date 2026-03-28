@@ -17,6 +17,7 @@ import frc.lib.reefscape.ScoringPositions.Branch;
 import frc.robot.Constants;
 import frc.robot.PositionConstants;
 import frc.robot.subsystems.agitator.Agitator;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 
@@ -26,24 +27,43 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class AutoCommands {
+    private final Drive drive;
     private final SwerveDriveKinematics kinematics;
+    private final AutoFactory autoFactory;
     private final Intake intake;
     private final Shooter shooter;
     private final Agitator agitator;
 
     //    private final Command configAutonDefault;
+    private final Command configTeleDefault;
 
     // private SwerveSample lastSample;
 
-    public AutoCommands(Intake intake, Agitator agitator, Shooter shooter) {
+    public AutoCommands(
+            Drive drive, Intake intake, Agitator agitator, Shooter shooter) {
+        this.drive = drive;
         this.intake = intake;
         this.kinematics = Constants.Drive.KINEMATICS;
         this.agitator = agitator;
         this.shooter = shooter;
         
         //Defining autofactory and creating a new autofactory
+        autoFactory = new AutoFactory(
+                //Getting the current pose(position and rotation)
+                drive::getPose,
+                drive::resetOdometry,
+                drive::followTrajectory,
+                // sample -> {
+                //     // "Don't ask, just cast (the ring into the fire frodo)" - Noah 2024
+                //     //
+                //     //Telling the bot to follow the trajectory(which is made in choreo)
+                //     lastSample = (SwerveSample) sample;
+                //     drive.followTrajectory((SwerveSample) sample);
+                // },
+                true,
+                drive);
 
-
+        Command normalDriveDefault = drive.getDefaultCommand();
 
         // "I heard you liked commands, so I gave you a command to set the default command to be a
         // different command" - Noah 2024
@@ -76,9 +96,118 @@ public class AutoCommands {
         // the match,
         // unfortunately that is undesired behavior :(, so we need to give them back" - Noah 2024
 
+        // This reinitializes teleoperated controls for when autonomous ends
+        configTeleDefault = Commands.runOnce(() -> drive.setDefaultCommand(normalDriveDefault))
+                .ignoringDisable(true);
 
+        RobotModeTriggers.autonomous().onFalse(configTeleDefault);
+        RobotModeTriggers.teleop().onTrue(configTeleDefault);
+    }
 
+    //Returns our autoFactory field. Containas pose, and the choreo trajectory
+    public AutoFactory getFactory() {
+        return autoFactory;
+    }
+
+    //Creates an auto which does nothing
+    public Command getNoAuto() {
+        final var routine = autoFactory.newRoutine("None");
+        routine.active().onTrue(Commands.print("Running No Auto"));
+
+        return routine.cmd();
+    }
+
+    //Creates a test drive auto routine
+    public AutoRoutine testDrive() {
+        final var routine = autoFactory.newRoutine("test");
+        final var traj = routine.trajectory("test");
+
+        routine.active()
+                .whileTrue(Commands.sequence(traj.resetOdometry(), traj.cmd())
+                        .withName("auto/cmdSec"));
+
+        return routine;
     }
 
 
+    public AutoRoutine moveAndShoot() {
+        final var routine = autoFactory.newRoutine("moveAndShoot");
+
+        // Load the routine's trajectories
+        AutoTrajectory moveToPos = routine.trajectory("OutCenter");
+
+        // When the routine begins, reset odometry and start the first trajectory
+        routine.active().onTrue(
+                Commands.sequence(
+                        moveToPos.resetOdometry(),
+                        moveToPos.cmd()
+                )
+        );
+
+
+
+        return routine;
+    }
+
+    public AutoRoutine leaveRight() {
+        final var routine = autoFactory.newRoutine("leaveRight");
+        final var traj = routine.trajectory("leaveRight");
+
+        // AutoTrajectory leaveToMidRight = routine.trajectory("RightLeave");
+
+        routine.active().onTrue(
+            Commands.sequence(
+                traj.resetOdometry(),
+                traj.cmd().withName("leaveRight")
+            )
+        );
+
+        return routine;
+    }
+
+        public AutoRoutine leaveLeft() {
+        final var routine = autoFactory.newRoutine("leaveLeft");
+        final var traj = routine.trajectory("leaveLeft");
+
+        // AutoTrajectory leaveToMidLeft = routine.trajectory("LeftLeave");
+
+        routine.active().onTrue(
+            Commands.sequence(
+                traj.resetOdometry(),
+                traj.cmd().withName("leaveLeft")
+            )
+        );
+
+        return routine;
+    }
+
+    // public AutoRoutine driveAway (String pathName) {
+    //     final var routine = autoFactory.newRoutine("Drive Away");
+
+    //     drive.followTrajectory(lastSample);
+
+    //     return routine;
+    // }
+
+
+
+
+    /**"
+     * I channelled my inner AP CSA here, I haven't touched normal for loops in a long time, and it
+     * really shows.
+     *
+     * @param numberOfCoral bingus
+     * @param pathName bongus
+     * @return boingus
+     " - Noah 2024*/
+    // public AutoRoutine leave(String pathName) {
+    //     final var routine = autoFactory.newRoutine(pathName);
+    //     final var traj = routine.trajectory(pathName);
+
+    //     routine.active()
+    //             .whileTrue(Commands.sequence(traj.resetOdometry(), traj.cmd())
+    //                     .withName("auto/cmdSec"));
+
+    //     return routine;
+    // }
 }
