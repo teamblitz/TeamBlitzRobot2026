@@ -31,8 +31,11 @@ import frc.lib.math.AllianceFlipUtil;
 import frc.lib.reefscape.ScoringPositions;
 import frc.robot.Constants.Spindexer;
 
-import frc.robot.subsystems.shooter.ShooterIOKraken;
-import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.wrist.Wrist;
+import frc.robot.subsystems.wrist.WristIOKraken;
+
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIOKraken;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -48,7 +51,8 @@ public class RobotContainer {
 
     /* ***** --- Subsystems --- ***** */
 
-    private Shooter shooter;
+    private Wrist wrist;
+    private Intake intake;
     //private DriveCommands driveCommands;
 
     /* ***** --- Autonomous --- ***** */
@@ -73,26 +77,31 @@ public class RobotContainer {
 
     private void configureSubsystems() {
 
-
-        shooter = new Shooter(new ShooterIOKraken());
-
-
+        wrist = new Wrist(new WristIOKraken());
+        intake = new Intake(new IntakeIOKraken());
 
 //        autoCommands = new AutoCommands(drive, intake, spindexer, shooter);
-
 
     }
 
     //Creating a new driving system so that our robot understands our joystick and control
     private void setDefaultCommands() {
 
-
-
-
     }
     //Configures our button bindings to the robot commands.
     private void configureTriggerBindings() {
-        OIConstants.Shooter.SHOOT.whileTrue(shooter.newShoot());
+        OIConstants.Intake.FORWARD.whileTrue(intake.forward()); // a
+        OIConstants.Intake.REVERSE.whileTrue(intake.reverse()); // b
+
+        OIConstants.Wrist.DOWN.whileTrue(
+                Commands.parallel(
+                        wrist.goToDown(),
+                        intake.forward()
+                )
+        ); 
+
+        OIConstants.Intake.REVERSE.whileTrue(intake.reverse()); //left bumper
+        OIConstants.Intake.FORWARD.whileTrue(intake.forward()); //right bumper
 
     }
 
