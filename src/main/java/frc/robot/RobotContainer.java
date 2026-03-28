@@ -16,50 +16,27 @@ import choreo.auto.AutoChooser;
 import com.ctre.phoenix6.SignalLogger;
 
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.DeferredCommand;
-import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-import frc.lib.math.AllianceFlipUtil;
-import frc.lib.reefscape.ScoringPositions;
 import frc.robot.commands.*;
 import frc.robot.subsystems.agitator.AgitatorIOKraken;
-import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.drive.gyro.GyroIOPigeon;
-import frc.robot.subsystems.drive.range.RangeSensorIOFusion;
-import frc.robot.subsystems.drive.swerveModule.SwerveModule;
-import frc.robot.subsystems.drive.swerveModule.SwerveModuleConfiguration;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOKraken;
-import frc.robot.subsystems.shooter.ShooterIOKraken;
-import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.commands.TeleopSwerve;
 
-import frc.robot.subsystems.wrist.Wrist;
-import frc.robot.subsystems.wrist.WristIO;
 
 import frc.robot.subsystems.agitator.Agitator;
-import frc.robot.subsystems.agitator.AgitatorIO;
 
 import frc.robot.Constants.*;
 
 
 
-import frc.robot.subsystems.wrist.WristIOKraken;
 import org.littletonrobotics.junction.Logger;
-
-import java.util.Set;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -70,17 +47,13 @@ import java.util.Set;
 public class RobotContainer {
 
     /* ***** --- Subsystems --- ***** */
-    private Drive drive;
-    private SwerveModule swerveModule;
+
     private Vision vision;
     private Intake intake;
     private IntakeIO intakeIO;
     private Shooter shooter;
     private AutoCommands autoCommands;
     //private DriveCommands driveCommands;
-    private Wrist wrist;
-    private WristIO wristIO;
-    private WristIOKraken wristIOKraken;
     private Agitator agitator;
 
     /* ***** --- Autonomous --- ***** */
@@ -104,35 +77,14 @@ public class RobotContainer {
     }
 
     private void configureSubsystems() {
-        drive = new Drive(
-                                    new SwerveModuleConfiguration(
-                                            SwerveModuleConfiguration.MotorType.KRAKEN,
-                                            SwerveModuleConfiguration.MotorType.KRAKEN,
-                                            SwerveModuleConfiguration.EncoderType.CANCODER),
-                                    Constants.Drive.Mod0.CONSTANTS,
-                                    Constants.Drive.Mod1.CONSTANTS,
-                                    Constants.Drive.Mod2.CONSTANTS,
-                                    Constants.Drive.Mod3.CONSTANTS,
-                                    new GyroIOPigeon(),
-                                    new RangeSensorIOFusion());
 
-//        RobotModeTriggers.teleop().onTrue(Commands.runOnce(
-//                () -> {drive.getCurrentCommand().cancel();}
-//        ).ignoringDisable(true));
-       // driveCommands = new DriveCommands(drive);
 
-        vision = new Vision(drive);
+
 
         intakeIO = new IntakeIOKraken();
 
 
         intake = new Intake(intakeIO);
-        shooter = new Shooter(new ShooterIOKraken(), drive);
-
-
-        wrist = new Wrist(new WristIOKraken());
-
-//        autoCommands = new AutoCommands(drive, intake, agitator, shooter);
 
         agitator = new Agitator(new AgitatorIOKraken());
 
@@ -140,20 +92,7 @@ public class RobotContainer {
     }
 
     private void setDefaultCommands() {
-        drive.setDefaultCommand(
-                new TeleopSwerve(
-                                drive,
-                                OIConstants.Drive.X_TRANSLATION,
-                                OIConstants.Drive.Y_TRANSLATION,
-                                OIConstants.Drive.ROTATION_SPEED,
-                                () -> false,
-                                () -> Double.NaN,
-                                () -> true)
-                        .unless(RobotState::isTest)
-                        .until(RobotState::isTest)
-                        .withName("TeleopSwerve"));
 
-        wrist.setDefaultCommand((wrist.goToIdle()));
 
 
 
@@ -161,30 +100,6 @@ public class RobotContainer {
 
     private void configureTriggerBindings() {
 
-        /*   Drive   */
-        OIConstants.Drive.RESET_GYRO.onTrue(Commands.runOnce(drive::zeroGyro));
-        //        OIConstants.Drive.X_BREAK.onTrue(drive.park());
-        //
-        //        OIConstants.Drive.BRAKE.onTrue(Commands.runOnce(() -> drive.setBrakeMode(true)));
-        //        OIConstants.Drive.COAST.onTrue(Commands.runOnce(() -> drive.setBrakeMode(false)));
-
-        OIConstants.Drive.ALIGN_LEFT.whileTrue(new DeferredCommand(
-                () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(
-                        PositionConstants.getClosestFace(drive.getPose())[0])),
-                Set.of(drive)));
-
-        OIConstants.Drive.ALIGN_RIGHT.whileTrue(new DeferredCommand(
-                () -> drive.driveToPose(PositionConstants.Reef.SCORING_POSITIONS.get(
-                        PositionConstants.getClosestFace(drive.getPose())[1])),
-                Set.of(drive)));
-
-        /*   Wrist   */
-        OIConstants.Wrist.DOWN.whileTrue(
-                Commands.parallel(
-                        wrist.goToDown(),
-                        intake.forward()
-                )
-        );
 
 
         /*   Shooter   */
@@ -208,25 +123,12 @@ public class RobotContainer {
                "Phoenix SignalLogger",
                runEnd(SignalLogger::start, SignalLogger::stop).ignoringDisable(true));
 
-       tab.add("drive/resetOdometry", Commands.runOnce(() -> drive.resetOdometry(new Pose2d())));
+//       tab.add("drive/resetOdometry", Commands.runOnce(() -> drive.resetOdometry(new Pose2d())));
 
 //        tab.add(
 //                "wheel radius characterization",
 //                DriveCharacterizationCommands.characterizeWheelDiameter(drive));
 
-        new Trigger(() -> DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)
-                        == DriverStation.Alliance.Blue)
-                .onChange(runOnce(() -> {
-                            for (ScoringPositions.Branch branch :
-                                    ScoringPositions.Branch.values()) {
-                                Logger.recordOutput(
-                                        "positions/reef/" + branch.name(),
-                                        PositionConstants.Reef.SCORING_POSITIONS
-                                                .get(branch)
-                                                .get());
-                            }
-                        })
-                        .ignoringDisable(true));
 
 //        Commands.run(() -> {
 //                    PositionConstants.getClosestFace(drive.getPose());
@@ -238,17 +140,10 @@ public class RobotContainer {
     }
     //Configures autonomuous cpmmands and autochooser
     private void configureAutonomous() {
-        autoCommands = new AutoCommands(drive, intake, agitator, shooter);
         autoChooser = new AutoChooser();
         SmartDashboard.putData("autoChooser", autoChooser);
 
-        autoChooser.addCmd("None", autoCommands::getNoAuto);
-        // autoChooser.addRoutine("Shoot Only", autoCommands::autoShoot);
-        //
-        autoChooser.addRoutine("MoveAndShoot", autoCommands::moveAndShoot);
-
-        autoChooser.addRoutine("RightLeave", autoCommands::leaveRight);
-        autoChooser.addRoutine("LeftLeave", autoCommands::leaveLeft);
+       
 
         //EXAMPLE
         // autoChooser.addRoutine("leaveRight", () -> autoCommands.leave("leaveRight"));
@@ -258,10 +153,8 @@ public class RobotContainer {
         Logger.recordOutput("selectedAuto", autoChooser.selectedCommand().getName());
 //        return autoChooser.selectedCommandScheduler();
 
-        return Commands.sequence(
-                Commands.runOnce(() -> drive.setGyro(AllianceFlipUtil.shouldFlip() ? 0 : 180)),
-                autoChooser.selectedCommandScheduler()).withName("Auto Command");
-//        return Commands.none();
+
+        return Commands.none();
 //         return Commands.sequence(
 //                         Commands.runOnce(() -> drive.resetRotation(
 //                                 AllianceFlipUtil.shouldFlip()
