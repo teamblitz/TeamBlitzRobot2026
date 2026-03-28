@@ -14,12 +14,15 @@ public class OIConstants {
 
     public static final double XBOX_STICK_DEADBAND = 0.06;
 
+    public static final Trigger UNBOUND = new Trigger(() -> false);
+    
     public static final CommandXboxController OPERATOR_CONTROLLER = new CommandXboxController(1);
 
 
-    public static final class Shooter {
-        public static final Trigger SHOOT = OPERATOR_CONTROLLER.x();
+    public static final class Spindexer{
+        public static final Trigger FEED = OPERATOR_CONTROLLER.povDown();
 
+        public static final Trigger SHOOT = UNBOUND; //TODO set val
     }
 
 }

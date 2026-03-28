@@ -29,10 +29,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.lib.math.AllianceFlipUtil;
 import frc.lib.reefscape.ScoringPositions;
-import frc.robot.Constants.Spindexer;
 
-import frc.robot.subsystems.shooter.ShooterIOKraken;
-import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.agitator.Agitator;
+import frc.robot.subsystems.agitator.AgitatorIOKraken;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -48,7 +47,7 @@ public class RobotContainer {
 
     /* ***** --- Subsystems --- ***** */
 
-    private Shooter shooter;
+    private Agitator agitator;
     //private DriveCommands driveCommands;
 
     /* ***** --- Autonomous --- ***** */
@@ -73,10 +72,7 @@ public class RobotContainer {
 
     private void configureSubsystems() {
 
-
-        shooter = new Shooter(new ShooterIOKraken());
-
-
+        agitator = new Agitator(new AgitatorIOKraken());
 
 //        autoCommands = new AutoCommands(drive, intake, spindexer, shooter);
 
@@ -86,15 +82,13 @@ public class RobotContainer {
     //Creating a new driving system so that our robot understands our joystick and control
     private void setDefaultCommands() {
 
-
-
-
     }
     //Configures our button bindings to the robot commands.
     private void configureTriggerBindings() {
-        OIConstants.Shooter.SHOOT.whileTrue(shooter.newShoot());
-
+       OIConstants.Spindexer.FEED.whileTrue(agitator.reverse()); //y
+       OIConstants.Spindexer.SHOOT.whileTrue(agitator.feed());
     }
+
 
     //Configures the FRC dashboard and tells the robot several things:
     //Which alliance, autochoosing, match timer,

@@ -469,9 +469,9 @@ public final class Constants {
         public static final double L4_PLOP = .4;
     }
 
-    public static final class Spindexer {
-        public static final double SPINDEXER_MAX_SPEED = compBot() ? 80 : 25; //TODO set val
-        public static final int SPINDEXER_ID = 23;
+    public static final class Agitator {
+        public static final double AGITATOR_MAX_SPEED = compBot() ? 80 : 25; //TODO set val
+        public static final int AGITATOR_ID = 23;
     }
 
     public static final class ShooterConstants {
