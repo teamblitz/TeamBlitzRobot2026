@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
-import frc.robot.commands.*;
 import frc.robot.subsystems.agitator.AgitatorIOKraken;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
@@ -50,11 +49,9 @@ public class RobotContainer {
 
     /* ***** --- Subsystems --- ***** */
 
-    private Vision vision;
     private Intake intake;
     private IntakeIO intakeIO;
     private Shooter shooter;
-    private AutoCommands autoCommands;
     //private DriveCommands driveCommands;
     private Agitator agitator;
 
