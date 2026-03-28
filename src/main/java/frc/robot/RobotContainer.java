@@ -8,8 +8,6 @@
 package frc.robot;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
-import static frc.robot.Constants.Agitator.AGITATOR_SPEED;
-import static frc.robot.Constants.Intake.INTAKE_SPEED;
 import static frc.robot.Constants.ShooterConstants.FEEDER_SPEED;
 import static frc.robot.Constants.ShooterConstants.SHOOTER_SPEED;
 
@@ -108,8 +106,8 @@ public class RobotContainer {
         OIConstants.Shooter.SHOOT.whileTrue(
                 Commands.parallel(
                         shooter.defaultShoot(SHOOTER_SPEED, FEEDER_SPEED),
-                        agitator.forward(AGITATOR_SPEED),
-                        intake.forward(INTAKE_SPEED)
+                        agitator.forward(),
+                        intake.forward()
                 )
         );
 

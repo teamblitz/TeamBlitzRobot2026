@@ -331,8 +331,6 @@ public final class Constants {
         public static final double L1 = .3;
 
         public static final double L4_PLOP = .4;
-
-        public static final double INTAKE_SPEED = 0.1;
     }
 
     public static final class ShooterConstants {
@@ -359,8 +357,6 @@ public final class Constants {
         public static final int AGITATOR_ID = 4; //TODO set val
         public static final double CURRENT_LIMIT = 0; //TODO set val
         public static final boolean INVERTED = true; //TODO get real val
-
-        public static final double AGITATOR_SPEED = 0.1;
     }
 
 
