@@ -99,13 +99,14 @@ public class RobotContainer {
 
     private void configureTriggerBindings() {
 
-
+        /*   Agitator   */
+        OIConstants.Agitator.FORWARD.whileTrue(agitator.run(AGITATOR_SPEED));
 
         /*   Shooter   */
         OIConstants.Shooter.SHOOT.whileTrue(
                 Commands.parallel(
                         shooter.defaultShoot(SHOOTER_SPEED, FEEDER_SPEED),
-                        agitator.forward(AGITATOR_SPEED),
+                        agitator.run(AGITATOR_SPEED),
                         intake.forward(INTAKE_SPEED)
                 )
         );

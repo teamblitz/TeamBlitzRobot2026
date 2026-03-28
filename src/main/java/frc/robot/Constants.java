@@ -121,7 +121,7 @@ public final class Constants {
 
     public static final class Agitator {
         public static final int AGITATOR_ID = 4; //TODO set val
-        public static final double CURRENT_LIMIT = 0; //TODO set val
+        public static final double CURRENT_LIMIT = 60; //TODO set val
         public static final boolean INVERTED = true; //TODO get real val
 
         public static final double AGITATOR_SPEED = 0.1;

@@ -192,11 +192,6 @@ public class OIConstants {
         
     }
 
-    public static final class Spindexer{
-        public static final Trigger FEED = OPERATOR_CONTROLLER.povDown();
-
-        public static final Trigger SHOOT = UNBOUND; //TODO set val
-    }
 
     public static final class Wrist {
         public static final DoubleSupplier MANUAL =
@@ -209,6 +204,10 @@ public class OIConstants {
         public static final Trigger DOWN = OPERATOR_CONTROLLER.y();
 
 //        public static final Trigger UP_TEST = OPERATOR_CONTROLLER.a();
+    }
+
+    public static final class Agitator {
+        public static final Trigger FORWARD = OPERATOR_CONTROLLER.povRight();
     }
 
 }
