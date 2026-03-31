@@ -2,7 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.spindexer.Spindexer;
+import frc.robot.subsystems.agitator.Agitator;
 
 public class ShootIndexCommand extends Command {
     // private final Shooter shooter;

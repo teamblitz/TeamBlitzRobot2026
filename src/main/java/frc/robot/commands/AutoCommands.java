@@ -16,9 +16,10 @@ import frc.lib.reefscape.ScoringPositions;
 import frc.lib.reefscape.ScoringPositions.Branch;
 import frc.robot.Constants;
 import frc.robot.PositionConstants;
+import frc.robot.subsystems.agitator.Agitator;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.spindexer.Spindexer;
+import frc.robot.subsystems.agitator.Agitator;
 import frc.robot.subsystems.shooter.Shooter;
 
 import org.littletonrobotics.junction.Logger;
@@ -31,7 +32,7 @@ public class AutoCommands {
     private final SwerveDriveKinematics kinematics;
     private final AutoFactory autoFactory;
     private final Intake intake;
-    private final Spindexer spindexer;
+    private final Agitator agitator;
     private final Shooter shooter;
 
     //    private final Command configAutonDefault;
@@ -40,11 +41,11 @@ public class AutoCommands {
     // private SwerveSample lastSample;
 
     public AutoCommands(
-            Drive drive, Intake intake, Spindexer spindexer, Shooter shooter) {
+            Drive drive, Intake intake, Agitator agitator, Shooter shooter) {
         this.drive = drive;
         this.intake = intake;
         this.kinematics = Constants.Drive.KINEMATICS;
-        this.spindexer = spindexer;
+        this.agitator = agitator;
         this.shooter = shooter;
         
         //Defining autofactory and creating a new autofactory
@@ -132,7 +133,7 @@ public class AutoCommands {
     //It must be done in this way using the commandfactory structure because of java syntax.
     public AutoRoutine autoShoot() { 
         final var routine = autoFactory.newRoutine("Shoot");
-        routine.active().whileTrue(CommandFactory.autoShoot(shooter, spindexer));
+        routine.active().whileTrue(CommandFactory.autoShoot(shooter, agitator));
         return routine;
     }
 
@@ -151,7 +152,7 @@ public class AutoCommands {
         );
 
         moveToPos.done().onTrue(
-                CommandFactory.autoShoot(shooter, spindexer)
+                CommandFactory.autoShoot(shooter, agitator)
         );
 
         return routine;

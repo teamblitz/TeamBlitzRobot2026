@@ -73,6 +73,7 @@ public class RobotContainer {
     private WristIO wristIO;
     private WristIOKraken wristIOKraken;
     private Agitator agitator;
+    private AgitatorIO agitatorIO;
 
     /* ***** --- Autonomous --- ***** */
     private AutoChooser autoChooser;
@@ -122,7 +123,7 @@ public class RobotContainer {
 
         wrist = new Wrist(new WristIOKraken());
 
-        agitator = new Agitator();
+        agitator = new Agitator(agitatorIO);
 
 //        autoCommands = new AutoCommands(drive, intake, spindexer, shooter);
 
@@ -240,7 +241,7 @@ public class RobotContainer {
         autoChooser.addRoutine("LeftLeave", autoCommands::leaveLeft);
 
         //EXAMPLE
-        // autoChooser.addRoutine("leaveRight", () -> autoCommands.leave("leaveRight"));
+        // autoChooser.addRoutine("leaveRight", () -> autoCommands.leave("leaveRight"));`
     }
     //Configures the Autochooser, which is selected in the dashboard(elastic)
     public Command getAutonomousCommand() {

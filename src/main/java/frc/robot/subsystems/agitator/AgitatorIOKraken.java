@@ -12,10 +12,10 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import org.littletonrobotics.junction.Logger;
 
 public class AgitatorIOKraken implements AgitatorIO {
-    public final TalonFX grabball;
+    public final TalonFX agitator;
 
     public AgitatorIOKraken() {
-        grabball = new TalonFX(24); // TODO SET VALUE
+        agitator = new TalonFX(24); // TODO SET VALUE
 
         TalonFXConfiguration config = new TalonFXConfiguration();
 
@@ -28,14 +28,14 @@ public class AgitatorIOKraken implements AgitatorIO {
                                 : InvertedValue.CounterClockwise_Positive);
 
 
-        grabball.getConfigurator().apply(config);
+        agitator.getConfigurator().apply(config);
     }
 
 
 
     @Override
     public void setSpeed(double speed) {
-        grabball.set(speed);
+        agitator.set(speed);
 
     }
 
