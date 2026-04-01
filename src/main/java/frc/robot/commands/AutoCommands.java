@@ -253,6 +253,38 @@ public class AutoCommands {
         return routine;
     }
 
+    //TODO Test Auto
+    public AutoRoutine doubleReload() {
+        final var routine = autoFactory.newRoutine("doubleReload");
+        final var traj = routine.trajectory("doubleReload");
+
+        routine.active().onTrue(
+            Commands.sequence(
+                traj.resetOdometry(),
+                traj.cmd().withName("doubleReload")
+            )
+        );
+
+        traj.atTime("Shoot1").onTrue(
+            Commands.sequence(
+            CommandFactory.autoShoot(shooter, spindexer),
+            Commands.waitSeconds(1)
+            )
+        );
+
+        traj.atTime("startIntake").onTrue(
+            CommandFactory.intakeDown(intake, wrist)
+        );
+
+       
+
+
+        traj.done().onTrue(
+            CommandFactory.autoShoot(shooter, spindexer)
+        );
+        
+        return routine;
+    }
 
     public AutoRoutine leaveRight() {
         final var routine = autoFactory.newRoutine("leaveRight");
