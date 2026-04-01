@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
@@ -44,7 +44,8 @@ public class RobotContainer {
   private final Vision vision;
 
   // Controller
-  private final CommandXboxController controller = new CommandXboxController(0);
+  //  private final CommandXboxController controller = new CommandXboxController(0);
+  private final CommandJoystick controller = new CommandJoystick(0);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -151,29 +152,57 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
+    //    drive.setDefaultCommand(
+    //        DriveCommands.joystickDrive(
+    //            drive,
+    //            () -> -controller.getLeftY(),
+    //            () -> -controller.getLeftX(),
+    //            () -> -controller.getRightX()));
+    //
+    //    // Lock to 0° when A button is held
+    //    controller
+    //        .a()
+    //        .whileTrue(
+    //            DriveCommands.joystickDriveAtAngle(
+    //                drive,
+    //                () -> -controller.getLeftY(),
+    //                () -> -controller.getLeftX(),
+    //                () -> Rotation2d.kZero));
+    //
+    //    // Switch to X pattern when X button is pressed
+    //    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    //
+    //    // Reset gyro to 0° when B button is pressed
+    //    controller
+    //        .b()
+    //        .onTrue(
+    //            Commands.runOnce(
+    //                    () ->
+    //                        drive.setPose(
+    //                            new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
+    //                    drive)
+    //                .ignoringDisable(true));
+    // Default command, normal field-relative drive
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
-            () -> -controller.getRightX()));
+            () -> -controller.getY(),
+            () -> -controller.getX(),
+            () -> -controller.getTwist()));
 
-    // Lock to 0° when A button is held
+    // Lock to 0° when trigger is held
     controller
-        .a()
+        .trigger()
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
-                drive,
-                () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(),
-                () -> Rotation2d.kZero));
+                drive, () -> -controller.getY(), () -> -controller.getX(), () -> Rotation2d.kZero));
 
-    // Switch to X pattern when X button is pressed
-    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    // Switch to X pattern when button 2 is pressed
+    controller.button(2).onTrue(Commands.runOnce(drive::stopWithX, drive));
 
-    // Reset gyro to 0° when B button is pressed
+    // Reset gyro to 0° when button 3 is pressed
     controller
-        .b()
+        .button(3)
         .onTrue(
             Commands.runOnce(
                     () ->
