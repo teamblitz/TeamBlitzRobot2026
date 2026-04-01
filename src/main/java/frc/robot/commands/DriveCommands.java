@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.math.VectorUtils;
 import frc.lib.util.Capture;
 import frc.robot.OIConstants;
-import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 
 import org.littletonrobotics.junction.Logger;
@@ -40,9 +39,9 @@ public class DriveCommands {
     private final Timer maintainHeadingTimer = new Timer();
     private final double maintainHeadingDelay = .5;
 
-    private final Drive drive;
+    private final CommandSwerveDrivetrain drive;
 
-    public DriveCommands(Drive drive) {
+    public DriveCommands(CommandSwerveDrivetrain drive) {
         this.drive = drive;
     }
 

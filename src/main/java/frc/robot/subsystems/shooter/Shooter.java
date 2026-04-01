@@ -5,8 +5,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants.*;
-import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.drive.swerveModule.SwerveModule;
+import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.lib.math.AllianceFlipUtil;
 import edu.wpi.first.math.geometry.*;
 
@@ -29,9 +28,9 @@ public class Shooter extends SubsystemBase {
    private final TalonFX leftShooter;
    private final TalonFX feeder;
     private final ShooterIO io;
-    private final Drive drive;
+    private final CommandSwerveDrivetrain drive;
 
-	public Shooter(ShooterIO io, Drive drive) {
+	public Shooter(ShooterIO io, CommandSwerveDrivetrain drive) {
         rightShooter = new TalonFX(RIGHT_SHOOTER_ID);
         leftShooter = new TalonFX(LEFT_SHOOTER_ID);
         feeder = new TalonFX(FEEDER_ID);

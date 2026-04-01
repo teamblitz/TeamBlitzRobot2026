@@ -15,8 +15,10 @@ public class OIConstants {
      * Wrist-Down -> y
      * Spindexer -> Pov_Down
      */
+
     public static final double XBOX_STICK_DEADBAND = 0.06;
 
+    
        public static final CommandJoystick DRIVE_CONTROLLER = new CommandJoystick(0);
     // public static final CommandXboxController DRIVE_CONTROLLER = new CommandXboxController(0);
     public static final CommandXboxController OPERATOR_CONTROLLER = new CommandXboxController(1);
@@ -33,7 +35,14 @@ public class OIConstants {
             OmegaControl // The rotation stick controls the angular velocity of the robot
         }
 
+        
         public static double STICK_DEADBAND = 0.08;
+        public static double TRANSLATION_DEADBAND = 0.05;
+        public static double ROTATION_DEADBAND = 0.05;
+
+        public static final Function<Double, Double> TRANSLATION_INPUT_CURVE =
+                (x) -> .8 * x + .2 * (x * x * x);
+        public static final Function<Double, Double> SPIN_CURVE = (x) -> (x * x * x);
 
         // Values are in percents, we have full power
         private static final double SPIN_SPEED = Constants.compBot() ? .32 : .4;
@@ -70,7 +79,7 @@ public class OIConstants {
                         (DRIVE_CONTROLLER.getHID().getRawButton(3) ? SUPER_SPIN : SPIN_SPEED)
                                 * SPIN_CURVE.apply(DRIVE_CONTROLLER.getTwist());
 
-        public static final DoubleSupplier HEADING_CONTROL = () -> Double.NaN;
+        // public static final DoubleSupplier HEADING_CONTROL = () -> Double.NaN;
         //                        0 * Math.hypot(DRIVE_CONTROLLER.getLeftY(),
         // DRIVE_CONTROLLER.getLeftX()) > .5
         //                                ? Math.toDegrees(Math.atan2(
@@ -85,16 +94,23 @@ public class OIConstants {
         public static final Trigger COAST = UNBOUND;
         public static final Trigger BRAKE = UNBOUND;
 
-//        public static final Trigger ALIGN_LEFT =
-//                new Trigger(() -> DRIVE_CONTROLLER.getHID().getPOV() > 180);
-         public static final Trigger ALIGN_LEFT = UNBOUND;
+       public static final Trigger ALIGN_LEFT =
+               new Trigger(() -> DRIVE_CONTROLLER.getHID().getPOV() > 180);
 
-//        public static final Trigger ALIGN_RIGHT =
-//                new Trigger(
-//                        () ->
-//                                DRIVE_CONTROLLER.getHID().getPOV() < 180
-//                                        && DRIVE_CONTROLLER.getHID().getPOV() > 0);
-         public static final Trigger ALIGN_RIGHT = UNBOUND;
+
+       public static final Trigger ALIGN_RIGHT =
+               new Trigger(
+                       () ->
+                               DRIVE_CONTROLLER.getHID().getPOV() < 180
+                                       && DRIVE_CONTROLLER.getHID().getPOV() > 0);
+
+        //Triggers for our sysID test routines
+        //TODO Comment these out for competition.
+        public static final Trigger SYS_ID_QUASISTATIC = DRIVE_CONTROLLER.button(12);
+        public static final Trigger SYS_ID_DYNAMIC = DRIVE_CONTROLLER.button(11);
+        public static final Trigger SYS_ID_QUASISTATIC_REVERSE = DRIVE_CONTROLLER.button(10);
+        public static final Trigger SYS_ID_DYNAMIC_REVERSE = DRIVE_CONTROLLER.button(9);
+
     }
 
 

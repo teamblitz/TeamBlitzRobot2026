@@ -15,6 +15,8 @@ import org.littletonrobotics.junction.Logger;
 import org.apache.commons.math3.exception.ZeroException;
 import org.littletonrobotics.junction.AutoLogOutput;
 
+import frc.robot.subsystems.wrist.WristIO.WristInputs;
+
 
 public class Wrist extends BlitzSubsystem {
     private final WristIO io;
