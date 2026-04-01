@@ -38,7 +38,7 @@ public class AutoCommands {
     //    private final Command configAutonDefault;
     private final Command configTeleDefault;
 
-    // private SwerveSample lastSample;
+    private SwerveSample lastSample;
 
     public AutoCommands(
             CommandSwerveDrivetrain drive, Intake intake, Agitator agitator, Shooter shooter) {
