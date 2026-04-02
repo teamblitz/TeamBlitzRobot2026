@@ -16,6 +16,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -130,10 +131,12 @@ public class RobotContainer {
             drive::getPose,
             drive::setPose,
             drive::runChoreoTrajectory,
-            () -> DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red,
+            DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
             drive);
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
+    autoChooser.addOption("StraightTest", Auto());
 
     // Set up SysId routines
     autoChooser.addOption(

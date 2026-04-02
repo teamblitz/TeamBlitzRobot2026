@@ -9,6 +9,7 @@ package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;
 
+import choreo.trajectory.SwerveSample;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
@@ -357,7 +358,7 @@ public class Drive extends SubsystemBase {
     };
   }
 
-  public void runChoreoTrajectory(ChassisSpeeds speeds) {
-    runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getRotation()));
+  public void runChoreoTrajectory(SwerveSample sample) {
+    runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(sample.getChassisSpeeds(), getRotation()));
   }
 }
