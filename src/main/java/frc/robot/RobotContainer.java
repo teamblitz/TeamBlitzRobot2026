@@ -9,6 +9,9 @@ package frc.robot;
 
 import static frc.robot.subsystems.vision.VisionConstants.*;
 
+import choreo.auto.AutoFactory;
+import choreo.auto.AutoRoutine;
+import choreo.auto.AutoTrajectory;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -42,6 +45,7 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private final Vision vision;
+  private final AutoFactory autoFactory;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -120,7 +124,12 @@ public class RobotContainer {
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         break;
     }
-
+    autoFactory = new AutoFactory(
+            drive::getPose,
+            drive::setPose,
+            drive::runChoreoTrajectory,
+            () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
+            drive);
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
@@ -212,6 +221,15 @@ public class RobotContainer {
     //                             new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
     //                     drive)
     //                 .ignoringDisable(true));
+  }
+
+  private Command Auto() {
+    AutoRoutine routine = autoFactory.newRoutine("StraightTest");
+    AutoTrajectory path = routine.trajectory("StraightTest");
+
+    routine.active().onTrue(Commands.sequence(path.resetOdometry(), path.cmd()));
+
+    return routine.cmd();
   }
 
   /**
