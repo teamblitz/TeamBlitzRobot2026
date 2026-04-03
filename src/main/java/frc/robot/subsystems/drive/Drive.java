@@ -21,6 +21,7 @@ import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -61,6 +62,9 @@ public class Drive extends SubsystemBase {
               Math.hypot(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
               Math.hypot(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)));
 
+  private final PIDController choreoXController = new PIDController(5.0, 0.0, 0.0);
+  private final PIDController choreoYController = new PIDController(5.0, 0.0, 0.0);
+  private final PIDController choreoHeadingController = new PIDController(5.0, 0.0, 0.0);
   // PathPlanner config constants
   private static final double ROBOT_MASS_KG = 74.088;
   private static final double ROBOT_MOI = 6.883;
@@ -359,6 +363,14 @@ public class Drive extends SubsystemBase {
   }
 
   public void runChoreoTrajectory(SwerveSample sample) {
-    runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(sample.getChassisSpeeds(), getRotation()));
+    Pose2d pose = getPose();
+    ChassisSpeeds speeds = sample.getChassisSpeeds();
+
+    speeds.vxMetersPerSecond += choreoXController.calculate(pose.getX(), sample.x);
+    speeds.vyMetersPerSecond += choreoYController.calculate(pose.getY(), sample.y);
+    speeds.omegaRadiansPerSecond +=
+        choreoHeadingController.calculate(pose.getRotation().getRadians(), sample.heading);
+
+    runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getRotation()));
   }
 }
