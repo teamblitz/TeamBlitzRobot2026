@@ -96,11 +96,11 @@ public class OIConstants {
     public static final Trigger FORWARD = OPERATOR_CONTROLLER.rightTrigger();
   }
 
-  public static final class Spindexer {
-    public static final Trigger FEED = OPERATOR_CONTROLLER.povDown();
+  //   public static final class Spindexer {
+  //     public static final Trigger FEED = OPERATOR_CONTROLLER.povDown();
 
-    public static final Trigger SHOOT = UNBOUND; // TODO set val
-  }
+  //     public static final Trigger SHOOT = UNBOUND; // TODO set val
+  //   }
 
   public static final class Wrist {
     public static final DoubleSupplier MANUAL =
