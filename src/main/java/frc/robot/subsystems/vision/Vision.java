@@ -39,7 +39,7 @@ LimelightHelpers.setPipelineIndex("limelight", 0);
         // Runs the the getVisionPose periodicly when the robot is enabled 
         getVisionPose();
         //TODO fix this issue. Find swerve postition. 
-        poseEstimator.update(drive.getPigeon2().getYaw().getValueAsDouble(), );
+        poseEstimator.update(drive.getPigeon2().getYaw().getValueAsDouble(), CommandSwerveDrivetrain.frontRightCANcoder.getAbsolutePosition() );
     }
 
 /*TODO Look at limelight docs for info on this.) 

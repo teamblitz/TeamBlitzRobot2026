@@ -50,10 +50,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
      public double absoluteEncoderPosition;
 
-     public final CANcoder frontRightCaNcoder;
-     public final CANcoder frontLeftCaNcoder;
-     public final CANcoder backRightCaNcoder;
-     public final CANcoder backLeftCaNcoder;
+     public static final CANcoder frontRightCANcoder = new CANcoder(TunerConstants.kFrontRightEncoderId);
+     public static final CANcoder frontLeftCANcoder = new CANcoder(TunerConstants.kFrontLeftEncoderId);
+     public static final CANcoder backRightCaNcoder = new CANcoder(TunerConstants.kBackRightEncoderId);
+     public static final CANcoder backLeftCaNcoder = new CANcoder(TunerConstants.kBackLeftEncoderId);
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
@@ -149,7 +149,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             startSimThread();
         }
 //Needs Can ID. Likly change stratagy
-        frontLeftCaNcoder = new CANcoder(getCAN);
     }
 
     /**
@@ -260,7 +259,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             });
         }
 
-            imputs.getAbsolutePosition = getAbsPosition();
+            inputs.getAbsolutePosition = getAbsPosition();
 
         
     }
