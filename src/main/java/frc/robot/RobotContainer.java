@@ -34,6 +34,9 @@ import frc.robot.Constants.Spindexer;
 import frc.robot.subsystems.shooter.ShooterIOKraken;
 import frc.robot.subsystems.shooter.Shooter;
 
+import frc.robot.subsystems.agitator.Agitator;
+import frc.robot.subsystems.agitator.AgitatorIOKraken;
+
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
@@ -49,6 +52,7 @@ public class RobotContainer {
     /* ***** --- Subsystems --- ***** */
 
     private Shooter shooter;
+    private Agitator agitator;
     //private DriveCommands driveCommands;
 
     /* ***** --- Autonomous --- ***** */
@@ -75,6 +79,8 @@ public class RobotContainer {
 
 
         shooter = new Shooter(new ShooterIOKraken());
+        agitator = new Agitator(new AgitatorIOKraken());
+
 
 
 
@@ -92,7 +98,7 @@ public class RobotContainer {
     }
     //Configures our button bindings to the robot commands.
     private void configureTriggerBindings() {
-        OIConstants.Shooter.SHOOT.whileTrue(shooter.newShoot());
+        OIConstants.Shooter.SHOOT.whileTrue(Commands.parallel(shooter.newShoot(), agitator.run()));
 
     }
 
