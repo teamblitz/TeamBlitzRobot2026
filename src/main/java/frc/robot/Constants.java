@@ -123,7 +123,11 @@ public final class Constants {
             : 469.11;
     public static final double HUB_Y = 158.84;
     public static final double BASIN_H = 72 - SHOOTER_HEIGHT;
+    // TODO set this for the new bot
     public static final double SHOOTER_ANGLE = 70;
+    // Format for gear is second/first, so how many rotations of our wheels per rotation of the
+    // motor
+    public static final double SHOOTER_GEAR = 3 / 1;
     public static final double WHEEL_DIAMETER = 0.1016;
 
     public static final double RAMP = 0.15;

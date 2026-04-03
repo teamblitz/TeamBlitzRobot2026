@@ -72,7 +72,10 @@ public class Shooter extends SubsystemBase {
   // Convert velocity to Rotations per second, because talon uses that for some reason
   public double getRPS() {
     double RPS;
-    RPS = (getVelocity()) / (Math.PI * Constants.ShooterConstants.WHEEL_DIAMETER);
+    RPS =
+        (getVelocity())
+            / (Math.PI * Constants.ShooterConstants.WHEEL_DIAMETER) // Acounting for wheel dameter
+            / Constants.ShooterConstants.SHOOTER_GEAR; // Accounting for the gear ratio so
     return RPS;
   }
 
