@@ -62,9 +62,10 @@ public class Drive extends SubsystemBase {
               Math.hypot(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
               Math.hypot(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)));
 
-  private final PIDController choreoXController = new PIDController(5.0, 0.0, 0.0);
-  private final PIDController choreoYController = new PIDController(5.0, 0.0, 0.0);
-  private final PIDController choreoHeadingController = new PIDController(5.0, 0.0, 0.0);
+  private final PIDController choreoXController = new PIDController(40.0, 0.0, 0.0);
+  private final PIDController choreoYController = new PIDController(40.0, 0.0, 0.0);
+  private final PIDController choreoHeadingController = new PIDController(10.0, 0.0, 0.0);
+
   // PathPlanner config constants
   private static final double ROBOT_MASS_KG = 74.088;
   private static final double ROBOT_MOI = 6.883;
