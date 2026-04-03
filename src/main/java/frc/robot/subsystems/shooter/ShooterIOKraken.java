@@ -8,7 +8,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import frc.lib.monitor.HardwareWatchdog;
 import frc.robot.Constants.ShooterConstants.*;
 import org.littletonrobotics.junction.Logger;
 
@@ -43,10 +42,6 @@ public class ShooterIOKraken implements ShooterIO {
     leftShooter.getConfigurator().apply(shooterConfig);
     rightShooter.getConfigurator().apply(feederConfig);
     feeder.getConfigurator().apply(feederConfig);
-
-    HardwareWatchdog.getInstance().registerCTREDevice(leftShooter, this.getClass());
-    HardwareWatchdog.getInstance().registerCTREDevice(rightShooter, this.getClass());
-    HardwareWatchdog.getInstance().registerCTREDevice(feeder, this.getClass());
   }
 
   @Override
