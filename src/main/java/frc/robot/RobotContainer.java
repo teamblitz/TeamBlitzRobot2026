@@ -99,6 +99,7 @@ public class RobotContainer {
     //Configures our button bindings to the robot commands.
     private void configureTriggerBindings() {
         OIConstants.Shooter.SHOOT.whileTrue(Commands.parallel(shooter.newShoot(), agitator.run()));
+        OIConstants.Shooter.ONESHOOT.whileTrue(Commands.parallel(shooter.newShoot(), agitator.run()));
 
     }
 

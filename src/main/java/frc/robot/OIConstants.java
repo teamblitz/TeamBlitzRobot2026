@@ -19,6 +19,7 @@ public class OIConstants {
 
     public static final class Shooter {
         public static final Trigger SHOOT = OPERATOR_CONTROLLER.x();
+        public static final Trigger ONESHOOT = OPERATOR_CONTROLLER.y();
 
     }
 

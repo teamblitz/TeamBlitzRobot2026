@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -22,9 +23,9 @@ public class ShooterIOKraken implements ShooterIO {
     public final TalonFX feeder;
 
     public ShooterIOKraken() {
-        leftShooter = new TalonFX(0);
-        rightShooter = new TalonFX(1);
-        feeder = new TalonFX(2);
+        leftShooter = new TalonFX(1);
+        rightShooter = new TalonFX(2);
+        feeder = new TalonFX(3);
 
         TalonFXConfiguration shooterConfig = new TalonFXConfiguration();
         shooterConfig.MotorOutput.withNeutralMode(NeutralModeValue.Coast)
@@ -55,6 +56,10 @@ public class ShooterIOKraken implements ShooterIO {
      @Override
      public void setFeederSpeed(double speed) {
          feeder.set(speed);
+     }
+
+     public void setRightSpeed(double speed) {
+        rightShooter.set(speed);
      }
 
      @Override

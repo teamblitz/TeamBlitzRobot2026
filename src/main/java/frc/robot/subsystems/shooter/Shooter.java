@@ -22,6 +22,7 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 
 import com.ctre.phoenix6.controls.Follower;
+import frc.robot.subsystems.shooter.ShooterIOKraken;
 
 
 public class Shooter extends SubsystemBase {
@@ -153,5 +154,18 @@ public class Shooter extends SubsystemBase {
                     io.setShooterSpeed(0);
                     io.setFeederSpeed(0);
                 });
+    }
+
+    //FOR TESTING ONLY. PROBOLY DOES NOT WORK!
+    public Command oneShoot() {
+        return runOnce(
+        () -> io.setRightSpeed(1))
+        .andThen(Commands.waitSeconds(1.2))
+        .andThen(() -> io.setFeederSpeed(1))
+        .andThen(Commands.waitSeconds(30))
+        .finallyDo(() -> {
+            io.setShooterSpeed(0);
+            io.setFeederSpeed(0);
+        });
     }
 }
