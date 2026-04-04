@@ -6,6 +6,7 @@ import static frc.robot.Constants.WristConstants.INVERTED;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -16,92 +17,130 @@ import org.littletonrobotics.junction.Logger;
 
 public class WristIOKraken implements WristIO {
 
-  public final TalonFX wrist;
-  public final CANcoder absoluteEncoder;
+  /*   Motors   */
+  public final TalonFX rightWrist;
+  public final TalonFX leftWrist;
+
+  /*   Absolute Encoders   */
+  public final CANcoder rightAbsoluteEncoder;
+  public final CANcoder leftAbsoluteEncoder;
 
   private final MotionMagicVoltage motionMagicRequest =
       new MotionMagicVoltage(0).withSlot(0).withEnableFOC(true);
   private final VoltageOut voltageOut = new VoltageOut(0).withEnableFOC(true);
   private final NeutralOut neutralRequest = new NeutralOut();
+  private final Follower followerRequest;
 
   public WristIOKraken() {
-    wrist = new TalonFX(21);
-    absoluteEncoder = new CANcoder(ABS_ENCODER_ID);
+    rightWrist = new TalonFX(0); // TODO set
+    leftWrist = new TalonFX(1); // TODO set
+    rightAbsoluteEncoder = new CANcoder(2); // TODO set
+    leftAbsoluteEncoder = new CANcoder(3); // TODO set
 
+    /*   Motor Synchronization   */
+    followerRequest =
+        new Follower(
+            leftWrist.getDeviceID(), MotorAlignmentValue.Aligned); // May need to be opposed
+
+    /*   Right Absolute Encoder Config   */
     CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
-    encoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-    encoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.9;
+    encoderConfig.MagnetSensor.SensorDirection =
+        SensorDirectionValue.CounterClockwise_Positive; // May need to be Clockwise_Positive
+    encoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.9; // TODO retune
+    encoderConfig.MagnetSensor.MagnetOffset = 0; // TODO retune
+    rightAbsoluteEncoder.getConfigurator().apply(encoderConfig);
 
-    // Set this to the negated raw reading when wrist is at the zero position
-    encoderConfig.MagnetSensor.MagnetOffset = MAGNET_OFFSET;
-    absoluteEncoder.getConfigurator().apply(encoderConfig);
+    /*   Left Absolute Encoder Config   */
+    CANcoderConfiguration encoderConfig2 = new CANcoderConfiguration();
+    encoderConfig2.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+    encoderConfig2.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.9;
+    encoderConfig2.MagnetSensor.MagnetOffset = 0; // TODO retune
+    leftAbsoluteEncoder.getConfigurator().apply(encoderConfig2);
 
+    /*   Right Side Motor - Primary Motor   */
     TalonFXConfiguration config = new TalonFXConfiguration();
-
     config.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT_WRIST;
     config.CurrentLimits.StatorCurrentLimitEnable = true;
-
     config.MotorOutput.withNeutralMode(NeutralModeValue.Brake)
         .withInverted(
             INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive);
-
-    config.Feedback.FeedbackRemoteSensorID = absoluteEncoder.getDeviceID();
-    config.Feedback.FeedbackSensorSource =
-        FeedbackSensorSourceValue.RemoteCANcoder; // Fused if we want pro
-    // config.Feedback.SensorToMechanismRatio = SENSOR_TO_MECHANISM_RATIO;
+    config.Feedback.FeedbackRemoteSensorID = rightAbsoluteEncoder.getDeviceID();
+    config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
     config.Feedback.RotorToSensorRatio = ROTOR_TO_SENSOR_RATIO;
-
-    // PID gains for Motion Magic (slot 0)
     config.Slot0.kP = KP;
     config.Slot0.kI = KI;
     config.Slot0.kD = KD;
     config.Slot0.kG = KG;
     config.Slot0.kV = KV;
     config.Slot0.kS = KS;
-
+    config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
     config.MotionMagic.MotionMagicCruiseVelocity = MAX_VELOCITY;
     config.MotionMagic.MotionMagicAcceleration = MAX_ACCEL;
     config.MotionMagic.MotionMagicJerk = 0;
-
-    config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-    // config.Slot0.GravityArmPositionOffset = IDLE_POS;
     config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-    config.SoftwareLimitSwitch.ForwardSoftLimitThreshold =
-        SOFT_LIMIT_FORWARD; // small buffer past zero
+    config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = SOFT_LIMIT_FORWARD;
     config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-    config.SoftwareLimitSwitch.ReverseSoftLimitThreshold =
-        SOFT_LIMIT_REVERSE; // small buffer before zero
+    config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = SOFT_LIMIT_REVERSE;
+    rightWrist.getConfigurator().apply(config);
 
-    wrist.getConfigurator().apply(config);
+    /*   Left Side Motor - Follower, may not need gains   */
+    TalonFXConfiguration config2 = new TalonFXConfiguration();
+    config2.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT_WRIST;
+    config2.CurrentLimits.StatorCurrentLimitEnable = true;
+    config2.MotorOutput.withNeutralMode(NeutralModeValue.Brake)
+        .withInverted(
+            INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive);
+    leftWrist.getConfigurator().apply(config2);
   }
 
   @Override
   public void updateInputs(WristInputs inputs) {
-    inputs.velocityRadiansPerSecond = wrist.getVelocity().getValueAsDouble();
-    inputs.absoluteEncoderPosition = getAbsPosition();
-    inputs.current = wrist.getStatorCurrent().getValueAsDouble();
+    //   Applying the follower control again to ensure that the left motor follower is correctly
+    // applied
+    leftWrist.setControl(followerRequest);
 
-    Logger.recordOutput("wrist/motorPosition", wrist.getPosition().getValueAsDouble());
-    Logger.recordOutput("wrist/absoluteEncoderPosition", getAbsPosition());
-    Logger.recordOutput("wrist/motionMagicEnabled", wrist.getMotionMagicIsRunning().getValue());
+    boolean primaryOk = rightAbsoluteEncoder.getAbsolutePosition().getStatus().isOK();
+    double position =
+        primaryOk
+            ? rightAbsoluteEncoder.getAbsolutePosition().getValueAsDouble()
+            : leftAbsoluteEncoder.getAbsolutePosition().getValueAsDouble();
+
+    inputs.velocityRadiansPerSecond = rightWrist.getVelocity().getValueAsDouble();
+    inputs.absoluteEncoderPosition = position;
+    inputs.current = rightWrist.getStatorCurrent().getValueAsDouble();
+
+    Logger.recordOutput("wrist/motorPosition", rightWrist.getPosition().getValueAsDouble());
+    Logger.recordOutput("wrist/absoluteEncoderPosition", position);
+    Logger.recordOutput(
+        "wrist/encoder1Position", rightAbsoluteEncoder.getAbsolutePosition().getValueAsDouble());
+    Logger.recordOutput(
+        "wrist/encoder2Position", leftAbsoluteEncoder.getAbsolutePosition().getValueAsDouble());
+    Logger.recordOutput("wrist/usingPrimaryEncoder", primaryOk);
+    Logger.recordOutput(
+        "wrist/motionMagicRunning", rightWrist.getMotionMagicIsRunning().getValue());
+    Logger.recordOutput("wrist/motor1Current", rightWrist.getStatorCurrent().getValueAsDouble());
+    Logger.recordOutput("wrist/motor2Current", leftWrist.getStatorCurrent().getValueAsDouble());
   }
 
   @Override
   public void setSpeed(double speed) {
-    wrist.set(speed);
+    rightWrist.set(speed);
   }
 
   @Override
   public void setMotionMagic(double position) {
-    wrist.setControl(motionMagicRequest.withPosition(position));
+    rightWrist.setControl(motionMagicRequest.withPosition(position));
   }
 
   @Override
   public void stop() {
-    wrist.setControl(neutralRequest);
+    rightWrist.setControl(neutralRequest);
   }
 
   public double getAbsPosition() {
-    return absoluteEncoder.getAbsolutePosition().getValueAsDouble();
+    boolean primaryOk = rightAbsoluteEncoder.getAbsolutePosition().getStatus().isOK();
+    return primaryOk
+        ? rightAbsoluteEncoder.getAbsolutePosition().getValueAsDouble()
+        : leftAbsoluteEncoder.getAbsolutePosition().getValueAsDouble();
   }
 }
