@@ -48,6 +48,7 @@ public class Shooter extends SubsystemBase {
    * @return velocity, the required velocity
    */
   public double getVelocity() {
+    System.out.println("Got to Velocity");
     // pose is just where the robot is at the time
     Pose2d pose = drive.getPose();
     // First part of the equation, calculating distance
@@ -71,16 +72,20 @@ public class Shooter extends SubsystemBase {
 
   // Convert velocity to Rotations per second, because talon uses that for some reason
   public double getRPS() {
+    System.out.println("Got to RPS");
     double RPS;
     RPS =
         (getVelocity())
             / (Math.PI * Constants.ShooterConstants.WHEEL_DIAMETER) // Acounting for wheel dameter
             / Constants.ShooterConstants.SHOOTER_GEAR; // Accounting for the gear ratio so
+
     return RPS;
   }
 
   public VelocityVoltage getVoltage() {
+    System.out.println("Got to Voltage");
     VelocityVoltage voltage = new VelocityVoltage(getRPS());
+
     return voltage;
   }
 
@@ -97,6 +102,7 @@ public class Shooter extends SubsystemBase {
               feeder.set(0);
             });
   }
+  ;
 
   public Command shootTest() {
     return runOnce(() -> io.setShooterSpeed(0.7))
