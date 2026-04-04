@@ -1,6 +1,6 @@
 package frc.robot.subsystems.shooter;
 
-import static frc.robot.Constants.ShooterConstants.RAMP;
+import static frc.robot.Constants.ShooterConstants.*;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
@@ -18,9 +18,9 @@ public class ShooterIOKraken implements ShooterIO {
   public final TalonFX feeder;
 
   public ShooterIOKraken() {
-    leftShooter = new TalonFX(0);
-    rightShooter = new TalonFX(1);
-    feeder = new TalonFX(2);
+    leftShooter = new TalonFX(RIGHT_SHOOTER_ID);
+    rightShooter = new TalonFX(LEFT_SHOOTER_ID);
+    feeder = new TalonFX(FEEDER_ID);
 
     TalonFXConfiguration shooterConfig = new TalonFXConfiguration();
     shooterConfig

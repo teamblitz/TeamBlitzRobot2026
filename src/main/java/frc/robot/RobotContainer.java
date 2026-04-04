@@ -34,6 +34,8 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import frc.robot.subsystems.wrist.Wrist;
+import frc.robot.subsystems.wrist.WristIOKraken;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -48,10 +50,11 @@ public class RobotContainer {
   private final Vision vision;
   private final Intake intake;
   private final Shooter shooter;
+  private final Wrist wrist;
 
   // Controller
   //  private final CommandXboxController controller = new CommandXboxController(0);
-  private final CommandJoystick controller = new CommandJoystick(0);
+  private final CommandJoystick driveController = OIConstants.DRIVE_CONTROLLER;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -80,6 +83,8 @@ public class RobotContainer {
         intake = new Intake(new IntakeIOKraken());
 
         shooter = new Shooter(new ShooterIOKraken(), drive);
+
+        wrist = new Wrist(new WristIOKraken());
         // The ModuleIOTalonFXS implementation provides an example implementation for
         // TalonFXS controller connected to a CANdi with a PWM encoder. The
         // implementations
@@ -119,6 +124,8 @@ public class RobotContainer {
                 new VisionIOPhotonVisionSim(camera0Name, robotToCamera0, drive::getPose),
                 new VisionIOPhotonVisionSim(camera1Name, robotToCamera1, drive::getPose));
 
+        wrist = new Wrist(new WristIOKraken());
+
         break;
 
       default:
@@ -135,6 +142,8 @@ public class RobotContainer {
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         intake = new Intake(new IntakeIOKraken());
         shooter = new Shooter(new ShooterIOKraken(), drive);
+
+        wrist = new Wrist(new WristIOKraken());
         break;
     }
 
@@ -206,22 +215,25 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -controller.getY(),
-            () -> -controller.getX(),
-            () -> -controller.getTwist()));
+            () -> -driveController.getY(),
+            () -> -driveController.getX(),
+            () -> -driveController.getTwist()));
 
     // Lock to 0° when trigger is held
-    controller
+    driveController
         .trigger()
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
-                drive, () -> -controller.getY(), () -> -controller.getX(), () -> Rotation2d.kZero));
+                drive,
+                () -> -driveController.getY(),
+                () -> -driveController.getX(),
+                () -> Rotation2d.kZero));
 
     // Switch to X pattern when button 2 is pressed
-    controller.button(2).onTrue(Commands.runOnce(drive::stopWithX, drive));
+    driveController.button(2).onTrue(Commands.runOnce(drive::stopWithX, drive));
 
     // Reset gyro to 0° when button 3 is pressed
-    controller
+    driveController
         .button(3)
         .onTrue(
             Commands.runOnce(
@@ -230,6 +242,10 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
                     drive)
                 .ignoringDisable(true));
+  }
+
+  private void setDefaultCommands() {
+    wrist.setDefaultCommand((wrist.goToDown()));
   }
 
   /**
