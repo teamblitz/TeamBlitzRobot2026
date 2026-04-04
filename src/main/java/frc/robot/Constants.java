@@ -49,8 +49,8 @@ public final class Constants {
 
     //      public static final double OPEN_LOOP_RAMP = .25;
     public static final int CURRENT_LIMIT_WRIST =
-        40; // TODO make this value higher after initial testing
-    public static final boolean INVERTED = false;
+        20; // TODO make this value higher after initial testing
+    public static final boolean INVERTED = true;
 
     // TODO TUNE MAXIMUM AND MINIMUM POSITIONS WHEN WE HAVE THE BOT
     //        public static final double ZERO_POS = Units.degreesToRadians(compBot() ? 94 : 90);
@@ -66,7 +66,7 @@ public final class Constants {
     //        public static final double TOLERANCE = Units.degreesToRadians(10);
     public static final double TOLERANCE = 0.005;
 
-    public static final double MAX_VELOCITY = 2; // TODO tune on actual bot
+    public static final double MAX_VELOCITY = 0.5; // TODO tune on actual bot
     public static final double MAX_ACCEL = 42; // TODO tune on actual bot
     public static final double MAX_JERK = MAX_ACCEL * 8;
 

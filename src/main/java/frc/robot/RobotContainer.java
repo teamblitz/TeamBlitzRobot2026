@@ -167,8 +167,18 @@ public class RobotContainer {
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     // Configure the button bindings
+    // configureSubsystems();
+    // setDefaultCommands();
     configureButtonBindings();
   }
+
+  //   private void configureSubsystems() {
+
+  //   }
+
+  //   private void setDefaultCommands() {
+  //     wrist.setDefaultCommand((wrist.goToDown()));
+  //   }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -243,7 +253,15 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    wrist.setDefaultCommand((wrist.goToDown()));
+    wrist.setDefaultCommand(wrist.goToIdle());
+    // wrist.setDefaultCommand(
+    //     wrist.runOnce(
+    //         () -> {
+    //           System.out.println("************************Finished goToPosition with position:");
+    //           System.out.println("************************Finished goToPosition with position:");
+    //         }));
+
+    // intake.setDefaultCommand(intake.forward());
   }
 
   //   private void setDefaultCommands() {
