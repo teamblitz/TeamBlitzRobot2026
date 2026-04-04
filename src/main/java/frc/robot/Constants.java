@@ -48,16 +48,17 @@ public final class Constants {
     //       public static final double WRIST_GEAR_RATIO = (9.0) * (5.0) * (54.0 / 16.0);
 
     //      public static final double OPEN_LOOP_RAMP = .25;
-    public static final int CURRENT_LIMIT_WRIST = 20; // TODO make this value higher after initial testing
+    public static final int CURRENT_LIMIT_WRIST =
+        40; // TODO make this value higher after initial testing
     public static final boolean INVERTED = false;
 
     // TODO TUNE MAXIMUM AND MINIMUM POSITIONS WHEN WE HAVE THE BOT
     //        public static final double ZERO_POS = Units.degreesToRadians(compBot() ? 94 : 90);
-    public static final double IDLE_POS = -0.147;
+    public static final double IDLE_POS = 0.052;
     //        public static final double EXTENDED_POS = Units.degreesToRadians(-90);//TODO set this
     // val to absolute encoder value when this is extended
     public static final double EXTENDED_POS =
-        0.208; // TODO tune on actual bot in reference to the zero position
+        0.409; // TODO tune on actual bot in reference to the zero position
 
     public static final double OFFSET = IDLE_POS + 0.25;
 

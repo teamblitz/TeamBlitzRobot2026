@@ -242,11 +242,13 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
                     drive)
                 .ignoringDisable(true));
-  }
 
-  private void setDefaultCommands() {
     wrist.setDefaultCommand((wrist.goToDown()));
   }
+
+  //   private void setDefaultCommands() {
+  //     wrist.setDefaultCommand((wrist.goToDown()));
+  //   }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

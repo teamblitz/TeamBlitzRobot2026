@@ -32,10 +32,10 @@ public class WristIOKraken implements WristIO {
   private final Follower followerRequest;
 
   public WristIOKraken() {
-    rightWrist = new TalonFX(0); // TODO set
-    leftWrist = new TalonFX(1); // TODO set
-    rightAbsoluteEncoder = new CANcoder(2); // TODO set
-    leftAbsoluteEncoder = new CANcoder(3); // TODO set
+    rightWrist = new TalonFX(18); // TODO set
+    leftWrist = new TalonFX(20); // TODO set
+    rightAbsoluteEncoder = new CANcoder(19); // TODO set
+    leftAbsoluteEncoder = new CANcoder(21); // TODO set
 
     /*   Motor Synchronization   */
     followerRequest =
@@ -46,22 +46,22 @@ public class WristIOKraken implements WristIO {
     CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
     encoderConfig.MagnetSensor.SensorDirection =
         SensorDirectionValue.CounterClockwise_Positive; // May need to be Clockwise_Positive
-    encoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.9; // TODO retune
-    encoderConfig.MagnetSensor.MagnetOffset = 0; // TODO retune
+    encoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1; // TODO retune
+    encoderConfig.MagnetSensor.MagnetOffset = -0.8; // TODO retune
     rightAbsoluteEncoder.getConfigurator().apply(encoderConfig);
 
     /*   Left Absolute Encoder Config   */
     CANcoderConfiguration encoderConfig2 = new CANcoderConfiguration();
     encoderConfig2.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-    encoderConfig2.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.9;
-    encoderConfig2.MagnetSensor.MagnetOffset = 0; // TODO retune
+    encoderConfig2.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1;
+    encoderConfig2.MagnetSensor.MagnetOffset = -0.154; // TODO retune
     leftAbsoluteEncoder.getConfigurator().apply(encoderConfig2);
 
     /*   Right Side Motor - Primary Motor   */
     TalonFXConfiguration config = new TalonFXConfiguration();
     config.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT_WRIST;
     config.CurrentLimits.StatorCurrentLimitEnable = true;
-    config.MotorOutput.withNeutralMode(NeutralModeValue.Brake)
+    config.MotorOutput.withNeutralMode(NeutralModeValue.Coast)
         .withInverted(
             INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive);
     config.Feedback.FeedbackRemoteSensorID = rightAbsoluteEncoder.getDeviceID();
@@ -87,7 +87,7 @@ public class WristIOKraken implements WristIO {
     TalonFXConfiguration config2 = new TalonFXConfiguration();
     config2.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT_WRIST;
     config2.CurrentLimits.StatorCurrentLimitEnable = true;
-    config2.MotorOutput.withNeutralMode(NeutralModeValue.Brake)
+    config2.MotorOutput.withNeutralMode(NeutralModeValue.Coast)
         .withInverted(
             INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive);
     leftWrist.getConfigurator().apply(config2);
