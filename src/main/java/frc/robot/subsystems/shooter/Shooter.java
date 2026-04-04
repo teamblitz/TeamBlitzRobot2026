@@ -83,7 +83,7 @@ public class Shooter extends SubsystemBase {
 
   public double getVoltage() {
     System.out.println("Got to Voltage");
-    double voltage = (getRPS() / 100) * 100;
+    double voltage = (getRPS() / 90) * 100;
 
     return voltage;
   }

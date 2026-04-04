@@ -74,6 +74,7 @@ public class RobotContainer {
         vision =
             new Vision(
                 drive::addVisionMeasurement,
+                new VisionIOLimelight(camera1Name, drive::getRotation),
                 new VisionIOLimelight(camera0Name, drive::getRotation));
 
         intake = new Intake(new IntakeIOKraken());
@@ -192,16 +193,16 @@ public class RobotContainer {
     //    // Switch to X pattern when X button is pressed
     //    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
     //
-    //    // Reset gyro to 0° when B button is pressed
-    //    controller
-    //        .b()
-    //        .onTrue(
-    //            Commands.runOnce(
-    //                    () ->
-    //                        drive.setPose(
-    //                            new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
-    //                    drive)
-    //                .ignoringDisable(true));
+    // Reset gyro to 0° when B button is pressed
+    controller
+        .button(5)
+        .onTrue(
+            Commands.runOnce(
+                    () ->
+                        drive.setPose(
+                            new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
+                    drive)
+                .ignoringDisable(true));
     // Default command, normal field-relative drive
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
