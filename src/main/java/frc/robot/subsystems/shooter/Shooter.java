@@ -1,6 +1,5 @@
 package frc.robot.subsystems.shooter;
 
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -14,16 +13,16 @@ public class Shooter extends SubsystemBase {
   // private final ShooterIO io;
 
   private final TalonFX shooter;
-  private final TalonFX deepFeed;
-  private final TalonFX feeder;
+  //   private final TalonFX deepFeed;
+  //   private final TalonFX feeder;
   private final ShooterIO io;
   private final Drive drive;
 
   public Shooter(ShooterIO io, Drive drive) {
 
     shooter = new TalonFX(30);
-    feeder = new TalonFX(31);
-    deepFeed = new TalonFX(32);
+    // feeder = new TalonFX(31);
+    // deepFeed = new TalonFX(32);
     //
     //        bottomShooter = new TalonFX(BOTTOM_SHOOTER_ID);
     //        feeder = new TalonFX(FEEDER_ID);
@@ -82,24 +81,25 @@ public class Shooter extends SubsystemBase {
     return RPS;
   }
 
-  public VelocityVoltage getVoltage() {
+  public double getVoltage() {
     System.out.println("Got to Voltage");
-    VelocityVoltage voltage = new VelocityVoltage(getRPS());
+    double voltage = (getRPS() / 100) * 100;
 
     return voltage;
   }
 
+  // GetVoltage Command is broken. The robot does know whare it is on the field
   public Command aimAndShoot() {
-    return runOnce(() -> shooter.setControl(getVoltage()))
+    return runOnce(() -> io.setAimSpeed(getVoltage()))
         .andThen(Commands.waitSeconds(1))
-        .andThen(() -> feeder.set(1))
-        .andThen(Commands.waitSeconds(5))
-        .andThen(() -> feeder.set(1))
-        .andThen(Commands.waitSeconds(1)) // TODO set values to run
+        .andThen(() -> io.setFeederSpeed(-0.6))
+        .andThen(Commands.waitSeconds(1))
+        .andThen(() -> io.setFeederSpeed(-0.6))
+        .andThen(Commands.waitSeconds(30)) // TODO set values to run
         .finallyDo(
             () -> {
-              shooter.set(0);
-              feeder.set(0);
+              io.setAimSpeed(0);
+              io.setFeederSpeed(0);
             });
   }
   ;

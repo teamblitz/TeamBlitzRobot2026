@@ -171,8 +171,9 @@ public class RobotContainer {
     OIConstants.Intake.FORWARD.whileTrue(intake.forward());
 
     OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(shooter.aimAndShoot());
+    OIConstants.Shooter.OPERATOR_DEEP.whileTrue(shooter.shootTest());
     //    drive.setDefaultCommand(
-    //        DriveCommands.joystickDrive(
+    //        DriveCommands.joystickDrive()
     //            drive,
     //            () -> -controller.getLeftY(),
     //            () -> -controller.getLeftX(),

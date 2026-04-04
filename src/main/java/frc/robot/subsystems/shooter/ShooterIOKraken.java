@@ -13,14 +13,14 @@ import org.littletonrobotics.junction.Logger;
 
 public class ShooterIOKraken implements ShooterIO {
 
-  public final TalonFX leftShooter;
-  public final TalonFX rightShooter;
+  public final TalonFX shooter;
   public final TalonFX feeder;
+  public final TalonFX deepFeed;
 
   public ShooterIOKraken() {
-    leftShooter = new TalonFX(0);
-    rightShooter = new TalonFX(1);
-    feeder = new TalonFX(2);
+    shooter = new TalonFX(30);
+    feeder = new TalonFX(31);
+    deepFeed = new TalonFX(32);
 
     TalonFXConfiguration shooterConfig = new TalonFXConfiguration();
     shooterConfig
@@ -35,31 +35,35 @@ public class ShooterIOKraken implements ShooterIO {
         .withNeutralMode(NeutralModeValue.Brake)
         .withInverted(InvertedValue.Clockwise_Positive);
 
-    rightShooter.setControl(
+    feeder.setControl(
         new Follower(
-            leftShooter.getDeviceID(), MotorAlignmentValue.Aligned)); // May need to be Inverted
+            shooter.getDeviceID(), MotorAlignmentValue.Opposed)); // May need to be Inverted
 
-    leftShooter.getConfigurator().apply(shooterConfig);
-    rightShooter.getConfigurator().apply(feederConfig);
-    feeder.getConfigurator().apply(feederConfig);
+    feeder.getConfigurator().apply(shooterConfig);
+    shooter.getConfigurator().apply(feederConfig);
+    deepFeed.getConfigurator().apply(feederConfig);
   }
 
   @Override
   public void setShooterSpeed(double speed) {
-    leftShooter.set(speed);
+    shooter.set(speed);
   }
 
   @Override
   public void setFeederSpeed(double speed) {
-    feeder.set(speed);
+    deepFeed.set(speed);
+  }
+
+  public void setAimSpeed(double speed) {
+    shooter.set(speed);
   }
 
   @Override
   public void updateInputs() {
     // TODO: read real sensor values from TalonFX when available. For now, provide placeholders.
 
-    Logger.recordOutput("shooter/shooterCANID", leftShooter.getDeviceID());
-    Logger.recordOutput("shooter/feederCANID", rightShooter.getDeviceID());
-    Logger.recordOutput("shooter/deepFeedCANID", feeder.getDeviceID());
+    Logger.recordOutput("shooter/shooterCANID", shooter.getDeviceID());
+    Logger.recordOutput("shooter/feederCANID", feeder.getDeviceID());
+    Logger.recordOutput("shooter/deepFeedCANID", deepFeed.getDeviceID());
   }
 }
