@@ -1,10 +1,3 @@
-// Copyright (c) 2021-2026 Littleton Robotics
-// http://github.com/Mechanical-Advantage
-//
-// Use of this source code is governed by a BSD
-// license that can be found in the LICENSE file
-// at the root directory of this project.
-
 package frc.robot;
 
 import static frc.robot.subsystems.vision.VisionConstants.*;
@@ -27,14 +20,17 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOKraken;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOKraken;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import frc.robot.subsystems.wrist.Wrist;
+import frc.robot.subsystems.wrist.WristIO;
 import frc.robot.subsystems.wrist.WristIOKraken;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -45,6 +41,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
   // Subsystems
   private final Drive drive;
   private final Vision vision;
@@ -79,11 +76,8 @@ public class RobotContainer {
                 drive::addVisionMeasurement,
                 new VisionIOLimelight(camera0Name, drive::getRotation),
                 new VisionIOLimelight(camera1Name, drive::getRotation));
-
         intake = new Intake(new IntakeIOKraken());
-
         shooter = new Shooter(new ShooterIOKraken(), drive);
-
         wrist = new Wrist(new WristIOKraken());
         // The ModuleIOTalonFXS implementation provides an example implementation for
         // TalonFXS controller connected to a CANdi with a PWM encoder. The
@@ -114,21 +108,17 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
         // Sim robot, instantiate physics sim IO implementations
-        intake = new Intake(new IntakeIOKraken());
-
-        shooter = new Shooter(new ShooterIOKraken(), drive);
-
         vision =
             new Vision(
                 drive::addVisionMeasurement,
                 new VisionIOPhotonVisionSim(camera0Name, robotToCamera0, drive::getPose),
                 new VisionIOPhotonVisionSim(camera1Name, robotToCamera1, drive::getPose));
-
-        wrist = new Wrist(new WristIOKraken());
-
+        intake = new Intake(new IntakeIO() {});
+        shooter = new Shooter(new ShooterIO() {}, drive);
+        wrist = new Wrist(new WristIO() {});
         break;
 
-      default:
+      default: // REPLAY
         // Replayed robot, disable IO implementations
         drive =
             new Drive(
@@ -140,16 +130,20 @@ public class RobotContainer {
         // Replayed robot, disable IO implementations
         // (Use same number of dummy implementations as the real robot)
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
-        intake = new Intake(new IntakeIOKraken());
-        shooter = new Shooter(new ShooterIOKraken(), drive);
-
-        wrist = new Wrist(new WristIOKraken());
+        intake = new Intake(new IntakeIO() {});
+        shooter = new Shooter(new ShooterIO() {}, drive);
+        wrist = new Wrist(new WristIO() {});
         break;
     }
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    configureSysId();
+    configureSubsystems();
+    configureButtonBindings();
+  }
 
+  private void configureSysId() {
     // Set up SysId routines
     autoChooser.addOption(
         "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
@@ -165,20 +159,13 @@ public class RobotContainer {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-
-    // Configure the button bindings
-    // configureSubsystems();
-    // setDefaultCommands();
-    configureButtonBindings();
   }
 
-  //   private void configureSubsystems() {
 
-  //   }
-
-  //   private void setDefaultCommands() {
-  //     wrist.setDefaultCommand((wrist.goToDown()));
-  //   }
+  //Throw default commands here for simplicity’s sake
+  private void configureSubsystems() {
+    wrist.setDefaultCommand(wrist.goToIdle());
+  }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -187,40 +174,6 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // Default command, normal field-relative drive
-    OIConstants.Intake.FORWARD.whileTrue(intake.forward());
-
-    OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(shooter.aimAndShoot());
-    //    drive.setDefaultCommand(
-    //        DriveCommands.joystickDrive(
-    //            drive,
-    //            () -> -controller.getLeftY(),
-    //            () -> -controller.getLeftX(),
-    //            () -> -controller.getRightX()));
-    //
-    //    // Lock to 0° when A button is held
-    //    controller
-    //        .a()
-    //        .whileTrue(
-    //            DriveCommands.joystickDriveAtAngle(
-    //                drive,
-    //                () -> -controller.getLeftY(),
-    //                () -> -controller.getLeftX(),
-    //                () -> Rotation2d.kZero));
-    //
-    //    // Switch to X pattern when X button is pressed
-    //    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-    //
-    //    // Reset gyro to 0° when B button is pressed
-    //    controller
-    //        .b()
-    //        .onTrue(
-    //            Commands.runOnce(
-    //                    () ->
-    //                        drive.setPose(
-    //                            new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
-    //                    drive)
-    //                .ignoringDisable(true));
     // Default command, normal field-relative drive
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
@@ -253,20 +206,12 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    wrist.setDefaultCommand(wrist.goToIdle());
-    // wrist.setDefaultCommand(
-    //     wrist.runOnce(
-    //         () -> {
-    //           System.out.println("************************Finished goToPosition with position:");
-    //           System.out.println("************************Finished goToPosition with position:");
-    //         }));
+    // Intake
+    OIConstants.Intake.FORWARD.whileTrue(intake.forward());
 
-    // intake.setDefaultCommand(intake.forward());
+    // Shooter
+    OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(shooter.aimAndShoot());
   }
-
-  //   private void setDefaultCommands() {
-  //     wrist.setDefaultCommand((wrist.goToDown()));
-  //   }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
