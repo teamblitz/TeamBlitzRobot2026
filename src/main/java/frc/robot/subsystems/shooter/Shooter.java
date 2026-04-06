@@ -1,7 +1,6 @@
 package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.controls.VelocityVoltage;
-import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -16,23 +15,13 @@ public class Shooter extends SubsystemBase {
   private final Drive drive;
 
   public Shooter(ShooterIO io, Drive drive) {
-
-    //
-    //        bottomShooter = new TalonFX(BOTTOM_SHOOTER_ID);
-    //        feeder = new TalonFX(FEEDER_ID);
-
     this.io = io;
     this.drive = drive;
-
-    //        bottomShooter.setControl(new Follower(topShooter.getDeviceID(),
-    // MotorAlignmentValue.Opposed)); // May need to be Inverted
-
   }
 
   @Override
   public void periodic() {
     super.periodic();
-    // IO update would be done by a higher-level manager; keep minimal here
   }
 
   /**
@@ -82,41 +71,42 @@ public class Shooter extends SubsystemBase {
     return voltage;
   }
 
-//  public Command aimAndShoot() {
-//    return runOnce(() -> shooter.setControl(getVoltage()))
-//        .andThen(Commands.waitSeconds(1))
-//        .andThen(() -> feeder.set(1))
-//        .andThen(Commands.waitSeconds(5))
-//        .andThen(() -> feeder.set(1))
-//        .andThen(Commands.waitSeconds(1)) // TODO set values to run
-//        .finallyDo(
-//            () -> {
-//              shooter.set(0);
-//              feeder.set(0);
-//            });
-//  }
+  //  public Command aimAndShoot() {
+  //    return runOnce(() -> shooter.setControl(getVoltage()))
+  //        .andThen(Commands.waitSeconds(1))
+  //        .andThen(() -> feeder.set(1))
+  //        .andThen(Commands.waitSeconds(5))
+  //        .andThen(() -> feeder.set(1))
+  //        .andThen(Commands.waitSeconds(1)) // TODO set values to run
+  //        .finallyDo(
+  //            () -> {
+  //              shooter.set(0);
+  //              feeder.set(0);
+  //            });
+  //  }
 
-//  public Command newShoot() {
-//    return runOnce(() -> io.setShooterSpeed(1))
-//        .andThen(Commands.waitSeconds(1.2))
-//        .andThen(() -> io.setFeederSpeed(1))
-//        .andThen((Commands.waitSeconds(30)))
-//        .finallyDo(
-//            () -> {
-//              io.setShooterSpeed(0);
-//              io.setFeederSpeed(0);
-//            });
-//  }
+  //  public Command newShoot() {
+  //    return runOnce(() -> io.setShooterSpeed(1))
+  //        .andThen(Commands.waitSeconds(1.2))
+  //        .andThen(() -> io.setFeederSpeed(1))
+  //        .andThen((Commands.waitSeconds(30)))
+  //        .finallyDo(
+  //            () -> {
+  //              io.setShooterSpeed(0);
+  //              io.setFeederSpeed(0);
+  //            });
+  //  }
 
-    public Command newShoot() {
-        return Commands.sequence(
-                Commands.runOnce(() -> io.setShooterSpeed(1)),
-                Commands.waitSeconds(1.2),
-                Commands.runOnce(() -> io.setFeederSpeed(1)),
-                Commands.idle()
-        ).finallyDo(() -> {
-            io.setShooterSpeed(0);
-            io.setFeederSpeed(0);
-        });
-    }
+  public Command newShoot() {
+    return Commands.sequence(
+            Commands.runOnce(() -> io.setShooterSpeed(1)),
+            Commands.waitSeconds(1.2),
+            Commands.runOnce(() -> io.setFeederSpeed(1)),
+            Commands.idle())
+        .finallyDo(
+            () -> {
+              io.setShooterSpeed(0);
+              io.setFeederSpeed(0);
+            });
+  }
 }
