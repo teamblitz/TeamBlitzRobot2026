@@ -63,6 +63,7 @@ public class Vision extends SubsystemBase {
     for (int i = 0; i < io.length; i++) {
       io[i].updateInputs(inputs[i]);
       Logger.processInputs("Vision/Camera" + Integer.toString(i), inputs[i]);
+      // System.out.println("Updating");
     }
 
     // Initialize logging values
@@ -133,6 +134,7 @@ public class Vision extends SubsystemBase {
           angularStdDev *= cameraStdDevFactors[cameraIndex];
         }
 
+        System.out.println("Calling Comsumer ");
         // Send vision observation
         consumer.accept(
             observation.pose().toPose2d(),
