@@ -87,8 +87,8 @@ public class Shooter extends SubsystemBase {
 
     return voltage;
   }
-
-  // GetVoltage Command is broken. The robot does know whare it is on the field
+ 
+  // Not Using this Command
   public Command aimAndShoot() {
     return runOnce(() -> io.setAimSpeed(getVoltage()))
         .andThen(Commands.waitSeconds(1))
@@ -102,7 +102,6 @@ public class Shooter extends SubsystemBase {
               io.setFeederSpeed(0);
             });
   }
-  ;
 
   public Command shootTest() {
     return runOnce(() -> io.setShooterSpeed(0.7))
