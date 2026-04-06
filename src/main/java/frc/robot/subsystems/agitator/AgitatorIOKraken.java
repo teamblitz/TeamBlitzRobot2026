@@ -11,7 +11,7 @@ public class AgitatorIOKraken implements AgitatorIO {
   public final TalonFX agitator;
 
   public AgitatorIOKraken() {
-    agitator = new TalonFX(24); // TODO SET VALUE
+    agitator = new TalonFX(16); // TODO SET VALUE
 
     TalonFXConfiguration config = new TalonFXConfiguration();
 

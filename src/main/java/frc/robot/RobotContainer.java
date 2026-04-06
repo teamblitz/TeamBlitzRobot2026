@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.agitator.Agitator;
+import frc.robot.subsystems.agitator.AgitatorIOKraken;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -48,6 +50,7 @@ public class RobotContainer {
   private final Intake intake;
   private final Shooter shooter;
   private final Wrist wrist;
+  private final Agitator agitator;
 
   // Controller
   //  private final CommandXboxController controller = new CommandXboxController(0);
@@ -79,6 +82,7 @@ public class RobotContainer {
         intake = new Intake(new IntakeIOKraken());
         shooter = new Shooter(new ShooterIOKraken(), drive);
         wrist = new Wrist(new WristIOKraken());
+        agitator = new Agitator(new AgitatorIOKraken());
         // The ModuleIOTalonFXS implementation provides an example implementation for
         // TalonFXS controller connected to a CANdi with a PWM encoder. The
         // implementations
@@ -116,6 +120,8 @@ public class RobotContainer {
         intake = new Intake(new IntakeIO() {});
         shooter = new Shooter(new ShooterIO() {}, drive);
         wrist = new Wrist(new WristIO() {});
+        agitator = new Agitator(new AgitatorIOKraken());
+
         break;
 
       default: // REPLAY
@@ -133,6 +139,8 @@ public class RobotContainer {
         intake = new Intake(new IntakeIO() {});
         shooter = new Shooter(new ShooterIO() {}, drive);
         wrist = new Wrist(new WristIO() {});
+        agitator = new Agitator(new AgitatorIOKraken());
+
         break;
     }
 
@@ -161,10 +169,9 @@ public class RobotContainer {
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
   }
 
-
-  //Throw default commands here for simplicity’s sake
+  // Throw default commands here for simplicity’s sake
   private void configureSubsystems() {
-    wrist.setDefaultCommand(wrist.goToIdle());
+    wrist.setDefaultCommand(wrist.goToDown());
   }
 
   /**
@@ -207,10 +214,17 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     // Intake
-    OIConstants.Intake.FORWARD.whileTrue(intake.forward());
+    OIConstants.Intake.FORWARD.whileTrue(intake.forward().alongWith(agitator.run()));
 
     // Shooter
-    OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(shooter.aimAndShoot());
+    //    OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(shooter.aimAndShoot());
+    OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(shooter.newShoot().alongWith(agitator.run()));
+
+    // Wrist
+    OIConstants.Wrist.PANIC_UP.whileTrue(wrist.goToIdle());
+
+    // Agitator
+    OIConstants.Agitator.RUN_AGITATOR.whileTrue(agitator.run());
   }
 
   /**

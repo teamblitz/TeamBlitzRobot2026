@@ -20,7 +20,7 @@ public class Intake extends BlitzSubsystem {
   }
 
   public Command forward() {
-    return runEnd(() -> io.setSpeed(0.55), () -> io.setSpeed(0));
+    return runEnd(() -> io.setSpeed(-0.8), () -> io.setSpeed(0));
   }
 
   public Command reverse() {

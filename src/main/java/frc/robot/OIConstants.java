@@ -112,6 +112,12 @@ public class OIConstants {
     public static final Trigger UP = OPERATOR_CONTROLLER.x();
     public static final Trigger DOWN = OPERATOR_CONTROLLER.y();
 
+    public static final Trigger PANIC_UP = OPERATOR_CONTROLLER.povUp();
+
     //        public static final Trigger UP_TEST = OPERATOR_CONTROLLER.a();
+  }
+
+  public static final class Agitator {
+    public static final Trigger RUN_AGITATOR = OPERATOR_CONTROLLER.povRight();
   }
 }

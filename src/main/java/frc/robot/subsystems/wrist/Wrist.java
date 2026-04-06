@@ -81,6 +81,10 @@ public class Wrist extends BlitzSubsystem {
     return goToPosition(EXTENDED_POS);
   }
 
+  public Command goToCenter() {
+    return goToPosition(KG_POS);
+  }
+
   // Moves to a position and waits until both sides are near the target
   public Command goToPosition(double position) {
     return followGoal(position)
@@ -88,7 +92,8 @@ public class Wrist extends BlitzSubsystem {
             Commands.waitUntil(
                 () -> {
                   // Both sides must individually be near the target, not just the average
-                  // This hopefully ensures the mechanism is actually flat, not one side ahead of the other
+                  // This hopefully ensures the mechanism is actually flat, not one side ahead of
+                  // the other
                   boolean leftNear =
                       MathUtil.isNear(position, inputs.absoluteEncoderPositionLeft, TOLERANCE);
                   boolean rightNear =

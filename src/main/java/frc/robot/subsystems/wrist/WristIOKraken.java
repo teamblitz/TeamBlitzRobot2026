@@ -33,15 +33,35 @@ public class WristIOKraken implements WristIO {
 
     absoluteEncoderLeft
         .getConfigurator()
-        .apply(buildEncoderConfig(MAGNET_OFFSET_LEFT, ENCODER_INVERTED_LEFT));
+        .apply(buildEncoderConfig(MAGNET_OFFSET_LEFT, ENCODER_INVERTED_LEFT), 0.1);
     absoluteEncoderRight
         .getConfigurator()
-        .apply(buildEncoderConfig(MAGNET_OFFSET_RIGHT, ENCODER_INVERTED_RIGHT));
+        .apply(buildEncoderConfig(MAGNET_OFFSET_RIGHT, ENCODER_INVERTED_RIGHT), 0.1);
 
-    wristLeft.getConfigurator().apply(buildMotorConfig(absoluteEncoderLeft, MOTOR_INVERTED_LEFT));
+    wristLeft
+        .getConfigurator()
+        .apply(
+            buildMotorConfig(
+                absoluteEncoderLeft,
+                MOTOR_INVERTED_LEFT,
+                LEFT_KP,
+                LEFT_KI,
+                LEFT_KD,
+                LEFT_KG,
+                LEFT_KV,
+                LEFT_KS));
     wristRight
         .getConfigurator()
-        .apply(buildMotorConfig(absoluteEncoderRight, MOTOR_INVERTED_RIGHT));
+        .apply(
+            buildMotorConfig(
+                absoluteEncoderRight,
+                MOTOR_INVERTED_RIGHT,
+                RIGHT_KP,
+                RIGHT_KI,
+                RIGHT_KD,
+                RIGHT_KG,
+                RIGHT_KV,
+                RIGHT_KS));
   }
 
   private CANcoderConfiguration buildEncoderConfig(double magnetOffset, boolean inverted) {
@@ -50,32 +70,39 @@ public class WristIOKraken implements WristIO {
         inverted
             ? SensorDirectionValue.Clockwise_Positive
             : SensorDirectionValue.CounterClockwise_Positive;
-    cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.9;
+    cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1;
     cfg.MagnetSensor.MagnetOffset = magnetOffset;
     return cfg;
   }
 
-  private TalonFXConfiguration buildMotorConfig(CANcoder encoder, boolean inverted) {
+  private TalonFXConfiguration buildMotorConfig(
+      CANcoder encoder,
+      boolean inverted,
+      double kP,
+      double kI,
+      double kD,
+      double kG,
+      double kV,
+      double kS) {
     TalonFXConfiguration cfg = new TalonFXConfiguration();
 
     cfg.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT_WRIST;
     cfg.CurrentLimits.StatorCurrentLimitEnable = true;
 
-    cfg.MotorOutput.withNeutralMode(NeutralModeValue.Brake)
+    cfg.MotorOutput.withNeutralMode(NeutralModeValue.Coast)
         .withInverted(
             inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive);
 
-    // Each motor uses its own encoder as the feedback source
     cfg.Feedback.FeedbackRemoteSensorID = encoder.getDeviceID();
     cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
     cfg.Feedback.RotorToSensorRatio = ROTOR_TO_SENSOR_RATIO;
 
-    cfg.Slot0.kP = KP;
-    cfg.Slot0.kI = KI;
-    cfg.Slot0.kD = KD;
-    cfg.Slot0.kG = KG;
-    cfg.Slot0.kV = KV;
-    cfg.Slot0.kS = KS;
+    cfg.Slot0.kP = kP;
+    cfg.Slot0.kI = kI;
+    cfg.Slot0.kD = kD;
+    cfg.Slot0.kG = kG;
+    cfg.Slot0.kV = kV;
+    cfg.Slot0.kS = kS;
     cfg.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
 
     cfg.MotionMagic.MotionMagicCruiseVelocity = MAX_VELOCITY;

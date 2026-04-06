@@ -43,16 +43,16 @@ public final class Constants {
   public static final double LOOP_PERIOD_SEC = frc.robot.Robot.defaultPeriodSecs;
 
   public static final class WristConstants {
-    public static final int MOTOR_ID_LEFT = 21; // update to your CAN IDs
-    public static final int MOTOR_ID_RIGHT = 22;
+    public static final int MOTOR_ID_LEFT = 20; // update to your CAN IDs
+    public static final int MOTOR_ID_RIGHT = 18;
 
-    public static final int ABS_ENCODER_ID_LEFT = 31; // update to your CAN IDs
-    public static final int ABS_ENCODER_ID_RIGHT = 32;
+    public static final int ABS_ENCODER_ID_LEFT = 21; // update to your CAN IDs
+    public static final int ABS_ENCODER_ID_RIGHT = 19;
 
-    public static final double MAGNET_OFFSET_LEFT = 0.0; // calibrate per robot
-    public static final double MAGNET_OFFSET_RIGHT = 0.0;
+    public static final double MAGNET_OFFSET_LEFT = -0.20; // calibrate per robot
+    public static final double MAGNET_OFFSET_RIGHT = -0.8427;
 
-    public static final boolean MOTOR_INVERTED_LEFT = false; // tune per your mechanism
+    public static final boolean MOTOR_INVERTED_LEFT = true; // tune per your mechanism
     public static final boolean MOTOR_INVERTED_RIGHT = true;
     public static final boolean ENCODER_INVERTED_LEFT = false;
     public static final boolean ENCODER_INVERTED_RIGHT = false;
@@ -64,36 +64,53 @@ public final class Constants {
     // Too high causes oscillation, too low means the sides drift apart
     public static final double SYNC_CORRECTION_SCALE = 0.1;
 
-    public static final double ROTOR_TO_SENSOR_RATIO = 1; // TODO set
+    public static final double ROTOR_TO_SENSOR_RATIO = 45;
 
-    public static final double SOFT_LIMIT_FORWARD = 0; // TODO tune using phoenix tuner
+    public static final double SOFT_LIMIT_FORWARD = 0.34; // TODO tune using phoenix tuner
 
-    public static final double SOFT_LIMIT_REVERSE = 1; // TODO tune using phoenix tuner
+    public static final double SOFT_LIMIT_REVERSE = 0; // TODO tune using phoenix tuner
 
-    public static final double TOLERANCE = 0; // TODO tune given the play of the mechanism
+    public static final double TOLERANCE = 0.014; // TODO tune given the play of the mechanism
 
-    public static final double IDLE_POS = 0; // TODO tune using abs position in phoenix tuner
+    public static final double IDLE_POS = 0.033; // TODO tune using abs position in phoenix tuner
 
-    public static final double EXTENDED_POS = 0; // TODO tune using abs position in phoenix tuner
+    public static final double EXTENDED_POS =
+        0.3325; // TODO tune using abs position in phoenix tuner
 
-    public static final double MAX_VELOCITY = 0; // TODO set
+    public static final double KG_POS = 0.275;
 
-    public static final double MAX_ACCEL = 0; // TODO set
+    public static final double MAX_VELOCITY = 5; // TODO set
+
+    public static final double MAX_ACCEL = 3; // TODO set
 
     public static final double CURRENT_LIMIT_WRIST =
-        40; // may need to be adjusted for further testing
+        80; // may need to be adjusted for further testing
 
-    public static final double KP = 10; // TODO tune
+    // Left
+    public static final double LEFT_KP = 7; // TODO tune
 
-    public static final double KI = 0; // TODO tune
+    public static final double LEFT_KI = 0; // TODO tune
 
-    public static final double KD = 0; // TODO tune
+    public static final double LEFT_KD = 0; // TODO tune
 
-    public static final double KG = 0.4; // TODO tune
+    public static final double LEFT_KG = 0.4; // TODO tune
 
-    public static final double KV = 0.12; // TODO tune
+    public static final double LEFT_KV = 0.5; // TODO tune
 
-    public static final double KS = 0.1; // TODO tune
+    public static final double LEFT_KS = 0.1; // TODO tune
+
+    // Right
+    public static final double RIGHT_KP = 7; // TODO tune
+
+    public static final double RIGHT_KI = 0; // TODO tune
+
+    public static final double RIGHT_KD = 0; // TODO tune
+
+    public static final double RIGHT_KG = 0.4; // TODO tune
+
+    public static final double RIGHT_KV = 0.5; // TODO tune
+
+    public static final double RIGHT_KS = 0.1; // TODO tune
   }
 
   public static final class Intake {
