@@ -2,9 +2,12 @@ package frc.robot;
 
 import static frc.robot.subsystems.vision.VisionConstants.*;
 
-import com.pathplanner.lib.auto.AutoBuilder;
+import choreo.auto.AutoFactory;
+import choreo.auto.AutoRoutine;
+import choreo.auto.AutoTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -51,6 +54,8 @@ public class RobotContainer {
   private final Shooter shooter;
   private final Wrist wrist;
   private final Agitator agitator;
+
+  private final AutoFactory autoFactory;
 
   // Controller
   //  private final CommandXboxController controller = new CommandXboxController(0);
@@ -102,6 +107,15 @@ public class RobotContainer {
         // new ModuleIOTalonFXS(TunerConstants.FrontRight),
         // new ModuleIOTalonFXS(TunerConstants.BackLeft),
         // new ModuleIOTalonFXS(TunerConstants.BackRight));
+        autoFactory =
+            new AutoFactory(
+                drive::getPose,
+                drive::setPose,
+                drive::runChoreoTrajectory,
+                DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)
+                    == DriverStation.Alliance.Red,
+                drive);
+
         break;
 
       case SIM:
@@ -124,6 +138,15 @@ public class RobotContainer {
         wrist = new Wrist(new WristIO() {});
         agitator = new Agitator(new AgitatorIOKraken());
 
+        autoFactory =
+            new AutoFactory(
+                drive::getPose,
+                drive::setPose,
+                drive::runChoreoTrajectory,
+                DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)
+                    == DriverStation.Alliance.Red,
+                drive);
+
         break;
 
       default: // REPLAY
@@ -143,6 +166,15 @@ public class RobotContainer {
         wrist = new Wrist(new WristIO() {});
         agitator = new Agitator(new AgitatorIOKraken());
 
+        autoFactory =
+            new AutoFactory(
+                drive::getPose,
+                drive::setPose,
+                drive::runChoreoTrajectory,
+                DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)
+                    == DriverStation.Alliance.Red,
+                drive);
+
         break;
     }
     //    autoFactory =
@@ -155,14 +187,20 @@ public class RobotContainer {
     //            drive);
 
     // Set up auto routines
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    // Replace with:
+    autoChooser = new LoggedDashboardChooser<>("Auto Choices");
+    autoChooser.addDefaultOption("Do Nothing", Commands.none());
     configureSysId();
     configureSubsystems();
     configureButtonBindings();
   }
 
   private void configureSysId() {
-    //    autoChooser.addOption("StraightTest", autoSetupCmd());
+
+    /*   Autos   */
+    autoChooser.addOption("Straight Test", straightTestAuto());
+    autoChooser.addOption("LeftSide", leftSideToCenter());
+    autoChooser.addOption("RightSide", rightSideToCenter());
 
     // Set up SysId routines
     autoChooser.addOption(
@@ -269,12 +307,34 @@ public class RobotContainer {
     return autoChooser.get();
   }
 
-  //  private Command autoSetupCmd() {
-  //    AutoRoutine routine = autoFactory.newRoutine("StraightTest");
-  //    AutoTrajectory path = routine.trajectory("StraightTest");
-  //
-  //    routine.active().onTrue(Commands.sequence(path.resetOdometry(), path.cmd()));
-  //
-  //    return routine.cmd();
-  //  }
+  private Command straightTestAuto() {
+    AutoRoutine routine = autoFactory.newRoutine("StraightTest");
+    AutoTrajectory path = routine.trajectory("StraightTest");
+
+    routine.active().onTrue(Commands.sequence(path.resetOdometry(), path.cmd()));
+
+    return routine.cmd();
+  }
+
+  private Command leftSideToCenter() {
+    AutoRoutine routine = autoFactory.newRoutine("LeftSide");
+    AutoTrajectory path = routine.trajectory("LeftSideToCenter");
+
+    routine.active().onTrue(Commands.sequence(path.resetOdometry(), path.cmd()));
+
+    path.atTime("intake").whileTrue(intake.forward().alongWith(agitator.run()));
+
+    return routine.cmd();
+  }
+
+  private Command rightSideToCenter() {
+    AutoRoutine routine = autoFactory.newRoutine("RightSide");
+    AutoTrajectory path = routine.trajectory("RightSideToCenter");
+
+    routine.active().onTrue(Commands.sequence(path.resetOdometry(), path.cmd()));
+
+    path.atTime("intake").whileTrue(intake.forward().alongWith(agitator.run()));
+
+    return routine.cmd();
+  }
 }
