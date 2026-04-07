@@ -2,9 +2,9 @@ package frc.robot;
 
 import static frc.robot.subsystems.vision.VisionConstants.*;
 
-import choreo.auto.AutoFactory;
-import choreo.auto.AutoRoutine;
-import choreo.auto.AutoTrajectory;
+//import choreo.auto.AutoFactory;
+//import choreo.auto.AutoRoutine;
+//import choreo.auto.AutoTrajectory;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -63,7 +63,7 @@ public class RobotContainer {
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
-  private final AutoFactory autoFactory;
+//  private final AutoFactory autoFactory;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -149,14 +149,14 @@ public class RobotContainer {
 
         break;
     }
-    autoFactory =
-        new AutoFactory(
-            drive::getPose,
-            drive::setPose,
-            drive::runChoreoTrajectory,
-            DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)
-                == DriverStation.Alliance.Red,
-            drive);
+//    autoFactory =
+//        new AutoFactory(
+//            drive::getPose,
+//            drive::setPose,
+//            drive::runChoreoTrajectory,
+//            DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)
+//                == DriverStation.Alliance.Red,
+//            drive);
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -166,7 +166,7 @@ public class RobotContainer {
   }
 
   private void configureSysId() {
-    autoChooser.addOption("StraightTest", autoSetupCmd());
+//    autoChooser.addOption("StraightTest", autoSetupCmd());
 
     // Set up SysId routines
     autoChooser.addOption(
@@ -258,12 +258,12 @@ public class RobotContainer {
     return autoChooser.get();
   }
 
-  private Command autoSetupCmd() {
-    AutoRoutine routine = autoFactory.newRoutine("StraightTest");
-    AutoTrajectory path = routine.trajectory("StraightTest");
-
-    routine.active().onTrue(Commands.sequence(path.resetOdometry(), path.cmd()));
-
-    return routine.cmd();
-  }
+//  private Command autoSetupCmd() {
+//    AutoRoutine routine = autoFactory.newRoutine("StraightTest");
+//    AutoTrajectory path = routine.trajectory("StraightTest");
+//
+//    routine.active().onTrue(Commands.sequence(path.resetOdometry(), path.cmd()));
+//
+//    return routine.cmd();
+//  }
 }
