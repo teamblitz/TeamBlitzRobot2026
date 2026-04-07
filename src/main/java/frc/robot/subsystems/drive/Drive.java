@@ -9,7 +9,6 @@ package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;
 
-import choreo.trajectory.SwerveSample;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
@@ -364,15 +363,15 @@ public class Drive extends SubsystemBase {
     };
   }
 
-  public void runChoreoTrajectory(SwerveSample sample) {
-    Pose2d pose = getPose();
-    ChassisSpeeds speeds = sample.getChassisSpeeds();
-
-    speeds.vxMetersPerSecond += choreoXController.calculate(pose.getX(), sample.x);
-    speeds.vyMetersPerSecond += choreoYController.calculate(pose.getY(), sample.y);
-    speeds.omegaRadiansPerSecond +=
-        choreoHeadingController.calculate(pose.getRotation().getRadians(), sample.heading);
-
-    runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getRotation()));
-  }
+  //  public void runChoreoTrajectory(SwerveSample sample) {
+  //    Pose2d pose = getPose();
+  //    ChassisSpeeds speeds = sample.getChassisSpeeds();
+  //
+  //    speeds.vxMetersPerSecond += choreoXController.calculate(pose.getX(), sample.x);
+  //    speeds.vyMetersPerSecond += choreoYController.calculate(pose.getY(), sample.y);
+  //    speeds.omegaRadiansPerSecond +=
+  //        choreoHeadingController.calculate(pose.getRotation().getRadians(), sample.heading);
+  //
+  //    runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getRotation()));
+  //  }
 }

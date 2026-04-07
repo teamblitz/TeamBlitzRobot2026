@@ -81,6 +81,10 @@ public class Wrist extends BlitzSubsystem {
     return goToPosition(EXTENDED_POS);
   }
 
+  public Command holdIdle() {
+    return followGoal(IDLE_POS).withName(logKey + "/holdIdle");
+  }
+
   public Command goToCenter() {
     return goToPosition(KG_POS);
   }

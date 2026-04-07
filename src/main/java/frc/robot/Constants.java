@@ -20,7 +20,7 @@ public final class Constants {
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 
   // Set this depending on Robot so it can use the right TunerConstants
-  public static final RobotType BotType = RobotType.ALPHA;
+  public static final RobotType BotType = RobotType.COMP;
 
   public static enum RobotType {
     COMP, // Main competiion bot
@@ -79,10 +79,10 @@ public final class Constants {
 
     public static final double MAX_VELOCITY = 2; // TODO set
 
-    public static final double MAX_ACCEL = 1; // TODO set
+    public static final double MAX_ACCEL = 0.75; // TODO set
 
     public static final double CURRENT_LIMIT_WRIST =
-        80; // may need to be adjusted for further testing
+        60; // may need to be adjusted for further testing
 
     // Left
     public static final double LEFT_KP = 45; // TODO tune
