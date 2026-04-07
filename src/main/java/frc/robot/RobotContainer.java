@@ -185,8 +185,8 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -driveController.getY(),
-            () -> -driveController.getX(),
+            () -> driveController.getY(),
+            () -> driveController.getX(),
             () -> -driveController.getTwist()));
 
     // Lock to 0° when trigger is held
@@ -218,10 +218,16 @@ public class RobotContainer {
 
     // Shooter
     //    OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(shooter.aimAndShoot());
-    OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(shooter.newShoot().alongWith(agitator.run()));
+    //    OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(
+    //        shooter.newShoot().alongWith(agitator.run())); // 43.5 inches away for current values
+    OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(
+        Commands.parallel(shooter.newShoot(), wrist.goToIdle(), agitator.run(), intake.forward()));
 
     // Wrist
-    OIConstants.Wrist.PANIC_UP.whileTrue(wrist.goToIdle());
+    //
+    // OIConstants.Wrist.PANIC_UP.whileTrue(intake.forwardWithWrist().alongWith(wrist.goToIdle()));
+    OIConstants.Wrist.PANIC_UP.whileTrue(
+        Commands.parallel(wrist.goToIdle(), intake.forwardWithWrist(), agitator.run()));
 
     // Agitator
     OIConstants.Agitator.RUN_AGITATOR.whileTrue(agitator.run());

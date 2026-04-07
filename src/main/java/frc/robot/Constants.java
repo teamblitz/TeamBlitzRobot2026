@@ -72,10 +72,9 @@ public final class Constants {
 
     public static final double TOLERANCE = 0.025; // TODO tune given the play of the mechanism
 
-    public static final double IDLE_POS = 0.0353; // TODO tune using abs position in phoenix tuner
+    public static final double IDLE_POS = 0.135; //
 
-    public static final double EXTENDED_POS = 0.34; // TODO tune using abs position in phoenix tuner
-
+    public static final double EXTENDED_POS = 0.34; // 0.355
     public static final double KG_POS = 0.275;
 
     public static final double MAX_VELOCITY = 2; // TODO set
@@ -86,7 +85,7 @@ public final class Constants {
         80; // may need to be adjusted for further testing
 
     // Left
-    public static final double LEFT_KP = 10; // TODO tune
+    public static final double LEFT_KP = 45; // TODO tune
 
     public static final double LEFT_KI = 0; // TODO tune
 
@@ -99,7 +98,7 @@ public final class Constants {
     public static final double LEFT_KS = 0.1; // TODO tune
 
     // Right
-    public static final double RIGHT_KP = 10; // TODO tune
+    public static final double RIGHT_KP = 45; // TODO tune
 
     public static final double RIGHT_KI = 0; // TODO tune
 
