@@ -20,7 +20,7 @@ public final class Constants {
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 
   // Set this depending on Robot so it can use the right TunerConstants
-  public static final RobotType BotType = RobotType.COMP;
+  public static final RobotType BotType = RobotType.ALPHA;
 
   public static enum RobotType {
     COMP, // Main competiion bot

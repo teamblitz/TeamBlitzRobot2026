@@ -9,6 +9,7 @@ package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;
 
+import choreo.trajectory.SwerveSample;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
@@ -20,6 +21,7 @@ import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -59,6 +61,10 @@ public class Drive extends SubsystemBase {
           Math.max(
               Math.hypot(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
               Math.hypot(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)));
+
+  private final PIDController choreoXController = new PIDController(40.0, 0.0, 0.0);
+  private final PIDController choreoYController = new PIDController(40.0, 0.0, 0.0);
+  private final PIDController choreoHeadingController = new PIDController(10.0, 0.0, 0.0);
 
   // PathPlanner config constants
   private static final double ROBOT_MASS_KG = 74.088;
@@ -356,5 +362,17 @@ public class Drive extends SubsystemBase {
       new Translation2d(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
       new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)
     };
+  }
+
+  public void runChoreoTrajectory(SwerveSample sample) {
+    Pose2d pose = getPose();
+    ChassisSpeeds speeds = sample.getChassisSpeeds();
+
+    speeds.vxMetersPerSecond += choreoXController.calculate(pose.getX(), sample.x);
+    speeds.vyMetersPerSecond += choreoYController.calculate(pose.getY(), sample.y);
+    speeds.omegaRadiansPerSecond +=
+        choreoHeadingController.calculate(pose.getRotation().getRadians(), sample.heading);
+
+    runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getRotation()));
   }
 }
