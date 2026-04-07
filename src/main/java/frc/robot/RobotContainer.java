@@ -235,8 +235,8 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> driveController.getY(),
-            () -> driveController.getX(),
+            () -> -driveController.getY(),
+            () -> -driveController.getX(),
             () -> -driveController.getTwist()));
 
     // Lock to 0° when trigger is held
@@ -317,12 +317,12 @@ public class RobotContainer {
   }
 
   private Command leftSideToCenter() {
-    AutoRoutine routine = autoFactory.newRoutine("LeftSide");
-    AutoTrajectory path = routine.trajectory("LeftSideToCenter");
+    AutoRoutine routine = autoFactory.newRoutine("StraightTest");
+    AutoTrajectory path = routine.trajectory("StraightTest");
 
     routine.active().onTrue(Commands.sequence(path.resetOdometry(), path.cmd()));
 
-    path.atTime("intake").whileTrue(intake.forward().alongWith(agitator.run()));
+    path.active().whileTrue(intake.forward().alongWith(agitator.run()));
 
     return routine.cmd();
   }
