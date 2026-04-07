@@ -43,10 +43,10 @@ public final class Constants {
   public static final double LOOP_PERIOD_SEC = frc.robot.Robot.defaultPeriodSecs;
 
   public static final class WristConstants {
-    public static final int MOTOR_ID_LEFT = 20; // update to your CAN IDs
+    public static final int MOTOR_ID_LEFT = 20;
     public static final int MOTOR_ID_RIGHT = 18;
 
-    public static final int ABS_ENCODER_ID_LEFT = 21; // update to your CAN IDs
+    public static final int ABS_ENCODER_ID_LEFT = 21;
     public static final int ABS_ENCODER_ID_RIGHT = 19;
 
     public static final double MAGNET_OFFSET_LEFT = -0.20; // calibrate per robot
@@ -62,32 +62,31 @@ public final class Constants {
 
     // How aggressively to correct divergence during motion - start small and increase carefully
     // Too high causes oscillation, too low means the sides drift apart
-    public static final double SYNC_CORRECTION_SCALE = 0.1;
+    public static final double SYNC_CORRECTION_SCALE = 0.3;
 
-    public static final double ROTOR_TO_SENSOR_RATIO = 45;
+    public static final double ROTOR_TO_SENSOR_RATIO = 36;
 
-    public static final double SOFT_LIMIT_FORWARD = 0.34; // TODO tune using phoenix tuner
+    public static final double SOFT_LIMIT_FORWARD = 0.36; // TODO tune using phoenix tuner
 
     public static final double SOFT_LIMIT_REVERSE = 0; // TODO tune using phoenix tuner
 
-    public static final double TOLERANCE = 0.014; // TODO tune given the play of the mechanism
+    public static final double TOLERANCE = 0.025; // TODO tune given the play of the mechanism
 
-    public static final double IDLE_POS = 0.033; // TODO tune using abs position in phoenix tuner
+    public static final double IDLE_POS = 0.0353; // TODO tune using abs position in phoenix tuner
 
-    public static final double EXTENDED_POS =
-        0.3325; // TODO tune using abs position in phoenix tuner
+    public static final double EXTENDED_POS = 0.34; // TODO tune using abs position in phoenix tuner
 
     public static final double KG_POS = 0.275;
 
-    public static final double MAX_VELOCITY = 5; // TODO set
+    public static final double MAX_VELOCITY = 2; // TODO set
 
-    public static final double MAX_ACCEL = 3; // TODO set
+    public static final double MAX_ACCEL = 1; // TODO set
 
     public static final double CURRENT_LIMIT_WRIST =
         80; // may need to be adjusted for further testing
 
     // Left
-    public static final double LEFT_KP = 7; // TODO tune
+    public static final double LEFT_KP = 10; // TODO tune
 
     public static final double LEFT_KI = 0; // TODO tune
 
@@ -95,12 +94,12 @@ public final class Constants {
 
     public static final double LEFT_KG = 0.4; // TODO tune
 
-    public static final double LEFT_KV = 0.5; // TODO tune
+    public static final double LEFT_KV = 1; // TODO tune
 
     public static final double LEFT_KS = 0.1; // TODO tune
 
     // Right
-    public static final double RIGHT_KP = 7; // TODO tune
+    public static final double RIGHT_KP = 10; // TODO tune
 
     public static final double RIGHT_KI = 0; // TODO tune
 
@@ -108,7 +107,7 @@ public final class Constants {
 
     public static final double RIGHT_KG = 0.4; // TODO tune
 
-    public static final double RIGHT_KV = 0.5; // TODO tune
+    public static final double RIGHT_KV = 1; // TODO tune
 
     public static final double RIGHT_KS = 0.1; // TODO tune
   }
@@ -142,11 +141,15 @@ public final class Constants {
     public static final double SHOOTER_GEAR = 3 / 1;
     public static final double WHEEL_DIAMETER = 0.1016;
 
-    public static final double RAMP = 0.15;
+    public static final double RAMP = 0.2;
     public static final double KA = 0.1;
 
     public static final double SHOOTER_SPEED = 1; // get real val
     public static final double FEEDER_SPEED = 0.2; // get real val
+  }
+
+  public static final class AgitartorConstants {
+    public static final int AGITATOR_ID = 16;
   }
 
   public static final class Auto {

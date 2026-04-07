@@ -1,5 +1,6 @@
 package frc.robot.subsystems.agitator;
 
+import static frc.robot.Constants.AgitartorConstants.AGITATOR_ID;
 import static frc.robot.Constants.Intake.*;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -11,7 +12,7 @@ public class AgitatorIOKraken implements AgitatorIO {
   public final TalonFX agitator;
 
   public AgitatorIOKraken() {
-    agitator = new TalonFX(16); // TODO SET VALUE
+    agitator = new TalonFX(AGITATOR_ID); // TODO SET VALUE
 
     TalonFXConfiguration config = new TalonFXConfiguration();
 

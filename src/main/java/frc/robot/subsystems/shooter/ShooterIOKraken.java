@@ -25,7 +25,7 @@ public class ShooterIOKraken implements ShooterIO {
     TalonFXConfiguration shooterConfig = new TalonFXConfiguration();
     shooterConfig
         .MotorOutput
-        .withNeutralMode(NeutralModeValue.Coast)
+        .withNeutralMode(NeutralModeValue.Brake)
         .withInverted(InvertedValue.Clockwise_Positive);
     shooterConfig.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = RAMP;
 
@@ -35,9 +35,7 @@ public class ShooterIOKraken implements ShooterIO {
         .withNeutralMode(NeutralModeValue.Brake)
         .withInverted(InvertedValue.Clockwise_Positive);
 
-    rightShooter.setControl(
-        new Follower(
-            leftShooter.getDeviceID(), MotorAlignmentValue.Aligned)); // May need to be Inverted
+    rightShooter.setControl(new Follower(leftShooter.getDeviceID(), MotorAlignmentValue.Aligned));
 
     leftShooter.getConfigurator().apply(shooterConfig);
     rightShooter.getConfigurator().apply(feederConfig);
