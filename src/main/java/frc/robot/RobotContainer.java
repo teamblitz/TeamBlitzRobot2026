@@ -286,6 +286,8 @@ public class RobotContainer {
     OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(
         Commands.parallel(shooter.newShoot(), wrist.goToIdle(), agitator.run(), intake.forward()));
 
+    OIConstants.Shooter.DRIVER_SHOOT.whileTrue(
+        Commands.parallel(shooter.shoot(), wrist.goToIdle(), agitator.run(), intake.forward()));
     // Wrist
     //
     // OIConstants.Wrist.PANIC_UP.whileTrue(intake.forwardWithWrist().alongWith(wrist.goToIdle()));
