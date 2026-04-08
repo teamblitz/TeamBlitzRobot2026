@@ -109,4 +109,20 @@ public class Shooter extends SubsystemBase {
               io.setFeederSpeed(0);
             });
   }
+
+  public Command startSpinUp() {
+    return Commands.sequence(Commands.runOnce(() -> io.setShooterSpeed(0.5)))
+        .finallyDo(
+            () -> {
+              io.setShooterSpeed(0);
+            });
+  }
+
+  public Command shoot() {
+    return Commands.sequence(Commands.runOnce(() -> io.setFeederSpeed(0.4)))
+        .finallyDo(
+            () -> {
+              io.setFeederSpeed(0);
+            });
+  }
 }
