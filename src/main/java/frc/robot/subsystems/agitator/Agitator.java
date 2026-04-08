@@ -18,6 +18,6 @@ public class Agitator extends BlitzSubsystem {
   }
 
   public Command run() {
-    return runEnd(() -> io.setSpeed(0.3), () -> io.setSpeed(0));
+    return runEnd(() -> io.setSpeed(0.6), () -> io.setSpeed(0));
   }
 }

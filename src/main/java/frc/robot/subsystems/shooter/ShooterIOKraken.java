@@ -1,31 +1,27 @@
 package frc.robot.subsystems.shooter;
 
-import static frc.robot.Constants.ShooterConstants.RAMP;
+import static frc.robot.Constants.ShooterConstants.*;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.Constants.ShooterConstants.*;
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterIOKraken implements ShooterIO {
 
-  public final TalonFX shooter;
+  public final TalonFX rightShooter;
   public final TalonFX feeder;
-  public final TalonFX deepFeed;
 
   public ShooterIOKraken() {
-    shooter = new TalonFX(30);
-    feeder = new TalonFX(31);
-    deepFeed = new TalonFX(32);
+    rightShooter = new TalonFX(RIGHT_SHOOTER_ID);
+    feeder = new TalonFX(FEEDER_ID);
 
     TalonFXConfiguration shooterConfig = new TalonFXConfiguration();
     shooterConfig
         .MotorOutput
-        .withNeutralMode(NeutralModeValue.Coast)
+        .withNeutralMode(NeutralModeValue.Brake)
         .withInverted(InvertedValue.Clockwise_Positive);
     shooterConfig.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = RAMP;
 
@@ -35,35 +31,23 @@ public class ShooterIOKraken implements ShooterIO {
         .withNeutralMode(NeutralModeValue.Brake)
         .withInverted(InvertedValue.Clockwise_Positive);
 
-    feeder.setControl(
-        new Follower(
-            shooter.getDeviceID(), MotorAlignmentValue.Opposed)); // May need to be Inverted
-
-    feeder.getConfigurator().apply(shooterConfig);
-    shooter.getConfigurator().apply(feederConfig);
-    deepFeed.getConfigurator().apply(feederConfig);
+    rightShooter.getConfigurator().apply(shooterConfig);
+    feeder.getConfigurator().apply(feederConfig);
   }
 
   @Override
   public void setShooterSpeed(double speed) {
-    shooter.set(speed);
+    rightShooter.set(speed);
   }
 
   @Override
   public void setFeederSpeed(double speed) {
-    deepFeed.set(speed);
-  }
-
-  public void setAimSpeed(double speed) {
-    shooter.set(speed);
+    feeder.set(speed);
   }
 
   @Override
   public void updateInputs() {
-    // TODO: read real sensor values from TalonFX when available. For now, provide placeholders.
-
-    Logger.recordOutput("shooter/shooterCANID", shooter.getDeviceID());
+    Logger.recordOutput("shooter/shooterCANID", rightShooter.getDeviceID());
     Logger.recordOutput("shooter/feederCANID", feeder.getDeviceID());
-    Logger.recordOutput("shooter/deepFeedCANID", deepFeed.getDeviceID());
   }
 }

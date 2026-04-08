@@ -20,7 +20,7 @@ public final class Constants {
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 
   // Set this depending on Robot so it can use the right TunerConstants
-  public static final RobotType BotType = RobotType.ALPHA;
+  public static final RobotType BotType = RobotType.COMP;
 
   public static enum RobotType {
     COMP, // Main competiion bot
@@ -43,74 +43,76 @@ public final class Constants {
   public static final double LOOP_PERIOD_SEC = frc.robot.Robot.defaultPeriodSecs;
 
   public static final class WristConstants {
-    public static final int WRIST_ID = 21;
-    public static final int ABS_ENCODER_ID = 22;
-    //       public static final double WRIST_GEAR_RATIO = (9.0) * (5.0) * (54.0 / 16.0);
+    public static final int MOTOR_ID_LEFT = 20;
+    public static final int MOTOR_ID_RIGHT = 18;
 
-    //      public static final double OPEN_LOOP_RAMP = .25;
-    public static final int CURRENT_LIMIT_WRIST =
-        80; // TODO make this value higher after initial testing
-    public static final boolean INVERTED = false;
+    public static final int ABS_ENCODER_ID_LEFT = 21;
+    public static final int ABS_ENCODER_ID_RIGHT = 19;
 
-    // TODO TUNE MAXIMUM AND MINIMUM POSITIONS WHEN WE HAVE THE BOT
-    //        public static final double ZERO_POS = Units.degreesToRadians(compBot() ? 94 : 90);
-    public static final double IDLE_POS = 0.085;
-    //        public static final double EXTENDED_POS = Units.degreesToRadians(-90);//TODO set this
-    // val to absolute encoder value when this is extended
-    public static final double EXTENDED_POS =
-        0.35; // TODO tune on actual bot in reference to the zero position
+    public static final double MAGNET_OFFSET_LEFT = -0.20; // calibrate per robot
+    public static final double MAGNET_OFFSET_RIGHT = -0.8427;
 
-    public static final double OFFSET = IDLE_POS + 0.25;
+    public static final boolean MOTOR_INVERTED_LEFT = true; // tune per your mechanism
+    public static final boolean MOTOR_INVERTED_RIGHT = true;
+    public static final boolean ENCODER_INVERTED_LEFT = false;
+    public static final boolean ENCODER_INVERTED_RIGHT = false;
 
-    public static final double ABS_ENCODER_ZERO = Math.toRadians(306.71 + 90);
-    //        public static final double TOLERANCE = Units.degreesToRadians(10);
-    public static final double TOLERANCE = 0.005;
+    // How far apart the two encoders can read before a fault is triggered (in rotations)
+    public static final double ENCODER_DIVERGENCE_THRESHOLD = 0.05;
 
-    public static final double MAX_VELOCITY = 2; // TODO tune on actual bot
-    public static final double MAX_ACCEL = 42; // TODO tune on actual bot
-    public static final double MAX_JERK = MAX_ACCEL * 8;
+    // How aggressively to correct divergence during motion - start small and increase carefully
+    // Too high causes oscillation, too low means the sides drift apart
+    public static final double SYNC_CORRECTION_SCALE = 0.3;
 
-    public static final double ROTOR_TO_SENSOR_RATIO = 9.0;
-    public static final double MAGNET_OFFSET = -0.144775390625; // TODO tune on actual bot
+    public static final double ROTOR_TO_SENSOR_RATIO = 36;
 
-    public static final double KP = 20; // TODO tune KP, KD, KV, and KS on actual bot
-    public static final double KI = 0;
-    public static final double KD = 1;
-    public static final double KG = 1;
-    public static final double KV = 0;
-    public static final double KS = 0.5;
+    public static final double SOFT_LIMIT_FORWARD = 0.36; // TODO tune using phoenix tuner
 
-    public static final double SOFT_LIMIT_FORWARD =
-        0.35; // Sets the bounds for where the wrist can go
-    public static final double SOFT_LIMIT_REVERSE =
-        0.08; // Sets the bounds for where the wrist can go
+    public static final double SOFT_LIMIT_REVERSE = 0; // TODO tune using phoenix tuner
 
-    public static final class PidGains {
-      public static final double KP = 2;
-      public static final double KI = 0;
-      public static final double KD = 0; // 524.32
-    }
+    public static final double TOLERANCE = 0.025; // TODO tune given the play of the mechanism
 
-    // bad cuz backlash
-    public static final class WristGains {
-      public static final double KS = 0.0080265;
-      public static final double KV = 2.8461;
-      public static final double KA = 0.66332;
-      public static final double KG = 0.2288;
-    }
+    public static final double IDLE_POS = 0.135; //
 
-    public static final class KrakenGains {
-      public static final double KS = 0.3576;
-      public static final double KV = 2.5726 * (2 * Math.PI);
-      public static final double KA = 0.059493 * (2 * Math.PI);
-      public static final double KG = 0.16157;
-      public static final double KP = 6 * 12 * (2 * Math.PI);
-      public static final double KD = 0; // 0.70647
-    }
+    public static final double EXTENDED_POS = 0.34; // 0.355
+    public static final double KG_POS = 0.275;
+
+    public static final double MAX_VELOCITY = 2; // TODO set
+
+    public static final double MAX_ACCEL = 0.75; // TODO set
+
+    public static final double CURRENT_LIMIT_WRIST =
+        60; // may need to be adjusted for further testing
+
+    // Left
+    public static final double LEFT_KP = 45; // TODO tune
+
+    public static final double LEFT_KI = 0; // TODO tune
+
+    public static final double LEFT_KD = 0; // TODO tune
+
+    public static final double LEFT_KG = 0.4; // TODO tune
+
+    public static final double LEFT_KV = 1; // TODO tune
+
+    public static final double LEFT_KS = 0.1; // TODO tune
+
+    // Right
+    public static final double RIGHT_KP = 45; // TODO tune
+
+    public static final double RIGHT_KI = 0; // TODO tune
+
+    public static final double RIGHT_KD = 0; // TODO tune
+
+    public static final double RIGHT_KG = 0.4; // TODO tune
+
+    public static final double RIGHT_KV = 1; // TODO tune
+
+    public static final double RIGHT_KS = 0.1; // TODO tune
   }
 
   public static final class Intake {
-    public static final int INTAKE_ID = 0; // TODO set val
+    public static final int INTAKE_ID = 17; // TODO set val
 
     public static final double CURRENT_LIMIT = 120; // TODO set val
 
@@ -118,9 +120,8 @@ public final class Constants {
   }
 
   public static final class ShooterConstants {
-    public static final int RIGHT_SHOOTER_ID = 0; // TODO set val
-    public static final int LEFT_SHOOTER_ID = 0; // TODO set val
-    public static final int FEEDER_ID = 0; // TODO set val
+    public static final int RIGHT_SHOOTER_ID = 13;
+    public static final int FEEDER_ID = 15;
 
     public static final double SHOOTER_HEIGHT = 0.4826;
     public static final double HUB_X =
@@ -138,16 +139,18 @@ public final class Constants {
     public static final double SHOOTER_GEAR = 3 / 1;
     public static final double WHEEL_DIAMETER = 0.1016;
 
-    public static final double RAMP = 0.15;
+    public static final double RAMP = 0.2;
     public static final double KA = 0.1;
 
     public static final double SHOOTER_SPEED = 1; // get real val
     public static final double FEEDER_SPEED = 0.2; // get real val
   }
 
+  public static final class AgitartorConstants {
+    public static final int AGITATOR_ID = 16;
+  }
+
   public static final class Auto {
-    public static final class Timings {
-      public static final double STOW_TO_L4_READY = 1.25; // IDK ACTUAL TIMINGS
-    }
+    public static final class Timings {}
   }
 }

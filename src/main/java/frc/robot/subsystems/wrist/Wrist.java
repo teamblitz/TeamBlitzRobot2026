@@ -9,20 +9,24 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.BlitzSubsystem;
 import java.util.Optional;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Wrist extends BlitzSubsystem {
+
   private final WristIO io;
+  private final WristInputsAutoLogged inputs = new WristInputsAutoLogged();
+
+  private Optional<TrapezoidProfile.State> goal;
+
+  @AutoLogOutput(key = "wrist/divergenceFault")
+  private boolean divergenceFault = false;
 
   public Wrist(WristIO io) {
     super("Wrist");
     this.io = io;
-    goal = Optional.empty();
+    this.goal = Optional.empty();
   }
-
-  private final WristInputsAutoLogged inputs = new WristInputsAutoLogged();
-
-  private Optional<TrapezoidProfile.State> goal;
 
   @Override
   public void periodic() {
@@ -30,8 +34,30 @@ public class Wrist extends BlitzSubsystem {
     io.updateInputs(inputs);
     Logger.processInputs(logKey, inputs);
 
+    // Check for encoder divergence every loop
+    // This means something mechanical has gone wrong - a slipping shaft, snapped belt, etc.
+    if (inputs.encoderDelta > ENCODER_DIVERGENCE_THRESHOLD) {
+      if (!divergenceFault) {
+        DriverStation.reportWarning(
+            "[Wrist] Encoder divergence fault! Left: "
+                + inputs.absoluteEncoderPositionLeft
+                + " Right: "
+                + inputs.absoluteEncoderPositionRight
+                + " Delta: "
+                + inputs.encoderDelta,
+            false);
+        divergenceFault = true;
+      }
+      // Stop the wrist and clear the goal when a fault is detected
+      // to prevent the motors from stressing the mechanism further
+      io.stop();
+      goal = Optional.empty();
+      return;
+    } else {
+      divergenceFault = false;
+    }
+
     if (goal.isPresent() && DriverStation.isEnabled()) {
-      System.out.println("Sending Motion Magic to: " + goal.get().position);
       io.setMotionMagic(goal.get().position);
     }
 
@@ -41,9 +67,7 @@ public class Wrist extends BlitzSubsystem {
     }
   }
 
-  public Command upTest() {
-    return startEnd(() -> io.setSpeed(0.5), () -> io.setSpeed(0));
-  }
+  // --- Commands ---
 
   public Command setSpeed(double speed) {
     return startEnd(() -> io.setSpeed(speed), () -> io.setSpeed(0));
@@ -54,51 +78,81 @@ public class Wrist extends BlitzSubsystem {
   }
 
   public Command goToDown() {
-    return followGoal(EXTENDED_POS);
+    return goToPosition(EXTENDED_POS);
   }
 
+  public Command holdIdle() {
+    return followGoal(IDLE_POS).withName(logKey + "/holdIdle");
+  }
+
+  public Command goToCenter() {
+    return goToPosition(KG_POS);
+  }
+
+  // Moves to a position and waits until both sides are near the target
   public Command goToPosition(double position) {
     return followGoal(position)
         .withDeadline(
             Commands.waitUntil(
                 () -> {
-                  boolean near = MathUtil.isNear(position, getPosition(), TOLERANCE);
-                  System.out.println(
-                      "position: " + getPosition() + " target: " + position + " near: " + near);
-                  return near;
+                  // Both sides must individually be near the target, not just the average
+                  // This hopefully ensures the mechanism is actually flat, not one side ahead of
+                  // the other
+                  boolean leftNear =
+                      MathUtil.isNear(position, inputs.absoluteEncoderPositionLeft, TOLERANCE);
+                  boolean rightNear =
+                      MathUtil.isNear(position, inputs.absoluteEncoderPositionRight, TOLERANCE);
+                  boolean arrived = leftNear && rightNear;
+
+                  Logger.recordOutput("wrist/goToPosition/leftNear", leftNear);
+                  Logger.recordOutput("wrist/goToPosition/rightNear", rightNear);
+                  Logger.recordOutput("wrist/goToPosition/arrived", arrived);
+
+                  return arrived;
                 }))
-        .withName(logKey + "/goToPosition_waitForMechanism " + position);
+        .withName(logKey + "/goToPosition " + position);
   }
 
-  public Command followGoal(double goal) {
+  public Command followGoal(double goalPos) {
     return run(() -> {
-          if (this.goal.isEmpty() || this.goal.get().position != goal) {
-            System.out.println("**************Setting goal to " + goal);
+          if (this.goal.isEmpty() || this.goal.get().position != goalPos) {
             this.goal =
                 Optional.of(
                     new TrapezoidProfile.State(
                         MathUtil.clamp(
-                            goal,
+                            goalPos,
                             Math.min(EXTENDED_POS, IDLE_POS),
                             Math.max(EXTENDED_POS, IDLE_POS)),
                         0));
           }
         })
-        .handleInterrupt(
-            () -> {
-              System.out.println(
-                  "Interrupted, goal was: "
-                      + this.goal.map(s -> String.valueOf(s.position)).orElse("empty"));
-              this.goal = Optional.empty();
-            })
-        .beforeStarting(() -> System.out.println("followGoal starting"));
+        .handleInterrupt(() -> this.goal = Optional.empty());
   }
 
+  // --- Getters ---
+
+  // Average position of both sides - use for general position checks
+  @AutoLogOutput(key = "wrist/position")
   public double getPosition() {
     return inputs.absoluteEncoderPosition;
   }
 
-  public double getVelocity() {
-    return inputs.velocityRadiansPerSecond;
+  @AutoLogOutput(key = "wrist/positionLeft")
+  public double getPositionLeft() {
+    return inputs.absoluteEncoderPositionLeft;
+  }
+
+  @AutoLogOutput(key = "wrist/positionRight")
+  public double getPositionRight() {
+    return inputs.absoluteEncoderPositionRight;
+  }
+
+  @AutoLogOutput(key = "wrist/encoderDelta")
+  public double getEncoderDelta() {
+    return inputs.encoderDelta;
+  }
+
+  public boolean hasDivergenceFault() {
+    return divergenceFault;
   }
 }

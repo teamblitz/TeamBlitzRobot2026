@@ -1,17 +1,13 @@
-// Copyright (c) 2021-2026 Littleton Robotics
-// http://github.com/Mechanical-Advantage
-//
-// Use of this source code is governed by a BSD
-// license that can be found in the LICENSE file
-// at the root directory of this project.
-
 package frc.robot;
 
 import static frc.robot.subsystems.vision.VisionConstants.*;
 
-import com.pathplanner.lib.auto.AutoBuilder;
+import choreo.auto.AutoFactory;
+import choreo.auto.AutoRoutine;
+import choreo.auto.AutoTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,6 +16,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.agitator.Agitator;
+import frc.robot.subsystems.agitator.AgitatorIOKraken;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -27,13 +25,18 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOKraken;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOKraken;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import frc.robot.subsystems.wrist.Wrist;
+import frc.robot.subsystems.wrist.WristIO;
+import frc.robot.subsystems.wrist.WristIOKraken;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -43,18 +46,25 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
   // Subsystems
   private final Drive drive;
   private final Vision vision;
   private final Intake intake;
   private final Shooter shooter;
+  private final Wrist wrist;
+  private final Agitator agitator;
+
+  private final AutoFactory autoFactory;
 
   // Controller
   //  private final CommandXboxController controller = new CommandXboxController(0);
-  private final CommandJoystick controller = new CommandJoystick(0);
+  private final CommandJoystick driveController = OIConstants.DRIVE_CONTROLLER;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
+
+  //  private final AutoFactory autoFactory;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -74,12 +84,12 @@ public class RobotContainer {
         vision =
             new Vision(
                 drive::addVisionMeasurement,
-                new VisionIOLimelight(camera1Name, drive::getRotation),
-                new VisionIOLimelight(camera0Name, drive::getRotation));
-
+                new VisionIOLimelight(camera0Name, drive::getRotation),
+                new VisionIOLimelight(camera1Name, drive::getRotation));
         intake = new Intake(new IntakeIOKraken());
-
         shooter = new Shooter(new ShooterIOKraken(), drive);
+        wrist = new Wrist(new WristIOKraken());
+        agitator = new Agitator(new AgitatorIOKraken());
         // The ModuleIOTalonFXS implementation provides an example implementation for
         // TalonFXS controller connected to a CANdi with a PWM encoder. The
         // implementations
@@ -97,6 +107,15 @@ public class RobotContainer {
         // new ModuleIOTalonFXS(TunerConstants.FrontRight),
         // new ModuleIOTalonFXS(TunerConstants.BackLeft),
         // new ModuleIOTalonFXS(TunerConstants.BackRight));
+        autoFactory =
+            new AutoFactory(
+                drive::getPose,
+                drive::setPose,
+                drive::runChoreoTrajectory,
+                DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)
+                    == DriverStation.Alliance.Red,
+                drive);
+
         break;
 
       case SIM:
@@ -109,19 +128,28 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
         // Sim robot, instantiate physics sim IO implementations
-        intake = new Intake(new IntakeIOKraken());
-
-        shooter = new Shooter(new ShooterIOKraken(), drive);
-
         vision =
             new Vision(
                 drive::addVisionMeasurement,
                 new VisionIOPhotonVisionSim(camera0Name, robotToCamera0, drive::getPose),
                 new VisionIOPhotonVisionSim(camera1Name, robotToCamera1, drive::getPose));
+        intake = new Intake(new IntakeIO() {});
+        shooter = new Shooter(new ShooterIO() {}, drive);
+        wrist = new Wrist(new WristIO() {});
+        agitator = new Agitator(new AgitatorIOKraken());
+
+        autoFactory =
+            new AutoFactory(
+                drive::getPose,
+                drive::setPose,
+                drive::runChoreoTrajectory,
+                DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)
+                    == DriverStation.Alliance.Red,
+                drive);
 
         break;
 
-      default:
+      default: // REPLAY
         // Replayed robot, disable IO implementations
         drive =
             new Drive(
@@ -133,13 +161,46 @@ public class RobotContainer {
         // Replayed robot, disable IO implementations
         // (Use same number of dummy implementations as the real robot)
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
-        intake = new Intake(new IntakeIOKraken());
-        shooter = new Shooter(new ShooterIOKraken(), drive);
+        intake = new Intake(new IntakeIO() {});
+        shooter = new Shooter(new ShooterIO() {}, drive);
+        wrist = new Wrist(new WristIO() {});
+        agitator = new Agitator(new AgitatorIOKraken());
+
+        autoFactory =
+            new AutoFactory(
+                drive::getPose,
+                drive::setPose,
+                drive::runChoreoTrajectory,
+                DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)
+                    == DriverStation.Alliance.Red,
+                drive);
+
         break;
     }
+    //    autoFactory =
+    //        new AutoFactory(
+    //            drive::getPose,
+    //            drive::setPose,
+    //            drive::runChoreoTrajectory,
+    //            DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)
+    //                == DriverStation.Alliance.Red,
+    //            drive);
 
     // Set up auto routines
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    // Replace with:
+    autoChooser = new LoggedDashboardChooser<>("Auto Choices");
+    autoChooser.addDefaultOption("Do Nothing", Commands.none());
+    configureSysId();
+    configureSubsystems();
+    configureButtonBindings();
+  }
+
+  private void configureSysId() {
+
+    /*   Autos   */
+    autoChooser.addOption("Straight Test", straightTestAuto());
+    autoChooser.addOption("LeftSide", leftSideToCenter());
+    autoChooser.addOption("RightSide", rightSideToCenter());
 
     // Set up SysId routines
     autoChooser.addOption(
@@ -156,9 +217,11 @@ public class RobotContainer {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+  }
 
-    // Configure the button bindings
-    configureButtonBindings();
+  // Throw default commands here for simplicity’s sake
+  private void configureSubsystems() {
+    wrist.setDefaultCommand(wrist.goToDown());
   }
 
   /**
@@ -169,60 +232,28 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
-    OIConstants.Intake.FORWARD.whileTrue(intake.forward());
-
-    OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(shooter.aimAndShoot());
-    OIConstants.Shooter.OPERATOR_DEEP.whileTrue(shooter.shootTest());
-    //    drive.setDefaultCommand(
-    //        DriveCommands.joystickDrive()
-    //            drive,
-    //            () -> -controller.getLeftY(),
-    //            () -> -controller.getLeftX(),
-    //            () -> -controller.getRightX()));
-    //
-    //    // Lock to 0° when A button is held
-    //    controller
-    //        .a()
-    //        .whileTrue(
-    //            DriveCommands.joystickDriveAtAngle(
-    //                drive,
-    //                () -> -controller.getLeftY(),
-    //                () -> -controller.getLeftX(),
-    //                () -> Rotation2d.kZero));
-    //
-    //    // Switch to X pattern when X button is pressed
-    //    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-    //
-    // Reset gyro to 0° when B button is pressed
-    controller
-        .button(5)
-        .onTrue(
-            Commands.runOnce(
-                    () ->
-                        drive.setPose(
-                            new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
-                    drive)
-                .ignoringDisable(true));
-    // Default command, normal field-relative drive
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -controller.getY(),
-            () -> -controller.getX(),
-            () -> -controller.getTwist()));
+            () -> -driveController.getY(),
+            () -> -driveController.getX(),
+            () -> -driveController.getTwist()));
 
     // Lock to 0° when trigger is held
-    controller
+    driveController
         .trigger()
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
-                drive, () -> -controller.getY(), () -> -controller.getX(), () -> Rotation2d.kZero));
+                drive,
+                () -> -driveController.getY(),
+                () -> -driveController.getX(),
+                () -> Rotation2d.kZero));
 
     // Switch to X pattern when button 2 is pressed
-    controller.button(2).onTrue(Commands.runOnce(drive::stopWithX, drive));
+    driveController.button(2).onTrue(Commands.runOnce(drive::stopWithX, drive));
 
     // Reset gyro to 0° when button 3 is pressed
-    controller
+    driveController
         .button(3)
         .onTrue(
             Commands.runOnce(
@@ -231,6 +262,40 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
                     drive)
                 .ignoringDisable(true));
+
+    // Super spin when button 1 is held
+    driveController
+        .button(1)
+        .whileTrue(
+            Commands.sequence(
+                Commands.runOnce(() -> wrist.followGoal(Constants.WristConstants.IDLE_POS), wrist),
+                DriveCommands.joystickDrive(
+                    drive,
+                    () -> driveController.getY(),
+                    () -> driveController.getX(),
+                    () -> -0.1)));
+
+    // Intake
+    OIConstants.Intake.FORWARD.whileTrue(intake.forward().alongWith(agitator.run()));
+    OIConstants.Intake.FORWARD_DRIVER.whileTrue(intake.forward().alongWith(agitator.run()));
+
+    // Shooter
+    //    OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(shooter.aimAndShoot());
+    //    OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(
+    //        shooter.newShoot().alongWith(agitator.run())); // 43.5 inches away for current values
+    OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(
+        Commands.parallel(shooter.newShoot(), wrist.goToIdle(), agitator.run(), intake.forward()));
+
+    // Wrist
+    //
+    // OIConstants.Wrist.PANIC_UP.whileTrue(intake.forwardWithWrist().alongWith(wrist.goToIdle()));
+    OIConstants.Wrist.UP.whileTrue(
+        Commands.parallel(wrist.goToIdle(), intake.forwardWithWrist(), agitator.run()));
+
+    OIConstants.Wrist.PANIC_UP.whileTrue(wrist.followGoal(Constants.WristConstants.IDLE_POS));
+
+    // Agitator
+    OIConstants.Agitator.RUN_AGITATOR.whileTrue(agitator.run());
   }
 
   /**
@@ -240,5 +305,36 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoChooser.get();
+  }
+
+  private Command straightTestAuto() {
+    AutoRoutine routine = autoFactory.newRoutine("StraightTest");
+    AutoTrajectory path = routine.trajectory("StraightTest");
+
+    routine.active().onTrue(Commands.sequence(path.resetOdometry(), path.cmd()));
+
+    return routine.cmd();
+  }
+
+  private Command leftSideToCenter() {
+    AutoRoutine routine = autoFactory.newRoutine("StraightTest");
+    AutoTrajectory path = routine.trajectory("StraightTest");
+
+    routine.active().onTrue(Commands.sequence(path.resetOdometry(), path.cmd()));
+
+    path.active().whileTrue(intake.forward().alongWith(agitator.run()));
+
+    return routine.cmd();
+  }
+
+  private Command rightSideToCenter() {
+    AutoRoutine routine = autoFactory.newRoutine("RightSide");
+    AutoTrajectory path = routine.trajectory("RightSideToCenter");
+
+    routine.active().onTrue(Commands.sequence(path.resetOdometry(), path.cmd()));
+
+    path.atTime("intake").whileTrue(intake.forward().alongWith(agitator.run()));
+
+    return routine.cmd();
   }
 }
