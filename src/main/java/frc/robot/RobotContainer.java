@@ -283,17 +283,22 @@ public class RobotContainer {
     //    OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(shooter.aimAndShoot());
     //    OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(
     //        shooter.newShoot().alongWith(agitator.run())); // 43.5 inches away for current values
-    OIConstants.Shooter.OPERATOR_BASICAIM.whileTrue(shooter.newShoot(shooter.basicSpeeds()));
+    // OIConstants.Shooter.OPERATOR_BASICAIM.whileTrue(shooter.newShoot(shooter.basicSpeeds()));
     OIConstants.Shooter.OPERATOR_PREFIRE.whileTrue(shooter.startSpinUp());
     OIConstants.Shooter.OPERATOR_PREFIRESHOOT.whileTrue(
         Commands.parallel(shooter.shoot(), wrist.goToIdle(), agitator.run(), intake.forward()));
     OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(
         Commands.parallel(
-            Commands.sequence(shooter.newShoot(0.58),Commands.waitSeconds(2), wrist.goToIdle()), agitator.run(), intake.forward()));
+            shooter.newShoot(0.5), 
+            wrist.goToIdle(),
+            agitator.run(),
+            intake.forward()));
 
     OIConstants.Shooter.DRIVER_SHOOT.whileTrue(
         Commands.parallel(
-            Commands.sequence(shooter.newShoot(0.58),Commands.waitSeconds(2), wrist.goToIdle()), agitator.run(), intake.forward()));
+            Commands.sequence(shooter.newShoot(0.58), Commands.waitSeconds(2), wrist.goToIdle()),
+            agitator.run(),
+            intake.forward()));
     // Wrist
     //
     // OIConstants.Wrist.PANIC_UP.whileTrue(intake.forwardWithWrist().alongWith(wrist.goToIdle()));
