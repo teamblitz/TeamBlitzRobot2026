@@ -254,7 +254,7 @@ public class RobotContainer {
 
     // Reset gyro to 0° when button 3 is pressed
     driveController
-        .button(3)
+        .button(5)
         .onTrue(
             Commands.runOnce(
                     () ->
@@ -289,11 +289,11 @@ public class RobotContainer {
         Commands.parallel(shooter.shoot(), wrist.goToIdle(), agitator.run(), intake.forward()));
     OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(
         Commands.parallel(
-            shooter.newShoot(0.5), wrist.goToIdle(), agitator.run(), intake.forward()));
+            Commands.sequence(shooter.newShoot(0.58),Commands.waitSeconds(2), wrist.goToIdle()), agitator.run(), intake.forward()));
 
     OIConstants.Shooter.DRIVER_SHOOT.whileTrue(
         Commands.parallel(
-            shooter.newShoot(0.5), wrist.goToIdle(), agitator.run(), intake.forward()));
+            Commands.sequence(shooter.newShoot(0.58),Commands.waitSeconds(2), wrist.goToIdle()), agitator.run(), intake.forward()));
     // Wrist
     //
     // OIConstants.Wrist.PANIC_UP.whileTrue(intake.forwardWithWrist().alongWith(wrist.goToIdle()));

@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants.*;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.wrist.Wrist;
 
 public class Shooter extends SubsystemBase {
 
@@ -32,15 +33,14 @@ public class Shooter extends SubsystemBase {
    * @return velocity, the required velocity
    */
   public double getDistance() {
-    System.out.println("Got to Velocity");
     // pose is just where the robot is at the time
     Pose2d pose = drive.getPose();
     // First part of the equation, calculating distance
     double distance =
         Math.sqrt(
-            Math.pow((Constants.ShooterConstants.HUB_X - Units.metersToInches(pose.getX())), 2)
+            Math.pow((Constants.ShooterConstants.HUB_X - pose.getX()), 2)
                 + Math.pow(
-                    (Constants.ShooterConstants.HUB_Y - Units.metersToInches(pose.getY())), 2));
+                    (Constants.ShooterConstants.HUB_Y - pose.getY()), 2));
     return Math.abs(distance);
   }
 
@@ -61,7 +61,6 @@ public class Shooter extends SubsystemBase {
 
   // Convert velocity to Rotations per second, because talon uses that for some reason
   public double getRPS() {
-    System.out.println("Got to RPS");
     double RPS;
     RPS =
         (getVelocity())
@@ -80,14 +79,14 @@ public class Shooter extends SubsystemBase {
   }
 
   public double basicSpeeds() {
-    double speed = 0.5;
+    double speed = 0.58;
     double distance = getDistance();
     if (distance > 50) {
       speed = 0.9;
     } else if (distance < 35) {
-      speed = 0.4;
+      speed = 0.48;
     } else {
-      speed = 0.5;
+      speed = 0.58;
     }
     return speed;
   }
@@ -122,7 +121,8 @@ public class Shooter extends SubsystemBase {
     return Commands.sequence(
             Commands.runOnce(() -> io.setShooterSpeed(speed)),
             Commands.waitSeconds(2),
-            Commands.runOnce(() -> io.setFeederSpeed(0.4)),
+            Commands.runOnce(() -> io.setFeederSpeed(0.48)),
+            // Commands.runOnce(() -> Wrist.goToIdle()),
             Commands.idle())
         .finallyDo(
             () -> {
@@ -132,7 +132,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public Command startSpinUp() {
-    return Commands.sequence(Commands.runOnce(() -> io.setShooterSpeed(0.5)))
+    return Commands.sequence(Commands.runOnce(() -> io.setShooterSpeed(0.58)))
         .finallyDo(
             () -> {
               io.setShooterSpeed(0);
@@ -140,7 +140,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public Command shoot() {
-    return Commands.sequence(Commands.runOnce(() -> io.setFeederSpeed(0.4)))
+    return Commands.sequence(Commands.runOnce(() -> io.setFeederSpeed(0.48)))
         .finallyDo(
             () -> {
               io.setFeederSpeed(0);

@@ -125,7 +125,7 @@ public final class Constants {
 
     public static final double SHOOTER_HEIGHT = 0.4826;
     public static final double HUB_X =
-        (!Constants.DISABLE_HAL
+        (Constants.DISABLE_HAL
                 && DriverStation.getAlliance().isPresent()
                 && DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
             ? 182.11
