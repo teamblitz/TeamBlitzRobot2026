@@ -39,7 +39,6 @@ public class Shooter extends SubsystemBase {
             Math.pow((Constants.ShooterConstants.HUB_X - pose.getX()), 2)
                 + Math.pow((Constants.ShooterConstants.HUB_Y - pose.getY()), 2));
     double velocity;
-
     // Second part of the equation, converting distance to required velocty
     velocity =
         Math.sqrt(

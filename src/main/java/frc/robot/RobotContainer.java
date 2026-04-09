@@ -289,14 +289,15 @@ public class RobotContainer {
         Commands.parallel(shooter.shoot(), wrist.goToIdle(), agitator.run(), intake.forward()));
     OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(
         Commands.parallel(
-            shooter.newShoot(0.5), 
+            shooter.newShoot(0.58), 
             wrist.goToIdle(),
             agitator.run(),
             intake.forward()));
 
     OIConstants.Shooter.DRIVER_SHOOT.whileTrue(
         Commands.parallel(
-            Commands.sequence(shooter.newShoot(0.58), Commands.waitSeconds(2), wrist.goToIdle()),
+            shooter.newShoot(0.58), 
+            wrist.goToIdle(),
             agitator.run(),
             intake.forward()));
     // Wrist
@@ -326,6 +327,7 @@ public class RobotContainer {
 
     routine.active().onTrue(Commands.sequence(path.resetOdometry(), path.cmd()));
 
+
     return routine.cmd();
   }
 
@@ -336,6 +338,7 @@ public class RobotContainer {
     routine.active().onTrue(Commands.sequence(path.resetOdometry(), path.cmd()));
 
     path.active().whileTrue(intake.forward().alongWith(agitator.run()));
+    path.doneFor(10).whileTrue(shooter.newShoot(0.58).alongWith(agitator.run()).alongWith(wrist.goToIdle()));
 
     return routine.cmd();
   }
