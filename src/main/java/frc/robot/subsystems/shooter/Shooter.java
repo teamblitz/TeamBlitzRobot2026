@@ -22,6 +22,7 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     super.periodic();
+    System.out.println(getDistance());
   }
 
   /**
@@ -29,8 +30,7 @@ public class Shooter extends SubsystemBase {
    *
    * @return velocity, the required velocity
    */
-  public double getVelocity() {
-    System.out.println("Got to Velocity");
+  public double getDistance() {
     // pose is just where the robot is at the time
     Pose2d pose = drive.getPose();
     // First part of the equation, calculating distance
@@ -38,7 +38,12 @@ public class Shooter extends SubsystemBase {
         Math.sqrt(
             Math.pow((Constants.ShooterConstants.HUB_X - pose.getX()), 2)
                 + Math.pow((Constants.ShooterConstants.HUB_Y - pose.getY()), 2));
+    return distance;
+  }
+
+  public double getVelocity() {
     double velocity;
+    double distance = getDistance();
     // Second part of the equation, converting distance to required velocty
     velocity =
         Math.sqrt(
@@ -68,6 +73,19 @@ public class Shooter extends SubsystemBase {
     VelocityVoltage voltage = new VelocityVoltage(getRPS());
 
     return voltage;
+  }
+
+  public double basicSpeeds() {
+    double speed = 0.58;
+    double distance = getDistance();
+    if (distance > 50) {
+      speed = 0.9;
+    } else if (distance < 35) {
+      speed = 0.48;
+    } else {
+      speed = 0.58;
+    }
+    return speed;
   }
 
   //  public Command aimAndShoot() {
