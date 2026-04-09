@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,6 +23,7 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     super.periodic();
+    System.out.println(getDistance());
   }
 
   /**
@@ -29,18 +31,23 @@ public class Shooter extends SubsystemBase {
    *
    * @return velocity, the required velocity
    */
-  public double getVelocity() {
+  public double getDistance() {
     System.out.println("Got to Velocity");
     // pose is just where the robot is at the time
     Pose2d pose = drive.getPose();
     // First part of the equation, calculating distance
     double distance =
         Math.sqrt(
-            Math.pow((Constants.ShooterConstants.HUB_X - pose.getX()), 2)
-                + Math.pow((Constants.ShooterConstants.HUB_Y - pose.getY()), 2));
-    double velocity;
+            Math.pow((Constants.ShooterConstants.HUB_X - Units.metersToInches(pose.getX())), 2)
+                + Math.pow(
+                    (Constants.ShooterConstants.HUB_Y - Units.metersToInches(pose.getY())), 2));
+    return Math.abs(distance);
+  }
 
+  public double getVelocity() {
     // Second part of the equation, converting distance to required velocty
+    double distance = getDistance();
+    double velocity;
     velocity =
         Math.sqrt(
             9.81
@@ -58,8 +65,9 @@ public class Shooter extends SubsystemBase {
     double RPS;
     RPS =
         (getVelocity())
-            / (Math.PI * Constants.ShooterConstants.WHEEL_DIAMETER) // Acounting for wheel dameter
-            / Constants.ShooterConstants.SHOOTER_GEAR; // Accounting for the gear ratio so
+            / (Math.PI
+                * Constants.ShooterConstants.WHEEL_DIAMETER) // Acounting for wheel circumference
+            / Constants.ShooterConstants.SHOOTER_GEAR; // Accounting for the gear ratio
 
     return RPS;
   }
@@ -71,8 +79,21 @@ public class Shooter extends SubsystemBase {
     return voltage;
   }
 
+  public double basicSpeeds() {
+    double speed = 0.5;
+    double distance = getDistance();
+    if (distance > 50) {
+      speed = 0.9;
+    } else if (distance < 35) {
+      speed = 0.4;
+    } else {
+      speed = 0.5;
+    }
+    return speed;
+  }
+
   //  public Command aimAndShoot() {
-  //    return runOnce(() -> shooter.setControl(getVoltage()))
+  //    return runOnce(() -> shooter.setVoltage(getVoltage()))
   //        .andThen(Commands.waitSeconds(1))
   //        .andThen(() -> feeder.set(1))
   //        .andThen(Commands.waitSeconds(5))
@@ -97,9 +118,9 @@ public class Shooter extends SubsystemBase {
   //            });
   //  }
 
-  public Command newShoot() {
+  public Command newShoot(double speed) {
     return Commands.sequence(
-            Commands.runOnce(() -> io.setShooterSpeed(0.5)),
+            Commands.runOnce(() -> io.setShooterSpeed(speed)),
             Commands.waitSeconds(2),
             Commands.runOnce(() -> io.setFeederSpeed(0.4)),
             Commands.idle())
