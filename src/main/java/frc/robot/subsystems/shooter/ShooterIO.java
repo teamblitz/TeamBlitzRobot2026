@@ -19,4 +19,8 @@ public interface ShooterIO {
   default void setFeederSpeed(double speed) {}
 
   default void setShooterVoltage(VelocityVoltage voltage) {}
+
+  default double getShooterRPS() {
+    return 0.0;
+  }
 }

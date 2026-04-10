@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter;
 
 import static edu.wpi.first.wpilibj2.command.Commands.sequence;
 import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
+import static frc.robot.Constants.ShooterConstants.SPEED_TOLERANCE;
 
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import edu.wpi.first.math.geometry.*;
@@ -74,9 +75,11 @@ public class Shooter extends SubsystemBase {
   }
 
   public VelocityVoltage getVoltage() {
-    VelocityVoltage voltage = new VelocityVoltage(getRPS());
+    return new VelocityVoltage(getRPS()).withSlot(0);
+  }
 
-    return voltage;
+  public boolean isAtTargetSpeed() {
+    return Math.abs(io.getShooterRPS() - getRPS()) < SPEED_TOLERANCE;
   }
 
   public double basicSpeeds() {
@@ -95,7 +98,7 @@ public class Shooter extends SubsystemBase {
   public Command aimAndShoot() {
     return sequence(
             runOnce(() -> io.setShooterVoltage(getVoltage())),
-            waitSeconds(2),
+            Commands.waitUntil(() -> isAtTargetSpeed()),
             runOnce(() -> io.setFeederSpeed(0.6)),
             idle())
         .finallyDo(

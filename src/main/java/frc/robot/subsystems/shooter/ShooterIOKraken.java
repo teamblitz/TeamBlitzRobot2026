@@ -26,6 +26,10 @@ public class ShooterIOKraken implements ShooterIO {
         .withInverted(InvertedValue.Clockwise_Positive);
     shooterConfig.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = RAMP;
 
+    shooterConfig.Slot0.kS = 0.05;
+    shooterConfig.Slot0.kV = 0.12;
+    shooterConfig.Slot0.kP = 0.11;
+
     TalonFXConfiguration feederConfig = new TalonFXConfiguration();
     feederConfig
         .MotorOutput
@@ -48,6 +52,11 @@ public class ShooterIOKraken implements ShooterIO {
 
   public void setShooterVoltage(VelocityVoltage voltage) {
     rightShooter.setControl(voltage);
+  }
+
+  @Override
+  public double getShooterRPS() {
+    return rightShooter.getVelocity().getValueAsDouble();
   }
 
   @Override
