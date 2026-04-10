@@ -54,11 +54,11 @@ public class Shooter extends SubsystemBase {
     velocity =
         Math.sqrt(
             9.81
-                    * Math.pow(distance, 2)
-                    / distance
-                    * Math.sin(Constants.ShooterConstants.SHOOTER_ANGLE * 2)
-                - Constants.ShooterConstants.BASIN_H
-                    * (1 + Math.cos(Constants.ShooterConstants.SHOOTER_ANGLE * 2)));
+                * Math.pow(distance, 2)
+                / (distance * Math.sin(Constants.ShooterConstants.SHOOTER_ANGLE * 2)
+                    - Constants.ShooterConstants.BASIN_H
+                        * (1 + Math.cos(Constants.ShooterConstants.SHOOTER_ANGLE * 2))));
+    System.out.println("velocity: " + velocity);
     return velocity;
   }
 
@@ -69,7 +69,7 @@ public class Shooter extends SubsystemBase {
         (getVelocity())
             / (Math.PI * Constants.ShooterConstants.WHEEL_DIAMETER) // Acounting for wheel dameter
             / Constants.ShooterConstants.SHOOTER_GEAR; // Accounting for the gear ratio so
-
+    System.out.println("RPS: " + RPS);
     return RPS;
   }
 
@@ -96,7 +96,7 @@ public class Shooter extends SubsystemBase {
     return sequence(
             runOnce(() -> io.setShooterVoltage(getVoltage())),
             waitSeconds(2),
-            runOnce(() -> io.setFeederSpeed(0.48)),
+            runOnce(() -> io.setFeederSpeed(0.6)),
             idle())
         .finallyDo(
             () -> {
@@ -115,7 +115,7 @@ public class Shooter extends SubsystemBase {
     return sequence(
             runOnce(() -> io.setShooterSpeed(speed)),
             waitSeconds(2),
-            runOnce(() -> io.setFeederSpeed(0.48)),
+            runOnce(() -> io.setFeederSpeed(0.6)),
             idle())
         .finallyDo(
             () -> {
@@ -125,7 +125,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public Command shoot() {
-    return sequence(Commands.runOnce(() -> io.setFeederSpeed(0.48)))
+    return sequence(Commands.runOnce(() -> io.setFeederSpeed(0.6)))
         .finallyDo(
             () -> {
               io.setFeederSpeed(0);
@@ -133,8 +133,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public Command unstick() {
-    return sequence(
-      Commands.runOnce(() -> io.setFeederSpeed(0.48)))
+    return sequence(Commands.runOnce(() -> io.setFeederSpeed(0.6)))
         .finallyDo(
             () -> {
               io.setFeederSpeed(0);

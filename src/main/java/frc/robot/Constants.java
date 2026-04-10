@@ -7,7 +7,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 
 /**
@@ -133,7 +132,7 @@ public final class Constants {
     public static final double HUB_Y = 4.034536;
     public static final double BASIN_H = 1.8288 - SHOOTER_HEIGHT;
     // TODO set this for the new bot
-    public static final double SHOOTER_ANGLE = 70;
+    public static final double SHOOTER_ANGLE = 73;
     // Format for gear is second/first, so how many rotations of our wheels per rotation of the
     // motor
     public static final double SHOOTER_GEAR = 3 / 1;
