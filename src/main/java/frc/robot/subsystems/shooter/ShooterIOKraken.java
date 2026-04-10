@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter;
 import static frc.robot.Constants.ShooterConstants.*;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -43,6 +44,10 @@ public class ShooterIOKraken implements ShooterIO {
   @Override
   public void setFeederSpeed(double speed) {
     feeder.set(speed);
+  }
+
+  public void setShooterVoltage(VelocityVoltage voltage) {
+    rightShooter.setControl(voltage);
   }
 
   @Override

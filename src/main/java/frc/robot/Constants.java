@@ -7,8 +7,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.RobotBase;
  */
 public final class Constants {
   public static final Mode simMode = Mode.SIM;
-  public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
+  public static final Mode currentMode = Mode.REAL;
 
   // Set this depending on Robot so it can use the right TunerConstants
   public static final RobotType BotType = RobotType.COMP;
@@ -128,8 +128,8 @@ public final class Constants {
         (Constants.DISABLE_HAL
                 && DriverStation.getAlliance().isPresent()
                 && DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
-            ? 182.11
-            : 469.11;
+            ? Units.inchesToMeters(182.11)
+            : Units.inchesToMeters(469.11);
     public static final double HUB_Y = 158.84;
     public static final double BASIN_H = 72 - SHOOTER_HEIGHT;
     // TODO set this for the new bot
