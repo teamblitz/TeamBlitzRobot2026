@@ -26,6 +26,7 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     super.periodic();
+    getVoltage();
   }
 
   /**
@@ -55,9 +56,9 @@ public class Shooter extends SubsystemBase {
         Math.sqrt(
             9.81
                 * Math.pow(distance, 2)
-                / (distance * Math.sin(Constants.ShooterConstants.SHOOTER_ANGLE * 2)
-                    - Constants.ShooterConstants.BASIN_H
-                        * (1 + Math.cos(Constants.ShooterConstants.SHOOTER_ANGLE * 2))));
+                / ((distance * Math.sin(Constants.ShooterConstants.SHOOTER_ANGLE * 2)
+                    - Constants.ShooterConstants.BALL_HEIGHT
+                        * (1 + Math.cos(Constants.ShooterConstants.SHOOTER_ANGLE * 2)))));
     System.out.println("velocity: " + velocity);
     return velocity;
   }
@@ -75,7 +76,9 @@ public class Shooter extends SubsystemBase {
 
   public VelocityVoltage getVoltage() {
     VelocityVoltage voltage = new VelocityVoltage(getRPS());
-
+    voltage = voltage.withAcceleration(getRPS() / 2);
+    voltage = voltage.withFeedForward(5);
+    System.out.println(voltage);
     return voltage;
   }
 
