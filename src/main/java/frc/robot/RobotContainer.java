@@ -318,11 +318,11 @@ public class RobotContainer {
             intake.forward()));
     OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(
         Commands.parallel(
-            shooter.newShoot(0.5), wrist.goToIdle(), agitator.run(), intake.forward()));
+            shooter.newShoot(0.60), wrist.goToIdle(), agitator.run(), intake.forward()));
 
     OIConstants.Shooter.DRIVER_SHOOT.whileTrue(
         Commands.parallel(
-            shooter.newShoot(0.5), wrist.goToIdle(), agitator.run(), intake.forward()));
+            shooter.newShoot(0.60), wrist.goToIdle(), agitator.run(), intake.forward()));
     // Wrist
     //
     // OIConstants.Wrist.PANIC_UP.whileTrue(intake.forwardWithWrist().alongWith(wrist.goToIdle()));
@@ -373,8 +373,8 @@ public class RobotContainer {
      *  Brings the wrist to idle for any balls stuck in the intake
      *  4 seconds: 2s for shooter to confirm speed + 1.5s feeding + 0.5s buffer
      */
-    path.doneFor(4)
-        .whileTrue(shooter.newShoot(0.58).alongWith(agitator.run()).alongWith(wrist.goToIdle()));
+    path.doneFor(1)
+        .whileTrue(shooter.newShoot(0.65).alongWith(agitator.run()).alongWith(wrist.goToIdle()));
 
     return routine.cmd();
   }
