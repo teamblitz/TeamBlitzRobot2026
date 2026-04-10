@@ -83,9 +83,8 @@ public class RobotContainer {
         // Real robot, instantiate hardware IO implementations
         vision =
             new Vision(
-                drive::addVisionMeasurement,
-                new VisionIOLimelight(camera0Name, drive::getRotation),
-                new VisionIOLimelight(camera1Name, drive::getRotation));
+                drive::addVisionMeasurement, new VisionIOLimelight(camera0Name, drive::getRotation)
+                /*, new VisionIOLimelight(camera1Name, drive::getRotation)*/ );
         intake = new Intake(new IntakeIOKraken());
         shooter = new Shooter(new ShooterIOKraken(), drive);
         wrist = new Wrist(new WristIOKraken());
@@ -274,8 +273,8 @@ public class RobotContainer {
                     () -> driveController.getY(),
                     () -> driveController.getX(),
                     () -> -0.1)));
-    //TODO DRIVERS REVIEW BINDINGS
-    //ALL BUTTON BINDINGS
+    // TODO DRIVERS REVIEW BINDINGS
+    // ALL BUTTON BINDINGS
     /*
      * OPERATOR:
      *  Intake:             Y ->
@@ -292,13 +291,13 @@ public class RobotContainer {
      *      Brings wrist up
      *  Agitator:           > ->
      *      runs agitator
-     * 
+     *
      * DRIVER:
      *  Intake:             Button 4 ->
      *      Runs intake and agitator
      *  Shoot:              Button 2 ->
      *      Runs shooter, feeder, agitator, and intake with slight delay on the shooter
-     *  
+     *
      */
     // Intake
     OIConstants.Intake.FORWARD.whileTrue(intake.forward().alongWith(agitator.run()));
@@ -311,20 +310,19 @@ public class RobotContainer {
     // OIConstants.Shooter.OPERATOR_BASICAIM.whileTrue(shooter.newShoot(shooter.basicSpeeds()));
     OIConstants.Shooter.OPERATOR_PREFIRE.whileTrue(shooter.startSpinUp());
     OIConstants.Shooter.OPERATOR_PREFIRESHOOT.whileTrue(
-        Commands.parallel(shooter.startSpinUp(), shooter.shoot(), wrist.goToIdle(), agitator.run(), intake.forward()));
-    OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(
         Commands.parallel(
-            shooter.newShoot(0.5), 
+            shooter.startSpinUp(),
+            shooter.shoot(),
             wrist.goToIdle(),
             agitator.run(),
             intake.forward()));
+    OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(
+        Commands.parallel(
+            shooter.newShoot(0.5), wrist.goToIdle(), agitator.run(), intake.forward()));
 
     OIConstants.Shooter.DRIVER_SHOOT.whileTrue(
         Commands.parallel(
-            shooter.newShoot(0.5), 
-            wrist.goToIdle(),
-            agitator.run(),
-            intake.forward()));
+            shooter.newShoot(0.5), wrist.goToIdle(), agitator.run(), intake.forward()));
     // Wrist
     //
     // OIConstants.Wrist.PANIC_UP.whileTrue(intake.forwardWithWrist().alongWith(wrist.goToIdle()));

@@ -11,6 +11,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import frc.robot.Constants;
 
 public class VisionConstants {
   // AprilTag layout
@@ -18,7 +19,8 @@ public class VisionConstants {
       AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
   // Camera names, must match names configured on coprocessor
-  public static String camera0Name = "limelight-fritz";
+  public static String camera0Name =
+      Constants.BotType == Constants.RobotType.ALPHA ? "limelight-fritz " : "limelight-blitz";
   public static String camera1Name = "camera_1";
 
   // Robot to camera transforms

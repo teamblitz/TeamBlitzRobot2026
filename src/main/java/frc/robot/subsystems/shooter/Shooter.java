@@ -5,6 +5,7 @@ import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
 
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,7 +26,7 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     super.periodic();
-    System.out.println(getDistance());
+    getDistance();
   }
 
   /**
@@ -41,6 +42,8 @@ public class Shooter extends SubsystemBase {
         Math.sqrt(
             Math.pow((Constants.ShooterConstants.HUB_X - pose.getX()), 2)
                 + Math.pow((Constants.ShooterConstants.HUB_Y - pose.getY()), 2));
+    System.out.println("METERS: " + distance);
+    System.out.println("INCHES: " + Units.metersToInches(distance));
     return distance;
   }
 
@@ -80,10 +83,10 @@ public class Shooter extends SubsystemBase {
 
   public double basicSpeeds() {
     double speed = 0.58;
-    double distance = getDistance();
-    if (distance > 50) {
+    double distanceInches = Units.metersToInches(getDistance());
+    if (distanceInches > 50) {
       speed = 0.9;
-    } else if (distance < 35) {
+    } else if (distanceInches < 35) {
       speed = 0.48;
     } else {
       speed = 0.58;
@@ -91,31 +94,18 @@ public class Shooter extends SubsystemBase {
     return speed;
   }
 
-  //  public Command aimAndShoot() {
-  //    return runOnce(() -> shooter.setControl(getVoltage()))
-  //        .andThen(Commands.waitSeconds(1))
-  //        .andThen(() -> feeder.set(1))
-  //        .andThen(Commands.waitSeconds(5))
-  //        .andThen(() -> feeder.set(1))
-  //        .andThen(Commands.waitSeconds(1)) // TODO set values to run
-  //        .finallyDo(
-  //            () -> {
-  //              shooter.set(0);
-  //              feeder.set(0);
-  //            });
-  //  }
-
-  //  public Command newShoot() {
-  //    return runOnce(() -> io.setShooterSpeed(1))
-  //        .andThen(Commands.waitSeconds(1.2))
-  //        .andThen(() -> io.setFeederSpeed(1))
-  //        .andThen((Commands.waitSeconds(30)))
-  //        .finallyDo(
-  //            () -> {
-  //              io.setShooterSpeed(0);
-  //              io.setFeederSpeed(0);
-  //            });
-  //  }
+  public Command aimAndShoot() {
+    return sequence(
+            runOnce(() -> io.setShooterVoltage(getVoltage())),
+            waitSeconds(2),
+            runOnce(() -> io.setFeederSpeed(0.48)),
+            idle())
+        .finallyDo(
+            () -> {
+              io.setShooterSpeed(0);
+              io.setFeederSpeed(0);
+            });
+  }
 
   // Using for auto. This command sets the speed when it starts and only stops when the command is
   // interrupted.
