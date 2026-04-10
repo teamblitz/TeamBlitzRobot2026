@@ -125,13 +125,13 @@ public final class Constants {
 
     public static final double SHOOTER_HEIGHT = 0.4826;
     public static final double HUB_X =
-        (Constants.DISABLE_HAL
+        (!Constants.DISABLE_HAL
                 && DriverStation.getAlliance().isPresent()
-                && DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
-            ? Units.inchesToMeters(182.11)
-            : Units.inchesToMeters(469.11);
-    public static final double HUB_Y = 158.84;
-    public static final double BASIN_H = 72 - SHOOTER_HEIGHT;
+                && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue)
+            ? 11.915394
+            : 4.625594;
+    public static final double HUB_Y = 4.034536;
+    public static final double BASIN_H = 1.8288 - SHOOTER_HEIGHT;
     // TODO set this for the new bot
     public static final double SHOOTER_ANGLE = 70;
     // Format for gear is second/first, so how many rotations of our wheels per rotation of the

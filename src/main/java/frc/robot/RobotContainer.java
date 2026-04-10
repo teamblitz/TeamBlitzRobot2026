@@ -286,6 +286,8 @@ public class RobotContainer {
      *      Runs shooter, feeder, agitator, and intake all at the same time with no wind-up
      *  Shoot:              LT ->
      *      Runs shooter, feeder, agitator, and intake with slight delay on the shooter
+     *  Unstick:            V  ->
+     *      Runs shooter in reverse
      *  Wrist-Up:           < ->
      *      Brings wrist up and runs agitator
      *  Panic-Up:           ^ ->
@@ -308,8 +310,9 @@ public class RobotContainer {
     //    OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(shooter.aimAndShoot());
     //    OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(
     //        shooter.newShoot().alongWith(agitator.run())); // 43.5 inches away for current values
-    // OIConstants.Shooter.OPERATOR_BASICAIM.whileTrue(shooter.newShoot(shooter.basicSpeeds()));
+    OIConstants.Shooter.OPERATOR_AIM.whileTrue(shooter.aimAndShoot());
     OIConstants.Shooter.OPERATOR_PREFIRE.whileTrue(shooter.startSpinUp());
+    OIConstants.Shooter.OPERATOR_UNSTICK.whileTrue(shooter.unstick());
     OIConstants.Shooter.OPERATOR_PREFIRESHOOT.whileTrue(
         Commands.parallel(
             shooter.startSpinUp(),
@@ -319,11 +322,11 @@ public class RobotContainer {
             intake.forward()));
     OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(
         Commands.parallel(
-            shooter.newShoot(0.58), wrist.goToIdle(), agitator.run(), intake.forward()));
+            shooter.newShoot(0.60), wrist.goToIdle(), agitator.run(), intake.forward()));
 
     OIConstants.Shooter.DRIVER_SHOOT.whileTrue(
         Commands.parallel(
-            shooter.newShoot(0.58), wrist.goToIdle(), agitator.run(), intake.forward()));
+            shooter.newShoot(0.60), wrist.goToIdle(), agitator.run(), intake.forward()));
     // Wrist
     //
     // OIConstants.Wrist.PANIC_UP.whileTrue(intake.forwardWithWrist().alongWith(wrist.goToIdle()));

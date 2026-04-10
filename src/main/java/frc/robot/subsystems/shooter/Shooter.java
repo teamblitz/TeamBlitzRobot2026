@@ -26,7 +26,6 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     super.periodic();
-    getDistance();
   }
 
   /**
@@ -42,6 +41,7 @@ public class Shooter extends SubsystemBase {
         Math.sqrt(
             Math.pow((Constants.ShooterConstants.HUB_X - pose.getX()), 2)
                 + Math.pow((Constants.ShooterConstants.HUB_Y - pose.getY()), 2));
+    System.out.println("ROBOT POSE:" + pose.getX() + ", " + pose.getY());
     System.out.println("METERS: " + distance);
     System.out.println("INCHES: " + Units.metersToInches(distance));
     return distance;
@@ -64,7 +64,6 @@ public class Shooter extends SubsystemBase {
 
   // Convert velocity to Rotations per second, because talon uses that for some reason
   public double getRPS() {
-    System.out.println("Got to RPS");
     double RPS;
     RPS =
         (getVelocity())
@@ -75,7 +74,6 @@ public class Shooter extends SubsystemBase {
   }
 
   public VelocityVoltage getVoltage() {
-    System.out.println("Got to Voltage");
     VelocityVoltage voltage = new VelocityVoltage(getRPS());
 
     return voltage;
@@ -110,7 +108,7 @@ public class Shooter extends SubsystemBase {
   // Using for auto. This command sets the speed when it starts and only stops when the command is
   // interrupted.
   public Command startSpinUp() {
-    return startEnd(() -> io.setShooterSpeed(0.60), () -> io.setShooterSpeed(0));
+    return startEnd(() -> io.setShooterSpeed(0.65), () -> io.setShooterSpeed(0));
   }
 
   public Command newShoot(double speed) {
@@ -128,6 +126,15 @@ public class Shooter extends SubsystemBase {
 
   public Command shoot() {
     return sequence(Commands.runOnce(() -> io.setFeederSpeed(0.48)))
+        .finallyDo(
+            () -> {
+              io.setFeederSpeed(0);
+            });
+  }
+
+  public Command unstick() {
+    return sequence(
+      Commands.runOnce(() -> io.setFeederSpeed(0.48)))
         .finallyDo(
             () -> {
               io.setFeederSpeed(0);

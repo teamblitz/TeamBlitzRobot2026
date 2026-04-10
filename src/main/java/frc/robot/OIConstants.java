@@ -31,7 +31,8 @@ public class OIConstants {
     public static final Trigger DRIVER_SHOOT = DRIVE_CONTROLLER.button(2);
     public static final Trigger OPERATOR_PREFIRE = OPERATOR_CONTROLLER.rightBumper();
     public static final Trigger OPERATOR_PREFIRESHOOT = OPERATOR_CONTROLLER.rightTrigger();
-    public static final Trigger OPERATOR_BASICAIM = OPERATOR_CONTROLLER.leftBumper();
+    public static final Trigger OPERATOR_AIM = OPERATOR_CONTROLLER.leftBumper();
+    public static final Trigger OPERATOR_UNSTICK = OPERATOR_CONTROLLER.povDown();
     public static final Trigger SHOOT_TESTING = OPERATOR_CONTROLLER.povRight();
   }
 
