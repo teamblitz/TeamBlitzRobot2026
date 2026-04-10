@@ -133,7 +133,7 @@ public final class Constants {
     public static final double BASIN_H = 1.8288 - SHOOTER_HEIGHT;
     public static final double BALL_HEIGHT = BASIN_H + 1;
     // TODO set this for the new bot
-    public static final double SHOOTER_ANGLE = 73;
+    public static final double SHOOTER_ANGLE = Math.toRadians(73);
     // Format for gear is second/first, so how many rotations of our wheels per rotation of the
     // motor
     public static final double SHOOTER_GEAR = 3 / 1;
@@ -144,6 +144,8 @@ public final class Constants {
 
     public static final double SHOOTER_SPEED = 1; // get real val
     public static final double FEEDER_SPEED = 0.2; // get real val
+
+    public static final double SPEED_TOLERANCE = 2.0;
   }
 
   public static final class AgitartorConstants {
