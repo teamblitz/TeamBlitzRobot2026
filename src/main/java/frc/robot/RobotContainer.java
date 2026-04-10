@@ -200,6 +200,7 @@ public class RobotContainer {
     autoChooser.addOption("Straight Test", straightTestAuto());
     autoChooser.addOption("LeftSide", leftSideToCenter());
     autoChooser.addOption("RightSide", rightSideToCenter());
+    autoChooser.addOption("Center", centerAuto());
 
     // Set up SysId routines
     autoChooser.addOption(
@@ -400,6 +401,23 @@ public class RobotContainer {
      */
     path.doneFor(1)
         .whileTrue(shooter.newShoot(0.65).alongWith(agitator.run()).alongWith(wrist.goToIdle()));
+
+    return routine.cmd();
+  }
+
+  private Command centerAuto() {
+    AutoRoutine routine = autoFactory.newRoutine("Center");
+    AutoTrajectory path = routine.trajectory("CenterAuto");
+
+    path.atTime("spinup").onTrue(shooter.startSpinUp());
+
+    path.doneFor(1)
+        .whileTrue(
+            shooter
+                .newShoot(0.65)
+                .alongWith(agitator.run())
+                .alongWith(wrist.goToIdle())
+                .alongWith(intake.forward()));
 
     return routine.cmd();
   }
