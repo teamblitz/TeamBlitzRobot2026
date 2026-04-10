@@ -289,17 +289,11 @@ public class RobotContainer {
         Commands.parallel(shooter.shoot(), wrist.goToIdle(), agitator.run(), intake.forward()));
     OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(
         Commands.parallel(
-            shooter.newShoot(0.58), 
-            wrist.goToIdle(),
-            agitator.run(),
-            intake.forward()));
+            shooter.newShoot(0.58), wrist.goToIdle(), agitator.run(), intake.forward()));
 
     OIConstants.Shooter.DRIVER_SHOOT.whileTrue(
         Commands.parallel(
-            shooter.newShoot(0.58), 
-            wrist.goToIdle(),
-            agitator.run(),
-            intake.forward()));
+            shooter.newShoot(0.58), wrist.goToIdle(), agitator.run(), intake.forward()));
     // Wrist
     //
     // OIConstants.Wrist.PANIC_UP.whileTrue(intake.forwardWithWrist().alongWith(wrist.goToIdle()));
@@ -327,18 +321,31 @@ public class RobotContainer {
 
     routine.active().onTrue(Commands.sequence(path.resetOdometry(), path.cmd()));
 
-
     return routine.cmd();
   }
 
+  // ***IMPORTANT: Need to set up event markers in the choreo path
   private Command leftSideToCenter() {
     AutoRoutine routine = autoFactory.newRoutine("StraightTest");
     AutoTrajectory path = routine.trajectory("StraightTest");
 
     routine.active().onTrue(Commands.sequence(path.resetOdometry(), path.cmd()));
 
+    // Runs intake and agitator for optimal hopper usage. Wrist is set to default down
     path.active().whileTrue(intake.forward().alongWith(agitator.run()));
-    path.doneFor(10).whileTrue(shooter.newShoot(0.58).alongWith(agitator.run()).alongWith(wrist.goToIdle()));
+
+    // Pre-spin shooter near end of path. Need an event marker named "spinup" in Choreo.
+    // newShoot will cancel this naturally when doneFor fires since both require Shooter
+    path.atTime("spinup").onTrue(shooter.startSpinUp());
+
+    /*  Runs the shoot command
+     *  Sets the shooter speed for 2 seconds. After 2 seconds runs the feeder
+     *  Runs the agitator
+     *  Brings the wrist to idle for any balls stuck in the intake
+     *  4 seconds: 2s for shooter to confirm speed + 1.5s feeding + 0.5s buffer
+     */
+    path.doneFor(4)
+        .whileTrue(shooter.newShoot(0.58).alongWith(agitator.run()).alongWith(wrist.goToIdle()));
 
     return routine.cmd();
   }

@@ -1,5 +1,8 @@
 package frc.robot.subsystems.shooter;
 
+import static edu.wpi.first.wpilibj2.command.Commands.sequence;
+import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
+
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -114,12 +117,18 @@ public class Shooter extends SubsystemBase {
   //            });
   //  }
 
+  // Using for auto. This command sets the speed when it starts and only stops when the command is
+  // interrupted.
+  public Command startSpinUp() {
+    return startEnd(() -> io.setShooterSpeed(0.58), () -> io.setShooterSpeed(0));
+  }
+
   public Command newShoot(double speed) {
-    return Commands.sequence(
-            Commands.runOnce(() -> io.setShooterSpeed(speed)),
-            Commands.waitSeconds(2),
-            Commands.runOnce(() -> io.setFeederSpeed(0.48)),
-            Commands.idle())
+    return sequence(
+            runOnce(() -> io.setShooterSpeed(speed)),
+            waitSeconds(2),
+            runOnce(() -> io.setFeederSpeed(0.48)),
+            idle())
         .finallyDo(
             () -> {
               io.setShooterSpeed(0);
@@ -127,16 +136,8 @@ public class Shooter extends SubsystemBase {
             });
   }
 
-  public Command startSpinUp() {
-    return Commands.sequence(Commands.runOnce(() -> io.setShooterSpeed(0.58)))
-        .finallyDo(
-            () -> {
-              io.setShooterSpeed(0);
-            });
-  }
-
   public Command shoot() {
-    return Commands.sequence(Commands.runOnce(() -> io.setFeederSpeed(0.48)))
+    return sequence(Commands.runOnce(() -> io.setFeederSpeed(0.48)))
         .finallyDo(
             () -> {
               io.setFeederSpeed(0);
