@@ -110,7 +110,7 @@ public class Shooter extends SubsystemBase {
   // Using for auto. This command sets the speed when it starts and only stops when the command is
   // interrupted.
   public Command startSpinUp() {
-    return startEnd(() -> io.setShooterSpeed(0.65), () -> io.setShooterSpeed(0));
+    return startEnd(() -> io.setShooterSpeed(0.60), () -> io.setShooterSpeed(0));
   }
 
   public Command newShoot(double speed) {
