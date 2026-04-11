@@ -70,7 +70,7 @@ public class Shooter extends SubsystemBase {
     RPS =
         ((getVelocity())
             / (Math.PI * Constants.ShooterConstants.WHEEL_DIAMETER) // Acounting for wheel dameter
-            / Constants.ShooterConstants.SHOOTER_GEAR) + 1; // Accounting for the gear ratio so
+            / Constants.ShooterConstants.SHOOTER_GEAR) + 0.01; // Accounting for the gear ratio so
     System.out.println("RPS: " + RPS);
     return RPS;
   }
