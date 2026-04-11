@@ -81,7 +81,7 @@ public final class Constants {
     public static final double MAX_ACCEL = 0.75; // TODO set
 
     public static final double CURRENT_LIMIT_WRIST =
-        60; // may need to be adjusted for further testing
+        30; // may need to be adjusted for further testing
 
     // Left
     public static final double LEFT_KP = 45; // TODO tune
@@ -113,7 +113,7 @@ public final class Constants {
   public static final class Intake {
     public static final int INTAKE_ID = 17; // TODO set val
 
-    public static final double CURRENT_LIMIT = 120; // TODO set val
+    public static final double CURRENT_LIMIT = 30; // TODO set val
 
     public static final boolean INVERTED = true; // may need to be set to false
   }
@@ -136,7 +136,7 @@ public final class Constants {
     public static final double SHOOTER_ANGLE = Math.toRadians(73);
     // Format for gear is second/first, so how many rotations of our wheels per rotation of the
     // motor
-    public static final double SHOOTER_GEAR = 3 / 1;
+    public static final double SHOOTER_GEAR = 1 / 1;
     public static final double WHEEL_DIAMETER = 0.1016;
 
     public static final double RAMP = 0.2;
