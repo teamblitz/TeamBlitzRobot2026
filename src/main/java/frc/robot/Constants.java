@@ -136,7 +136,7 @@ public final class Constants {
     public static final double SHOOTER_ANGLE = Math.toRadians(73);
     // Format for gear is second/first, so how many rotations of our wheels per rotation of the
     // motor
-    public static final double SHOOTER_GEAR = 3 / 1;
+    public static final double SHOOTER_GEAR = 1 / 1;
     public static final double WHEEL_DIAMETER = 0.1016;
 
     public static final double RAMP = 0.2;

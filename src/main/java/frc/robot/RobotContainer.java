@@ -310,9 +310,12 @@ public class RobotContainer {
     //    OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(shooter.aimAndShoot());
     //    OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(
     //        shooter.newShoot().alongWith(agitator.run())); // 43.5 inches away for current values
-    OIConstants.Shooter.OPERATOR_AIM.whileTrue(shooter.aimAndShoot());
+    OIConstants.Shooter.OPERATOR_AIM.whileTrue(
+        Commands.parallel(
+            shooter.aimAndShoot(), wrist.goToIdle(), agitator.run(), intake.forward()));
     OIConstants.Shooter.OPERATOR_PREFIRE.whileTrue(shooter.startSpinUp());
     OIConstants.Shooter.OPERATOR_UNSTICK.whileTrue(shooter.unstick());
+    OIConstants.Shooter.SHOOT_TESTING.whileTrue(shooter.shoot());
     OIConstants.Shooter.OPERATOR_PREFIRESHOOT.whileTrue(
         Commands.parallel(
             shooter.startSpinUp(),

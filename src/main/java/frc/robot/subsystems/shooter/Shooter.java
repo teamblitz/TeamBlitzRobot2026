@@ -106,7 +106,7 @@ public class Shooter extends SubsystemBase {
     return sequence(
             runOnce(() -> io.setShooterVoltage(getVoltage())),
             waitSeconds(2),
-            runOnce(() -> io.setFeederSpeed(0.6)),
+            runOnce(() -> io.setFeederSpeed(0.8)),
             idle())
         .finallyDo(
             () -> {
@@ -125,7 +125,7 @@ public class Shooter extends SubsystemBase {
     return sequence(
             runOnce(() -> io.setShooterSpeed(speed)),
             Commands.waitSeconds(2),
-            runOnce(() -> io.setFeederSpeed(0.6)),
+            runOnce(() -> io.setFeederSpeed(0.8)),
             idle())
         .finallyDo(
             () -> {
@@ -135,7 +135,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public Command shoot() {
-    return sequence(Commands.runOnce(() -> io.setFeederSpeed(0.6)))
+    return sequence(Commands.runOnce(() -> io.setFeederSpeed(0.8)))
         .finallyDo(
             () -> {
               io.setFeederSpeed(0);
@@ -143,7 +143,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public Command unstick() {
-    return sequence(Commands.runOnce(() -> io.setFeederSpeed(0.6)))
+    return sequence(Commands.runOnce(() -> io.setFeederSpeed(0.8)))
         .finallyDo(
             () -> {
               io.setFeederSpeed(0);
