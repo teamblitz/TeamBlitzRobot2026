@@ -69,8 +69,10 @@ public class Shooter extends SubsystemBase {
     double RPS;
     RPS =
         ((getVelocity())
-            / (Math.PI * Constants.ShooterConstants.WHEEL_DIAMETER) // Acounting for wheel dameter
-            / Constants.ShooterConstants.SHOOTER_GEAR) + 0.01; // Accounting for the gear ratio so
+                / (Math.PI
+                    * Constants.ShooterConstants.WHEEL_DIAMETER) // Acounting for wheel dameter
+                / Constants.ShooterConstants.SHOOTER_GEAR)
+            + 0.01; // Accounting for the gear ratio so
     System.out.println("RPS: " + RPS);
     return RPS;
   }
@@ -122,7 +124,7 @@ public class Shooter extends SubsystemBase {
   public Command newShoot(double speed) {
     return sequence(
             runOnce(() -> io.setShooterSpeed(speed)),
-            Commands.waitUntil(() -> isAtTargetSpeed()),
+            Commands.waitSeconds(2),
             runOnce(() -> io.setFeederSpeed(0.6)),
             idle())
         .finallyDo(
