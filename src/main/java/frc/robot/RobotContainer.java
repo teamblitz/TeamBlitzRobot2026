@@ -412,7 +412,7 @@ public class RobotContainer {
   }
 
   private Command centerAuto() {
-    AutoRoutine routine = autoFactory.newRoutine("Center");
+    AutoRoutine routine = autoFactory.newRoutine("CenterAuto");
     AutoTrajectory path = routine.trajectory("CenterAuto");
 
     path.atTime("spinup").onTrue(shooter.startSpinUp());
