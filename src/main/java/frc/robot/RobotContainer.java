@@ -363,8 +363,8 @@ public class RobotContainer {
 
   // ***IMPORTANT: Need to set up event markers in the choreo path
   private Command leftSideToCenter() {
-    AutoRoutine routine = autoFactory.newRoutine("StraightTest");
-    AutoTrajectory path = routine.trajectory("StraightTest");
+    AutoRoutine routine = autoFactory.newRoutine("LeftSideAuto");
+    AutoTrajectory path = routine.trajectory("LeftSideAuto");
 
     routine.active().onTrue(Commands.sequence(path.resetOdometry(), path.cmd()));
 
@@ -413,7 +413,7 @@ public class RobotContainer {
   }
 
   private Command centerAuto() {
-    AutoRoutine routine = autoFactory.newRoutine("Center");
+    AutoRoutine routine = autoFactory.newRoutine("CenterAuto");
     AutoTrajectory path = routine.trajectory("CenterAuto");
 
     path.atTime("spinup").onTrue(shooter.startSpinUp());

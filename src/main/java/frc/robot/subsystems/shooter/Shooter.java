@@ -43,9 +43,9 @@ public class Shooter extends SubsystemBase {
         Math.sqrt(
             Math.pow((Constants.ShooterConstants.HUB_X - pose.getX()), 2)
                 + Math.pow((Constants.ShooterConstants.HUB_Y - pose.getY()), 2));
-    System.out.println("ROBOT POSE:" + pose.getX() + ", " + pose.getY());
-    System.out.println("METERS: " + distance);
-    System.out.println("INCHES: " + Units.metersToInches(distance));
+    // System.out.println("ROBOT POSE:" + pose.getX() + ", " + pose.getY());
+    // System.out.println("METERS: " + distance);
+    // System.out.println("INCHES: " + Units.metersToInches(distance));
     return distance;
   }
 
@@ -60,7 +60,7 @@ public class Shooter extends SubsystemBase {
                 / ((distance * Math.sin(Constants.ShooterConstants.SHOOTER_ANGLE * 2)
                     - Constants.ShooterConstants.BALL_HEIGHT
                         * (1 + Math.cos(Constants.ShooterConstants.SHOOTER_ANGLE * 2)))));
-    System.out.println("velocity: " + velocity);
+    // System.out.println("velocity: " + velocity);
     return velocity;
   }
 
@@ -73,7 +73,7 @@ public class Shooter extends SubsystemBase {
                     * Constants.ShooterConstants.WHEEL_DIAMETER) // Acounting for wheel dameter
                 / Constants.ShooterConstants.SHOOTER_GEAR)
             + 0.01; // Accounting for the gear ratio so
-    System.out.println("RPS: " + RPS);
+    // System.out.println("RPS: " + RPS);
     return RPS;
   }
 
@@ -81,7 +81,7 @@ public class Shooter extends SubsystemBase {
     VelocityVoltage voltage = new VelocityVoltage(getRPS()).withSlot(0);
     voltage = voltage.withAcceleration(getRPS() / 2);
     voltage = voltage.withFeedForward(5);
-    System.out.println(voltage);
+    // System.out.println(voltage);
     return voltage;
   }
 
