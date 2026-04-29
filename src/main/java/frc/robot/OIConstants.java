@@ -33,7 +33,6 @@ public class OIConstants {
     public static final Trigger OPERATOR_PREFIRESHOOT = OPERATOR_CONTROLLER.rightTrigger();
     public static final Trigger OPERATOR_AIM = OPERATOR_CONTROLLER.leftBumper();
     public static final Trigger OPERATOR_UNSTICK = OPERATOR_CONTROLLER.povDown();
-
     public static final Trigger SHOOT_TESTING = OPERATOR_CONTROLLER.povRight();
   }
 
@@ -96,7 +95,6 @@ public class OIConstants {
     // public static final Trigger REVERSE = OPERATOR_CONTROLLER.rightBumper();
     public static final Trigger FORWARD = OPERATOR_CONTROLLER.y();
     public static final Trigger FORWARD_DRIVER = DRIVE_CONTROLLER.button(4);
-    public static final Trigger OPERATOR_INTAKE_REVERSE = OPERATOR_CONTROLLER.x();
   }
 
   //   public static final class Spindexer {

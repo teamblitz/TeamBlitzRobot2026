@@ -315,7 +315,7 @@ public class RobotContainer {
             shooter.aimAndShoot(), wrist.goToIdle(), agitator.run(), intake.forward()));
     OIConstants.Shooter.OPERATOR_PREFIRE.whileTrue(shooter.startSpinUp());
     OIConstants.Shooter.OPERATOR_UNSTICK.whileTrue(shooter.unstick());
-    OIConstants.Intake.OPERATOR_INTAKE_REVERSE.whileTrue(intake.reverse());
+    // OIConstants.Intake.OPERATOR_INTAKE_REVERSE.whileTrue(intake.reverse());
     OIConstants.Shooter.SHOOT_TESTING.whileTrue(shooter.shoot());
     OIConstants.Shooter.OPERATOR_PREFIRESHOOT.whileTrue(
         Commands.parallel(
