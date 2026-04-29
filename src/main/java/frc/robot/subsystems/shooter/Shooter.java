@@ -155,7 +155,7 @@ public class Shooter extends SubsystemBase {
   public Rotation2d getTargetRotation(double targetX, double targetY, double offset) {
     double xDiff = targetX - drive.getPose().getX();
     double yDiff = targetY - drive.getPose().getY();
-    Rotation2d rotation = new Rotation2d(Math.atan2(yDiff, xDiff)).plus(Rotation2d.fromRadians(offset));
+    Rotation2d rotation = new Rotation2d(Math.atan2(yDiff, xDiff)+ offset);
     return rotation;
   }
 
