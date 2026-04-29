@@ -58,9 +58,9 @@ public class Shooter extends SubsystemBase {
         Math.sqrt(
             9.81
                 * Math.pow(distance, 2)
-                / ((distance * Math.sin(Constants.ShooterConstants.SHOOTER_ANGLE * 2)
-                    - Constants.ShooterConstants.BALL_HEIGHT
-                        * (1 + Math.cos(Constants.ShooterConstants.SHOOTER_ANGLE * 2)))));
+                / ((distance * Math.sin(angle * 2)
+                    - heightGain
+                        * (1 + Math.cos(angle * 2)))));
     // System.out.println("velocity: " + velocity);
     return velocity;
   }
