@@ -153,10 +153,9 @@ public class Shooter extends SubsystemBase {
    * @return what the robot should rotate to as a rotation 2d object
    */
   public Rotation2d getTargetRotation(double targetX, double targetY, double offset) {
-    double xDiff = drive.getPose().getX() - targetX;
-    double yDiff = drive.getPose().getY() - targetY;
-    Rotation2d rotation = new Rotation2d(Math.atan(
-      yDiff / xDiff) + offset);
+    double xDiff = targetX - drive.getPose().getX();
+    double yDiff = targetY - drive.getPose().getY();
+    Rotation2d rotation = new Rotation2d(Math.atan2(yDiff, xDiff)).plus(Rotation2d.fromRadians(offset));
     return rotation;
   }
 
