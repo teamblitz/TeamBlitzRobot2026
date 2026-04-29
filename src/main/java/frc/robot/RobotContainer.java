@@ -277,12 +277,7 @@ public class RobotContainer {
 
     OIConstants.Shooter.AIM_TO_TARGET.whileTrue(
         DriveCommands.joystickDriveAtAngle(
-            drive,
-            () -> 0,
-            () -> 0,
-            () -> shooter.getRotationToHub()
-        )
-    );
+            drive, () -> 0, () -> 0, () -> shooter.getRotationToHub()));
     // TODO DRIVERS REVIEW BINDINGS
     // ALL BUTTON BINDINGS
     /*
