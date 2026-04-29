@@ -2,6 +2,8 @@ package frc.robot.subsystems.shooter;
 
 import static edu.wpi.first.wpilibj2.command.Commands.sequence;
 import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
+import static frc.robot.Constants.ShooterConstants.HUB_X;
+import static frc.robot.Constants.ShooterConstants.HUB_Y;
 import static frc.robot.Constants.ShooterConstants.SPEED_TOLERANCE;
 
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -27,13 +29,12 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     super.periodic();
-    getVoltage();
   }
 
   /**
-   * This method calculates the required velocity for the ball, given the distance to target.
+   * This method calculates the distance from the robot to the hub
    *
-   * @return velocity, the required velocity
+   * @return the distance in meters to the target
    */
   public double getDistance() {
     // pose is just where the robot is at the time
@@ -43,15 +44,15 @@ public class Shooter extends SubsystemBase {
         Math.sqrt(
             Math.pow((Constants.ShooterConstants.HUB_X - pose.getX()), 2)
                 + Math.pow((Constants.ShooterConstants.HUB_Y - pose.getY()), 2));
-    // System.out.println("ROBOT POSE:" + pose.getX() + ", " + pose.getY());
-    // System.out.println("METERS: " + distance);
-    // System.out.println("INCHES: " + Units.metersToInches(distance));
     return distance;
   }
 
-  public double getVelocity() {
+  /**
+   * This method gets the velocity of our shooter wheels with distance
+   * @return
+   */
+  public double getVelocity(double distance, double angle, double heightGain) {
     double velocity;
-    double distance = getDistance();
     // Second part of the equation, converting distance to required velocty
     velocity =
         Math.sqrt(
@@ -64,47 +65,61 @@ public class Shooter extends SubsystemBase {
     return velocity;
   }
 
-  // Convert velocity to Rotations per second, because talon uses that for some reason
-  public double getRPS() {
+  /**
+   * Gets the required Rotations per second of a wheel based on a velocity
+   * @param velocity the wanted velocity
+   * @param gearRatio the gear ratio from motor to wheel
+   * @param wheelDiameter the diameter of the contacting wheel
+   * @return the rotations per second, as a double, for the wanted velocity
+   */
+  public double getRPS(double velocity, double gearRatio, double wheelDiameter) {
     double RPS;
     RPS =
-        ((getVelocity())
+        ((velocity)
                 / (Math.PI
-                    * Constants.ShooterConstants.WHEEL_DIAMETER) // Acounting for wheel dameter
-                / Constants.ShooterConstants.SHOOTER_GEAR)
+                    * wheelDiameter) // Acounting for wheel dameter
+                / gearRatio)
             + 0.01; // Accounting for the gear ratio so
     // System.out.println("RPS: " + RPS);
     return RPS;
   }
 
-  public VelocityVoltage getVoltage() {
-    VelocityVoltage voltage = new VelocityVoltage(getRPS()).withSlot(0);
-    voltage = voltage.withAcceleration(getRPS() / 2);
+  /**
+   * Constructs a velocity voltage object to be sent to a talonFX based off of rotations per second
+   * @param RPS the rotations per second wanted
+   * @return the velocityvoltage object to be passed
+   */
+  public VelocityVoltage getVoltage(double RPS) {
+    VelocityVoltage voltage = new VelocityVoltage(RPS).withSlot(0);
+    voltage = voltage.withAcceleration(RPS / 2);
     voltage = voltage.withFeedForward(5);
     // System.out.println(voltage);
     return voltage;
   }
 
+  /**
+   * Checks to see if our shooter wheels are at the target speed
+   * @return whether or not we are at our target speed
+   */
   public boolean isAtTargetSpeed() {
-    return Math.abs(io.getShooterRPS() - getRPS()) < SPEED_TOLERANCE;
+    return Math.abs(io.getShooterRPS() - getRPS(getVelocity(
+      getDistance(), Constants.ShooterConstants.SHOOTER_ANGLE, Constants.ShooterConstants.BALL_HEIGHT),
+      Constants.ShooterConstants.SHOOTER_GEAR,
+      Constants.ShooterConstants.WHEEL_DIAMETER
+      )) < SPEED_TOLERANCE;
   }
 
-  public double basicSpeeds() {
-    double speed = 0.58;
-    double distanceInches = Units.metersToInches(getDistance());
-    if (distanceInches > 50) {
-      speed = 0.9;
-    } else if (distanceInches < 35) {
-      speed = 0.48;
-    } else {
-      speed = 0.58;
-    }
-    return speed;
-  }
-
+  /**
+   * Calculates the distance to the target and runs our shooters at that value
+   * @return the command to run the shoot
+   */
   public Command aimAndShoot() {
     return sequence(
-            runOnce(() -> io.setShooterVoltage(getVoltage())),
+            runOnce(() -> io.setShooterVoltage(getVoltage(getRPS(getVelocity(
+      getDistance(), Constants.ShooterConstants.SHOOTER_ANGLE, Constants.ShooterConstants.BALL_HEIGHT),
+      Constants.ShooterConstants.SHOOTER_GEAR,
+      Constants.ShooterConstants.WHEEL_DIAMETER
+            )))),
             waitSeconds(2),
             runOnce(() -> io.setFeederSpeed(0.8)),
             idle())
@@ -114,9 +129,36 @@ public class Shooter extends SubsystemBase {
               io.setFeederSpeed(0);
             });
   }
+  /**
+   * This command gets the needed rotation of the robot to face a target
+   * 
+   * @param targetX the x coordinate of the target
+   * @param targetY the y coordinate of the target
+   * @param offset the offset, in radians, to offset the angle by
+   * @return what the robot should rotate to as a rotation 2d object
+   */
+  public Rotation2d getTargetRotation(double targetX, double targetY, double offset) {
+      double xDiff = drive.getPose().getX() - targetX;
+      double yDiff = drive.getPose().getY() - targetY;
+      Rotation2d rotation = new Rotation2d(
+        Math.atan(yDiff/xDiff) + offset
+      );
+      return rotation;
+  }
 
-  // Using for auto. This command sets the speed when it starts and only stops when the command is
-  // interrupted.
+  /**
+   * Gets the rotation of the bot as a rotation 2d based on the hub coordinates
+   * @return the needed rotation
+   */
+  public Rotation2d getRotationToHub() {
+    return getTargetRotation(HUB_X, HUB_Y, 0);
+  }
+
+  /**
+   * Spins the wheels up to a speed so that we don't have to delay too much
+   * Only stops when interrupted
+   * @return the command
+   */
   public Command startSpinUp() {
     return startEnd(() -> io.setShooterSpeed(0.65), () -> io.setShooterSpeed(0));
   }
