@@ -17,7 +17,6 @@ public class OIConstants {
   public static final double XBOX_STICK_DEADBAND = 0.06;
 
   public static final CommandJoystick DRIVE_CONTROLLER = new CommandJoystick(0);
-  // public static final CommandXboxController DRIVE_CONTROLLER = new CommandXboxController(0);
   public static final CommandXboxController OPERATOR_CONTROLLER = new CommandXboxController(1);
 
   public static final Trigger TELEOP = new Trigger(DriverStation::isTeleop);
@@ -35,6 +34,8 @@ public class OIConstants {
     public static final Trigger OPERATOR_UNSTICK = OPERATOR_CONTROLLER.povDown();
 
     public static final Trigger SHOOT_TESTING = OPERATOR_CONTROLLER.povRight();
+
+    public static final Trigger AIM_TO_TARGET = OPERATOR_CONTROLLER.rightStick();
   }
 
   //    public static final class TestMode {
