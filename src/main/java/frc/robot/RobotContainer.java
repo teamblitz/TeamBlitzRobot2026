@@ -421,26 +421,24 @@ public class RobotContainer {
     AutoRoutine routine = autoFactory.newRoutine("rightCenter");
     AutoTrajectory path = routine.trajectory("rightCenter");
 
-    routine.active().onTrue(Commands.sequence(path.resetOdometry(),path.cmd()));
+    routine.active().onTrue(Commands.sequence(path.resetOdometry(), path.cmd()));
 
     path.atTime("intakeDown").onTrue(intake.forward().alongWith(agitator.run()));
 
-    path.doneFor(1)
-        .whileTrue(shooter.newShoot());
+    path.doneFor(1).whileTrue(shooter.newShoot());
 
     return routine.cmd();
   }
 
-private Command leftCenter() {
+  private Command leftCenter() {
     AutoRoutine routine = autoFactory.newRoutine("leftCenter");
     AutoTrajectory path = routine.trajectory("leftCenter");
 
-    routine.active().onTrue(Commands.sequence(path.resetOdometry(),path.cmd()));
+    routine.active().onTrue(Commands.sequence(path.resetOdometry(), path.cmd()));
 
     path.atTime("intakeDown").onTrue(intake.forward().alongWith(agitator.run()));
 
-    path.doneFor(1)
-        .whileTrue(shooter.newShoot());
+    path.doneFor(1).whileTrue(shooter.newShoot());
 
     return routine.cmd();
   }
