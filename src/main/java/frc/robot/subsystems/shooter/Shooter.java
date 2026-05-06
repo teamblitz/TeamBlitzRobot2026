@@ -58,9 +58,7 @@ public class Shooter extends SubsystemBase {
         Math.sqrt(
             9.81
                 * Math.pow(distance, 2)
-                / ((distance * Math.sin(angle * 2)
-                    - heightGain
-                        * (1 + Math.cos(angle * 2)))));
+                / ((distance * Math.sin(angle * 2) - heightGain * (1 + Math.cos(angle * 2)))));
     // System.out.println("velocity: " + velocity);
     return velocity;
   }
@@ -155,7 +153,7 @@ public class Shooter extends SubsystemBase {
   public Rotation2d getTargetRotation(double targetX, double targetY, double offset) {
     double xDiff = targetX - drive.getPose().getX();
     double yDiff = targetY - drive.getPose().getY();
-    Rotation2d rotation = new Rotation2d(Math.atan2(yDiff, xDiff)+ offset);
+    Rotation2d rotation = new Rotation2d(Math.atan2(yDiff, xDiff) + offset);
     return rotation;
   }
 
@@ -180,9 +178,9 @@ public class Shooter extends SubsystemBase {
 
   public Command newShoot() {
     return sequence(
-            runOnce(() -> io.setShooterSpeed(0.8)),
+            runOnce(() -> io.setShooterSpeed(0.6)),
             Commands.waitSeconds(2),
-            runOnce(() -> io.setFeederSpeed(0.8)),
+            runOnce(() -> io.setFeederSpeed(0.6)),
             idle())
         .finallyDo(
             () -> {

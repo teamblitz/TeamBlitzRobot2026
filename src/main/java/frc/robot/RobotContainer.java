@@ -201,6 +201,8 @@ public class RobotContainer {
     autoChooser.addOption("LeftSide", leftSideToCenter());
     autoChooser.addOption("RightSide", rightSideToCenter());
     autoChooser.addOption("Center", centerAuto());
+    autoChooser.addOption("RightCenter", rightCenter());
+    autoChooser.addOption("LeftCenter", leftCenter());
 
     // Set up SysId routines
     autoChooser.addOption(
@@ -411,6 +413,34 @@ public class RobotContainer {
      */
     path.doneFor(1)
         .whileTrue(shooter.newShoot().alongWith(agitator.run()).alongWith(wrist.goToIdle()));
+
+    return routine.cmd();
+  }
+
+  private Command rightCenter() {
+    AutoRoutine routine = autoFactory.newRoutine("rightCenter");
+    AutoTrajectory path = routine.trajectory("rightCenter");
+
+    routine.active().onTrue(Commands.sequence(path.resetOdometry(),path.cmd()));
+
+    path.atTime("intakeDown").onTrue(intake.forward().alongWith(agitator.run()));
+
+    path.doneFor(1)
+        .whileTrue(shooter.newShoot());
+
+    return routine.cmd();
+  }
+
+private Command leftCenter() {
+    AutoRoutine routine = autoFactory.newRoutine("leftCenter");
+    AutoTrajectory path = routine.trajectory("leftCenter");
+
+    routine.active().onTrue(Commands.sequence(path.resetOdometry(),path.cmd()));
+
+    path.atTime("intakeDown").onTrue(intake.forward().alongWith(agitator.run()));
+
+    path.doneFor(1)
+        .whileTrue(shooter.newShoot());
 
     return routine.cmd();
   }
