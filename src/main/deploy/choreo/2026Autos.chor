@@ -1,5 +1,5 @@
 {
- "name":"autoPaths",
+ "name":"2026Autos",
  "version":2,
  "type":"Swerve",
  "variables":{
@@ -28,8 +28,8 @@
    }
   },
   "mass":{
-   "exp":"150 lbs",
-   "val":68.0388555
+   "exp":"130 lbs",
+   "val":58.9670081
   },
   "inertia":{
    "exp":"6 kg m ^ 2",
@@ -44,8 +44,8 @@
    "val":0.0508
   },
   "vmax":{
-   "exp":"1500 RPM",
-   "val":157.07963267948966
+   "exp":"2000 RPM",
+   "val":209.43951023931953
   },
   "tmax":{
    "exp":"1.2 N * m",
@@ -76,9 +76,9 @@
  },
  "generationFeatures":[],
  "codegen":{
-  "root":"..\\C:\\Github\\TeamBlitzRobot2026\\src\\main\\deploy\\choreo",
+  "root":"..\\..\\..\\..\\..\\Github\\TeamBlitzRobot2026\\src\\main\\deploy\\choreo",
   "genVars":false,
-  "genTrajData":false,
+  "genTrajData":true,
   "useChoreoLib":false
  }
 }
