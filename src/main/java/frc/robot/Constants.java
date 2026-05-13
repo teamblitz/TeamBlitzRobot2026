@@ -122,7 +122,8 @@ public final class Constants {
     public static final int RIGHT_SHOOTER_ID = 13;
     public static final int FEEDER_ID = 15;
 
-    public static final double SHOOTER_HEIGHT = 0.75184;
+    public static final double SHOOTER_HEIGHT = 0.7493;
+    public static final double SHOOTER_DISTANCE_OFFSET = 0.23;
     public static final double HUB_X =
         (!Constants.DISABLE_HAL
                 && DriverStation.getAlliance().isPresent()

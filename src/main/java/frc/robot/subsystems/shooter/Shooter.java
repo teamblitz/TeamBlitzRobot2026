@@ -127,7 +127,8 @@ public class Shooter extends SubsystemBase {
                         getVoltage(
                             getRPS(
                                 getVelocity(
-                                    getDistance(),
+                                    getDistance()
+                                        + Constants.ShooterConstants.SHOOTER_DISTANCE_OFFSET,
                                     Constants.ShooterConstants.SHOOTER_ANGLE,
                                     Constants.ShooterConstants.BALL_HEIGHT),
                                 Constants.ShooterConstants.SHOOTER_GEAR,
