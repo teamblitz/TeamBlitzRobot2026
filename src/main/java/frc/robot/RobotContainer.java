@@ -423,9 +423,10 @@ public class RobotContainer {
 
     routine.active().onTrue(Commands.sequence(path.resetOdometry(), path.cmd()));
 
-    path.atTime("intakeDown").onTrue(intake.forward().alongWith(agitator.run()));
+    path.active().onTrue(intake.forward().alongWith(agitator.run()));
 
-    path.doneFor(1).whileTrue(shooter.newShoot());
+    path.doneFor(10)
+        .whileTrue(shooter.newShoot().alongWith(agitator.run()).alongWith(wrist.goToIdle()));
 
     return routine.cmd();
   }
@@ -436,9 +437,10 @@ public class RobotContainer {
 
     routine.active().onTrue(Commands.sequence(path.resetOdometry(), path.cmd()));
 
-    path.atTime("intakeDown").onTrue(intake.forward().alongWith(agitator.run()));
+    path.active().onTrue(intake.forward().alongWith(agitator.run()));
 
-    path.doneFor(1).whileTrue(shooter.newShoot());
+    path.doneFor(1)
+        .whileTrue(shooter.newShoot().alongWith(agitator.run()).alongWith(wrist.goToIdle()));
 
     return routine.cmd();
   }
