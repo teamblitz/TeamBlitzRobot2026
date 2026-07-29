@@ -179,9 +179,9 @@ public class Shooter extends SubsystemBase {
 
   public Command newShoot() {
     return sequence(
-            runOnce(() -> io.setShooterSpeed(0.6)),
+            runOnce(() -> io.setShooterSpeed(1)),
             Commands.waitSeconds(2),
-            runOnce(() -> io.setFeederSpeed(0.6)),
+            runOnce(() -> io.setFeederSpeed(1)),
             idle())
         .finallyDo(
             () -> {

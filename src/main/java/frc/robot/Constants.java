@@ -48,8 +48,8 @@ public final class Constants {
     public static final int ABS_ENCODER_ID_LEFT = 21;
     public static final int ABS_ENCODER_ID_RIGHT = 19;
 
-    public static final double MAGNET_OFFSET_LEFT = -0.574189; // calibrate per robot
-    public static final double MAGNET_OFFSET_RIGHT = -0.905244;
+    public static final double MAGNET_OFFSET_LEFT = -0.199921; // calibrate per robot
+    public static final double MAGNET_OFFSET_RIGHT = -0.512666;
 
     public static final boolean MOTOR_INVERTED_LEFT = true; // tune per your mechanism
     public static final boolean MOTOR_INVERTED_RIGHT = true;
@@ -71,9 +71,9 @@ public final class Constants {
 
     public static final double TOLERANCE = 0.025; // TODO tune given the play of the mechanism
 
-    public static final double IDLE_POS = 0.0384; //
+    public static final double IDLE_POS = 0.108398; //
 
-    public static final double EXTENDED_POS = 0.34; // 0.355
+    public static final double EXTENDED_POS = 0.345459; // 0.355
     public static final double KG_POS = 0.275;
 
     public static final double MAX_VELOCITY = 2; // TODO set
