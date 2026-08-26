@@ -59,6 +59,10 @@ public class ShooterIOKraken implements ShooterIO {
     return rightShooter.getVelocity().getValueAsDouble();
   }
 
+  public double getEncoderRPM() {
+    return 0;
+  }
+
   @Override
   public void updateInputs() {
     Logger.recordOutput("shooter/shooterCANID", rightShooter.getDeviceID());

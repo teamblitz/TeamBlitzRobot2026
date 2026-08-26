@@ -223,7 +223,7 @@ public class RobotContainer {
 
   // Throw default commands here for simplicity’s sake
   private void configureSubsystems() {
-    wrist.setDefaultCommand(wrist.goToDown());
+    // wrist.setDefaultCommand(wrist.goToDown());
   }
 
   /**
