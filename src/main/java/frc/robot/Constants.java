@@ -71,7 +71,7 @@ public final class Constants {
 
     public static final double TOLERANCE = 0.025; // TODO tune given the play of the mechanism
 
-    public static final double IDLE_POS = 0.623; //
+    public static final double IDLE_POS = 0.61; //
 
     public static final double EXTENDED_POS = 0.97; //
     public static final double KG_POS = 0.275;
