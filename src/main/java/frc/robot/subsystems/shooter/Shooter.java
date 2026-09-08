@@ -14,11 +14,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants.*;
 import frc.robot.subsystems.drive.Drive;
+import org.littletonrobotics.junction.AutoLogOutput;
 
 public class Shooter extends SubsystemBase {
 
   private final ShooterIO io;
   private final Drive drive;
+
+  private final ShooterInputsAutoLogged inputs = new ShooterInputsAutoLogged();
 
   public Shooter(ShooterIO io, Drive drive) {
     this.io = io;
@@ -179,7 +182,7 @@ public class Shooter extends SubsystemBase {
 
   public Command newShoot() {
     return sequence(
-            runOnce(() -> io.setShooterSpeed(1)),
+            runOnce(() -> io.setShooterSpeed(1)), // 0.18 for cycle
             Commands.waitSeconds(2),
             runOnce(() -> io.setFeederSpeed(1)),
             idle())
@@ -204,5 +207,10 @@ public class Shooter extends SubsystemBase {
             () -> {
               io.setFeederSpeed(0);
             });
+  }
+
+  @AutoLogOutput(key = "shooter/RPM")
+  public double getRPM() {
+    return inputs.rpm;
   }
 }

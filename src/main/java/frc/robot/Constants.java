@@ -71,10 +71,10 @@ public final class Constants {
 
     public static final double TOLERANCE = 0.025; // TODO tune given the play of the mechanism
 
-    public static final double IDLE_POS = 0.61; //
+    public static final double IDLE_POS = 0.1; //
 
-    public static final double EXTENDED_POS = 0.97; //
-    public static final double KG_POS = 0.275;
+    public static final double EXTENDED_POS = 0.355; // 0.355
+    public static final double KG_POS = 0;
 
     public static final double MAX_VELOCITY = 2; // TODO set
 
@@ -121,6 +121,11 @@ public final class Constants {
   public static final class ShooterConstants {
     public static final int RIGHT_SHOOTER_ID = 13;
     public static final int FEEDER_ID = 15;
+
+    public static final int ABS_ENCODER_ID_SHOOTER = 0; // TODO Set val
+
+    public static final double MAGNET_OFFSET_SHOOTER = 0; // TODO Set Val
+    public static final boolean ENCODER_INVERTED_SHOOTER = false;
 
     public static final double SHOOTER_HEIGHT = 0.7493;
     public static final double SHOOTER_DISTANCE_OFFSET = 0.23;

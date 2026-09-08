@@ -332,7 +332,10 @@ public class RobotContainer {
             intake.forward()));
     OIConstants.Shooter.OPERATOR_SHOOT.whileTrue(
         Commands.parallel(
-            shooter.aimAndShoot(), wrist.goToIdle(), agitator.run(), intake.forward()));
+            shooter.newShoot(),
+            agitator.run(),
+            intake.forward(),
+            wrist.goToIdle())); // Add Wrist Back
 
     OIConstants.Shooter.DRIVER_SHOOT.whileTrue(
         Commands.parallel(shooter.newShoot(), wrist.goToIdle(), agitator.run(), intake.forward()));
