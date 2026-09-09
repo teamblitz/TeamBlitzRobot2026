@@ -428,6 +428,8 @@ public class RobotContainer {
 
     path.active().onTrue(intake.forward().alongWith(agitator.run()));
 
+    path.atTime("intakeDown").onTrue(intake.forward().alongWith(wrist.goToDown()));
+
     path.doneFor(10)
         .whileTrue(shooter.newShoot().alongWith(agitator.run()).alongWith(wrist.goToIdle()));
 
