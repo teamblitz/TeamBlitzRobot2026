@@ -20,16 +20,25 @@ public class ShooterIOKraken implements ShooterIO {
 
   public final CANcoder absoluteEncoderShooter;
 
+  /*
+   * Creates new shooters called:
+   * rightshooter,
+   * feeder,
+   * and sets ID values to these moters. 
+   */
   public ShooterIOKraken() {
     rightShooter = new TalonFX(RIGHT_SHOOTER_ID);
     feeder = new TalonFX(FEEDER_ID);
 
+    //Creates a new Cancoder Object
     absoluteEncoderShooter = new CANcoder(ABS_ENCODER_ID_SHOOTER);
 
+    //Configs the new CANcoder
     absoluteEncoderShooter
         .getConfigurator()
         .apply(buildEncoderConfig(MAGNET_OFFSET_SHOOTER, ENCODER_INVERTED_SHOOTER), 0.1);
 
+    //Configs the rightShooter moter.
     TalonFXConfiguration shooterConfig = new TalonFXConfiguration();
     shooterConfig
         .MotorOutput
@@ -41,6 +50,7 @@ public class ShooterIOKraken implements ShooterIO {
     shooterConfig.Slot0.kV = 0.12;
     shooterConfig.Slot0.kP = 0.11;
 
+    //Configs the feeder moter.
     TalonFXConfiguration feederConfig = new TalonFXConfiguration();
     feederConfig
         .MotorOutput
@@ -51,6 +61,12 @@ public class ShooterIOKraken implements ShooterIO {
     feeder.getConfigurator().apply(feederConfig);
   }
 
+  /*
+   * Creates a new CANcoderConfigutation.
+   * Sets the magnetOffset, and if it is inverted or not.
+   * 
+   * @return the CANcoder configuration (cfg)
+   */
   private CANcoderConfiguration buildEncoderConfig(double magnetOffset, boolean inverted) {
     CANcoderConfiguration cfg = new CANcoderConfiguration();
     cfg.MagnetSensor.SensorDirection =
@@ -62,29 +78,39 @@ public class ShooterIOKraken implements ShooterIO {
     return cfg;
   }
 
+  //Creates a void that sets the rightShooter speed when called, using the double speed.
   @Override
   public void setShooterSpeed(double speed) {
     rightShooter.set(speed);
   }
 
+  //Creates a void that sets the feeder speed when called, using the double speed.
   @Override
   public void setFeederSpeed(double speed) {
     feeder.set(speed);
   }
 
+  //Creates a void that allows the changing of voltage for the rightShooter moter.
   public void setShooterVoltage(VelocityVoltage voltage) {
     rightShooter.setControl(voltage);
   }
 
+  //Creates a double that gets the RPS of the rightShooter moter.
   @Override
   public double getShooterRPS() {
     return rightShooter.getVelocity().getValueAsDouble();
   }
 
+  //Creates a double that gets the RPM of the RightShooter moter.
   public double getEncoderRPM() {
     return 0;
   }
 
+  /*
+   * Using the UpdateInputs, we log multiple things. 
+   * The rightShooter ID
+   * The Feeder ID
+   */
   @Override
   public void updateInputs() {
     Logger.recordOutput("shooter/shooterCANID", rightShooter.getDeviceID());

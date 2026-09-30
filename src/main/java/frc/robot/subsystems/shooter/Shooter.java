@@ -18,6 +18,7 @@ import org.littletonrobotics.junction.AutoLogOutput;
 
 public class Shooter extends SubsystemBase {
 
+  
   private final ShooterIO io;
   private final Drive drive;
 
@@ -180,9 +181,16 @@ public class Shooter extends SubsystemBase {
     return startEnd(() -> io.setShooterSpeed(0.65), () -> io.setShooterSpeed(0));
   }
 
+  /*
+   * Creates a newShoot command. The shooter will incress up to speed, then we wait 2 sec so the
+   * drum can get up to speed, and then run the feeder. 
+   * When you release the button the moters will stop. 
+   * 
+   * @return the command
+   */
   public Command newShoot() {
     return sequence(
-            runOnce(() -> io.setShooterSpeed(1)), // 0.18 for cycle
+            runOnce(() -> io.setShooterSpeed(1)), // 0.18 speed for both for endless cycle
             Commands.waitSeconds(2),
             runOnce(() -> io.setFeederSpeed(1)),
             idle())
@@ -193,6 +201,11 @@ public class Shooter extends SubsystemBase {
             });
   }
 
+  /*
+   * Creates a shoot command. The shooter sets its speed, and then when released it stops the speed
+   * 
+   * @return the command
+   */
   public Command shoot() {
     return sequence(Commands.runOnce(() -> io.setFeederSpeed(0.8)))
         .finallyDo(
@@ -201,6 +214,11 @@ public class Shooter extends SubsystemBase {
             });
   }
 
+  /*
+   * Creates a unstick command. The shooter sets the feeder speed, and when the button is released it stops.
+   * 
+   * @return the command
+   */
   public Command unstick() {
     return sequence(Commands.runOnce(() -> io.setFeederSpeed(0.8)))
         .finallyDo(
@@ -209,6 +227,9 @@ public class Shooter extends SubsystemBase {
             });
   }
 
+  /*
+   * Using the AutoLogOutputs, the value of getRPM is recoded in advantage scope.
+   */
   @AutoLogOutput(key = "shooter/RPM")
   public double getRPM() {
     return inputs.rpm;

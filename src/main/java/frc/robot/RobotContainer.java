@@ -47,7 +47,10 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
 
-  // Subsystems
+  /*  Subsystems
+   * 
+   * Creates privates of all of are Subsystems to work in RobotContainer
+   */
   private final Drive drive;
   private final Vision vision;
   private final Intake intake;
@@ -57,7 +60,13 @@ public class RobotContainer {
 
   private final AutoFactory autoFactory;
 
-  // Controller
+  /*  Controller
+   * 
+   * Creates controler objects, with
+   * CommandXboxController or an Xbox or equivalent Controler or
+   * Refence a Joystick in the OIConstant Class
+   */
+
   //  private final CommandXboxController controller = new CommandXboxController(0);
   private final CommandJoystick driveController = OIConstants.DRIVE_CONTROLLER;
 
@@ -66,7 +75,10 @@ public class RobotContainer {
 
   //  private final AutoFactory autoFactory;
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /* The container for the robot. Contains subsystems, OI devices, and commands. 
+   *
+   *  Initates all of are subsystems alowing us to use it. 
+  */
   public RobotContainer() {
     switch (Constants.currentMode) {
       case REAL:
@@ -194,6 +206,7 @@ public class RobotContainer {
     configureButtonBindings();
   }
 
+  //Creates options to use for auto selection.
   private void configureSysId() {
 
     /*   Autos   */
