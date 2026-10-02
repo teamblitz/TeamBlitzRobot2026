@@ -8,8 +8,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -35,7 +35,7 @@ public class DriveCommands {
   private static final double DEADBAND = 0.1;
   private static final double ANGLE_KP = 5.0;
   private static final double ANGLE_KD = 0.4;
-  private static final double ANGLE_KS = 0.05; //Tune this
+  private static final double ANGLE_KS = 0.05; // Tune this
   private static final double ANGLE_MAX_VELOCITY = 8.0;
   private static final double ANGLE_MAX_ACCELERATION = 20.0;
   private static final double FF_START_DELAY = 2.0; // Secs
@@ -152,13 +152,13 @@ public class DriveCommands {
         .beforeStarting(() -> angleController.reset(drive.getRotation().getRadians()));
   }
 
-
-    /**
+  /**
    * Field relative drive command using joystick for linear control and PID for angular control.
    * Possible use cases include snapping to an angle, aiming at a vision target, or controlling
    * absolute rotation with a joystick.
-   * 
-   * This is the Team Blitz modified version of this command ment for snapping while moving. Use with caution.
+   *
+   * <p>This is the Team Blitz modified version of this command ment for snapping while moving. Use
+   * with caution.
    */
   public static Command joystickDriveAggresiveAtAngle(
       Drive drive,
@@ -168,12 +168,7 @@ public class DriveCommands {
 
     // Create PID controller
     @SuppressWarnings("resource")
-    PIDController angleController =
-        new PIDController(
-            ANGLE_KP,
-            0.0,
-            ANGLE_KD
-            );
+    PIDController angleController = new PIDController(ANGLE_KP, 0.0, ANGLE_KD);
 
     angleController.enableContinuousInput(-Math.PI, Math.PI);
 
@@ -190,9 +185,9 @@ public class DriveCommands {
               double omega =
                   angleController.calculate(
                       drive.getRotation().getRadians(), rotationSupplier.get().getRadians());
-              
-              //check if we're at the setpoint. If not, add the kS
-              if(!angleController.atSetpoint()) {
+
+              // check if we're at the setpoint. If not, add the kS
+              if (!angleController.atSetpoint()) {
                 omega += Math.copySign(ANGLE_KS, omega);
               }
 

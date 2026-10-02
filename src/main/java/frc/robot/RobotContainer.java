@@ -52,8 +52,10 @@ public class RobotContainer {
    * Creates privates of all of are Subsystems to work in RobotContainer
    */
   private final Drive drive;
+
   @SuppressWarnings("unused")
   private final Vision vision;
+
   private final Intake intake;
   private final Shooter shooter;
   private final Wrist wrist;
