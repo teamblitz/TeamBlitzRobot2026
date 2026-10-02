@@ -140,10 +140,18 @@ public final class Constants {
     public static final double BALL_HEIGHT = BASIN_H + 1;
     // TODO set this for the new bot
     public static final double SHOOTER_ANGLE = Math.toRadians(73);
-    // Format for gear is second/first, so how many rotations of our wheels per rotation of the
+    // Format for gear is motor rot/wheel rot, so how many rotations of our wheels per rotation of
+    // the
     // motor
     public static final double SHOOTER_GEAR = 1 / 1;
     public static final double WHEEL_DIAMETER = 0.1016;
+
+    // How efficient we think our shooter is. This means that we think our ball is exiting at about
+    // 1/2
+    // the velocity of our actual wheels, so we compensate by doubling what we think our velocity
+    // should be.
+    // Reccommended values between 0.5 and 0.85
+    public static final double SHOOTER_EFFICIENCY = 0.5;
 
     public static final double RAMP = 0.2;
     public static final double KA = 0.1;

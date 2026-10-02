@@ -1,7 +1,6 @@
 package frc.robot.subsystems.shooter;
 
 import static edu.wpi.first.wpilibj2.command.Commands.sequence;
-import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
 import static frc.robot.Constants.ShooterConstants.HUB_X;
 import static frc.robot.Constants.ShooterConstants.HUB_Y;
 import static frc.robot.Constants.ShooterConstants.SPEED_TOLERANCE;
@@ -18,7 +17,6 @@ import org.littletonrobotics.junction.AutoLogOutput;
 
 public class Shooter extends SubsystemBase {
 
-  
   private final ShooterIO io;
   private final Drive drive;
 
@@ -77,12 +75,7 @@ public class Shooter extends SubsystemBase {
    */
   public double getRPS(double velocity, double gearRatio, double wheelDiameter) {
     double RPS;
-    RPS =
-        ((velocity)
-                / (Math.PI * wheelDiameter) // Acounting for wheel dameter
-                / gearRatio)
-            + 0.01; // Accounting for the gear ratio so
-    // System.out.println("RPS: " + RPS);
+    RPS = (((velocity) * gearRatio) / (Math.PI * wheelDiameter));
     return RPS;
   }
 
@@ -94,8 +87,7 @@ public class Shooter extends SubsystemBase {
    */
   public VelocityVoltage getVoltage(double RPS) {
     VelocityVoltage voltage = new VelocityVoltage(RPS).withSlot(0);
-    voltage = voltage.withAcceleration(RPS / 2);
-    voltage = voltage.withFeedForward(5);
+    voltage = voltage.withFeedForward(io.getFeedForward(RPS));
     // System.out.println(voltage);
     return voltage;
   }
@@ -110,7 +102,7 @@ public class Shooter extends SubsystemBase {
             io.getShooterRPS()
                 - getRPS(
                     getVelocity(
-                        getDistance(),
+                        getDistance() + Constants.ShooterConstants.SHOOTER_DISTANCE_OFFSET,
                         Constants.ShooterConstants.SHOOTER_ANGLE,
                         Constants.ShooterConstants.BALL_HEIGHT),
                     Constants.ShooterConstants.SHOOTER_GEAR,
@@ -125,19 +117,19 @@ public class Shooter extends SubsystemBase {
    */
   public Command aimAndShoot() {
     return sequence(
-            runOnce(
-                () ->
+            run(() ->
                     io.setShooterVoltage(
                         getVoltage(
                             getRPS(
                                 getVelocity(
-                                    getDistance()
-                                        + Constants.ShooterConstants.SHOOTER_DISTANCE_OFFSET,
-                                    Constants.ShooterConstants.SHOOTER_ANGLE,
-                                    Constants.ShooterConstants.BALL_HEIGHT),
+                                        getDistance()
+                                            + Constants.ShooterConstants.SHOOTER_DISTANCE_OFFSET,
+                                        Constants.ShooterConstants.SHOOTER_ANGLE,
+                                        Constants.ShooterConstants.BALL_HEIGHT)
+                                    / Constants.ShooterConstants.SHOOTER_EFFICIENCY,
                                 Constants.ShooterConstants.SHOOTER_GEAR,
-                                Constants.ShooterConstants.WHEEL_DIAMETER)))),
-            waitSeconds(2),
+                                Constants.ShooterConstants.WHEEL_DIAMETER))))
+                .until(this::isAtTargetSpeed),
             runOnce(() -> io.setFeederSpeed(0.8)),
             idle())
         .finallyDo(
@@ -183,9 +175,9 @@ public class Shooter extends SubsystemBase {
 
   /*
    * Creates a newShoot command. The shooter will incress up to speed, then we wait 2 sec so the
-   * drum can get up to speed, and then run the feeder. 
-   * When you release the button the moters will stop. 
-   * 
+   * drum can get up to speed, and then run the feeder.
+   * When you release the button the moters will stop.
+   *
    * @return the command
    */
   public Command newShoot() {
@@ -203,7 +195,7 @@ public class Shooter extends SubsystemBase {
 
   /*
    * Creates a shoot command. The shooter sets its speed, and then when released it stops the speed
-   * 
+   *
    * @return the command
    */
   public Command shoot() {
@@ -216,7 +208,7 @@ public class Shooter extends SubsystemBase {
 
   /*
    * Creates a unstick command. The shooter sets the feeder speed, and when the button is released it stops.
-   * 
+   *
    * @return the command
    */
   public Command unstick() {
