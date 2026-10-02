@@ -1,7 +1,5 @@
 package frc.robot.subsystems.intake;
 
-import static frc.robot.Constants.Intake.*;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.BlitzSubsystem;
 
@@ -29,10 +27,6 @@ public class Intake extends BlitzSubsystem {
 
   public Command reverse() {
     return runEnd(() -> io.setSpeed(-0.65), () -> io.setSpeed(0));
-  }
-
-  private Command stop() {
-    return runOnce(() -> io.setSpeed(0));
   }
 
   public Command setSpeed(double speed) {

@@ -10,7 +10,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import frc.robot.Constants.ShooterConstants.*;
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterIOKraken implements ShooterIO {

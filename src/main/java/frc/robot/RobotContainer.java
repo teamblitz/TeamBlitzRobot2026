@@ -52,6 +52,7 @@ public class RobotContainer {
    * Creates privates of all of are Subsystems to work in RobotContainer
    */
   private final Drive drive;
+  @SuppressWarnings("unused")
   private final Vision vision;
   private final Intake intake;
   private final Shooter shooter;
@@ -291,7 +292,7 @@ public class RobotContainer {
                     () -> -0.1)));
 
     OIConstants.Shooter.AIM_TO_TARGET.whileTrue(
-        DriveCommands.joystickDriveAtAngle(
+        DriveCommands.joystickDriveAggresiveAtAngle(
             drive, () -> 0, () -> 0, () -> shooter.getRotationToHub()));
     // TODO DRIVERS REVIEW BINDINGS
     // ALL BUTTON BINDINGS
