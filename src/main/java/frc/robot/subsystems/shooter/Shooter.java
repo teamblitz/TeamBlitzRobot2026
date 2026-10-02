@@ -50,7 +50,10 @@ public class Shooter extends SubsystemBase {
   /**
    * This method gets the velocity of our shooter wheels with distance
    *
-   * @return
+   * @param distance the distance from the exit point of the ball to the target in meters
+   * @param angle the release angle of the projectile in radians
+   * @param heightGain how much higher the target is than the release point in meters
+   * @return the required exit velocity to hit the target in Meters per second
    */
   public double getVelocity(double distance, double angle, double heightGain) {
     double velocity;
@@ -68,8 +71,8 @@ public class Shooter extends SubsystemBase {
    * Gets the required Rotations per second of a wheel based on a velocity
    *
    * @param velocity the wanted velocity
-   * @param gearRatio the gear ratio from motor to wheel
-   * @param wheelDiameter the diameter of the contacting wheel
+   * @param gearRatio the gear ratio from motor to wheel, formatted as Motor Rotations/Wheel rotations
+   * @param wheelDiameter the diameter of the contacting wheel in meters
    * @return the rotations per second, as a double, for the wanted velocity
    */
   public double getRPS(double velocity, double gearRatio, double wheelDiameter) {
@@ -81,13 +84,17 @@ public class Shooter extends SubsystemBase {
   /**
    * Constructs a velocity voltage object to be sent to a talonFX based off of rotations per second
    *
-   * @param RPS the rotations per second wanted
+   * @param RPS the rotations per second wanted of the motor
    * @return the velocityvoltage object to be passed
    */
   public VelocityVoltage getVoltage(double RPS) {
     VelocityVoltage voltage = new VelocityVoltage(RPS).withSlot(0);
+    //Dynamically calculate feedforward using the CTRE equation: kS * signum(RPS) + kV * RPS
+    //kS is static friction feedforward gain
+    //kV is velocity feedforward coefficient
+    //They can be found in ShooterIOKraken.java
     voltage = voltage.withFeedForward(io.getFeedForward(RPS));
-    // System.out.println(voltage);
+    //ADD voltage = voltage.withAcceleration(RPS*2); IF THE SHOOTER MOTORS DON't START SPINNING.
     return voltage;
   }
 
@@ -101,12 +108,13 @@ public class Shooter extends SubsystemBase {
             io.getShooterRPS()
                 - getRPS(
                     getVelocity(
-                        getDistance() + Constants.ShooterConstants.SHOOTER_DISTANCE_OFFSET,
-                        Constants.ShooterConstants.SHOOTER_ANGLE,
-                        Constants.ShooterConstants.BALL_HEIGHT),
-                    Constants.ShooterConstants.SHOOTER_GEAR,
-                    Constants.ShooterConstants.WHEEL_DIAMETER))
-        < SPEED_TOLERANCE;
+                        getDistance() + Constants.ShooterConstants.SHOOTER_DISTANCE_OFFSET, //Distance
+                        Constants.ShooterConstants.SHOOTER_ANGLE,//Angle
+                        Constants.ShooterConstants.BALL_HEIGHT) //Heightgain
+                      / Constants.ShooterConstants.SHOOTER_EFFICIENCY, //Account for shooter efficiency by dividing by our percentage TODO Tune this!!
+                    Constants.ShooterConstants.SHOOTER_GEAR,//Gear Ratio
+                    Constants.ShooterConstants.WHEEL_DIAMETER)) //Wheel Diameter
+        < SPEED_TOLERANCE; //How close we want to be to our speed at minimum
   }
 
   /**
@@ -121,14 +129,13 @@ public class Shooter extends SubsystemBase {
                         getVoltage(
                             getRPS(
                                 getVelocity(
-                                        getDistance()
-                                            + Constants.ShooterConstants.SHOOTER_DISTANCE_OFFSET,
-                                        Constants.ShooterConstants.SHOOTER_ANGLE,
-                                        Constants.ShooterConstants.BALL_HEIGHT)
-                                    / Constants.ShooterConstants.SHOOTER_EFFICIENCY,
-                                Constants.ShooterConstants.SHOOTER_GEAR,
-                                Constants.ShooterConstants.WHEEL_DIAMETER))))
-                .until(this::isAtTargetSpeed),
+                                        getDistance() + Constants.ShooterConstants.SHOOTER_DISTANCE_OFFSET, //Distance
+                                        Constants.ShooterConstants.SHOOTER_ANGLE,//Angle
+                                        Constants.ShooterConstants.BALL_HEIGHT) //Heightgain
+                                    / Constants.ShooterConstants.SHOOTER_EFFICIENCY, //Account for shooter efficiency by dividing by our percentage TODO Tune this!!
+                                Constants.ShooterConstants.SHOOTER_GEAR, //Gear ratio
+                                Constants.ShooterConstants.WHEEL_DIAMETER)))) //Wheel diameter
+                .until(this::isAtTargetSpeed), //REPLACE THIS WITH A NORMAL WAIT IF THE BALL NEVER GETS FEEDED
             runOnce(() -> io.setFeederSpeed(0.8)),
             idle())
         .finallyDo(
@@ -156,7 +163,7 @@ public class Shooter extends SubsystemBase {
   /**
    * Gets the rotation of the bot as a rotation 2d based on the hub coordinates
    *
-   * @return the needed rotation
+   * @return the needed rotation as a rotation2d
    */
   public Rotation2d getRotationToHub() {
     return getTargetRotation(HUB_X, HUB_Y, 0);
@@ -173,7 +180,7 @@ public class Shooter extends SubsystemBase {
   }
 
   /*
-   * Creates a newShoot command. The shooter will incress up to speed, then we wait 2 sec so the
+   * Creates a newShoot command. The shooter will increase up to speed, then we wait 2 sec so the
    * drum can get up to speed, and then run the feeder.
    * When you release the button the moters will stop.
    *
