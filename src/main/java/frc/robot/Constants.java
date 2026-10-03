@@ -119,7 +119,8 @@ public final class Constants {
   }
 
   public static final class ShooterConstants {
-    public static final int RIGHT_SHOOTER_ID = 13;
+    public static final int RIGHT_SHOOTER_ID = 14;
+    public static final int LEFT_SHOOTER_ID = 13;
     public static final int FEEDER_ID = 15;
 
     public static final int ABS_ENCODER_ID_SHOOTER = 0; // TODO Set val

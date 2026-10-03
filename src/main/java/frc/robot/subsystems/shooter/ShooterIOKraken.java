@@ -14,19 +14,22 @@ import org.littletonrobotics.junction.Logger;
 
 public class ShooterIOKraken implements ShooterIO {
 
-  public final TalonFX rightShooter;
+  public final TalonFX leftShooter;
   public final TalonFX feeder;
+  public final TalonFX rightShooter;
 
   public final CANcoder absoluteEncoderShooter;
 
   /*
    * Creates new shooters called:
    * rightshooter,
+   * leftshooter,
    * feeder,
    * and sets ID values to these moters.
    */
   public ShooterIOKraken() {
     rightShooter = new TalonFX(RIGHT_SHOOTER_ID);
+    leftShooter = new TalonFX(LEFT_SHOOTER_ID);
     feeder = new TalonFX(FEEDER_ID);
 
     // Creates a new Cancoder Object
@@ -37,7 +40,7 @@ public class ShooterIOKraken implements ShooterIO {
         .getConfigurator()
         .apply(buildEncoderConfig(MAGNET_OFFSET_SHOOTER, ENCODER_INVERTED_SHOOTER), 0.1);
 
-    // Configs the rightShooter moter.
+    // Configs the Shooter moters.
     TalonFXConfiguration shooterConfig = new TalonFXConfiguration();
     shooterConfig
         .MotorOutput
@@ -57,6 +60,7 @@ public class ShooterIOKraken implements ShooterIO {
         .withInverted(InvertedValue.Clockwise_Positive);
 
     rightShooter.getConfigurator().apply(shooterConfig);
+    leftShooter.getConfigurator().apply(shooterConfig);
     feeder.getConfigurator().apply(feederConfig);
   }
 
@@ -77,10 +81,11 @@ public class ShooterIOKraken implements ShooterIO {
     return cfg;
   }
 
-  // Creates a void that sets the rightShooter speed when called, using the double speed.
+  // Creates a void that sets the shooter speeds when called, using the double speed.
   @Override
   public void setShooterSpeed(double speed) {
     rightShooter.set(speed);
+    leftShooter.set(speed);
   }
 
   // Creates a void that sets the feeder speed when called, using the double speed.
@@ -89,9 +94,10 @@ public class ShooterIOKraken implements ShooterIO {
     feeder.set(speed);
   }
 
-  // Creates a void that allows the changing of voltage for the rightShooter moter.
+  // Creates a void that allows the changing of voltage for the shooter moters.
   public void setShooterVoltage(VelocityVoltage voltage) {
     rightShooter.setControl(voltage);
+    leftShooter.setControl(voltage);
   }
 
   // Creates a double that gets the RPS of the rightShooter moter.
@@ -109,6 +115,7 @@ public class ShooterIOKraken implements ShooterIO {
     // Motor cond=figutation so we can pull PID values directly off of our motors
     TalonFXConfiguration configuration = new TalonFXConfiguration();
     rightShooter.getConfigurator().refresh(configuration);
+    leftShooter.getConfigurator().refresh(configuration);
 
     // TalonFX feedforward equation kS * signum(RPS) + kV * RPS
     return (configuration.Slot0.kS * Math.signum(RPS)) + (configuration.Slot0.kV * RPS);
@@ -117,11 +124,13 @@ public class ShooterIOKraken implements ShooterIO {
   /*
    * Using the UpdateInputs, we log multiple things.
    * The rightShooter ID
+   * The leftShooter ID
    * The Feeder ID
    */
   @Override
   public void updateInputs() {
-    Logger.recordOutput("shooter/shooterCANID", rightShooter.getDeviceID());
+    Logger.recordOutput("shooter/rightShooterCANID", rightShooter.getDeviceID());
     Logger.recordOutput("shooter/feederCANID", feeder.getDeviceID());
+    Logger.recordOutput("shooter/leftShooterCANID", leftShooter.getDeviceID());
   }
 }

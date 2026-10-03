@@ -16,7 +16,9 @@ public class OIConstants {
 
   public static final double XBOX_STICK_DEADBAND = 0.06;
 
-  public static final CommandJoystick DRIVE_CONTROLLER = new CommandJoystick(0);
+  public static final CommandJoystick DRIVE_JOYSTICK = new CommandJoystick(0);
+  // Use if you want Xbox Controller
+  // public static final CommandXboxController DRIVE_CONTROLLER = new CommandXboxController(0);
   public static final CommandXboxController OPERATOR_CONTROLLER = new CommandXboxController(1);
 
   public static final Trigger TELEOP = new Trigger(DriverStation::isTeleop);
@@ -27,7 +29,8 @@ public class OIConstants {
 
   public static final class Shooter {
     public static final Trigger OPERATOR_SHOOT = OPERATOR_CONTROLLER.leftTrigger();
-    public static final Trigger DRIVER_SHOOT = DRIVE_CONTROLLER.button(2);
+    // Change if you want Xbox
+    public static final Trigger DRIVER_SHOOT = DRIVE_JOYSTICK.button(2);
     public static final Trigger OPERATOR_PREFIRE = OPERATOR_CONTROLLER.rightBumper();
     public static final Trigger OPERATOR_PREFIRESHOOT = OPERATOR_CONTROLLER.rightTrigger();
     public static final Trigger OPERATOR_AIM = OPERATOR_CONTROLLER.leftBumper();
@@ -95,7 +98,8 @@ public class OIConstants {
   public static final class Intake {
     // public static final Trigger REVERSE = OPERATOR_CONTROLLER.rightBumper();
     public static final Trigger FORWARD = OPERATOR_CONTROLLER.y();
-    public static final Trigger FORWARD_DRIVER = DRIVE_CONTROLLER.button(4);
+    // Change if you want xbox
+    public static final Trigger FORWARD_DRIVER = DRIVE_JOYSTICK.button(4);
   }
 
   //   public static final class Spindexer {

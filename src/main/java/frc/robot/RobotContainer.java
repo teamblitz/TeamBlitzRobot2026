@@ -71,7 +71,7 @@ public class RobotContainer {
    */
 
   //  private final CommandXboxController controller = new CommandXboxController(0);
-  private final CommandJoystick driveController = OIConstants.DRIVE_CONTROLLER;
+  private final CommandJoystick driveController = OIConstants.DRIVE_JOYSTICK;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;

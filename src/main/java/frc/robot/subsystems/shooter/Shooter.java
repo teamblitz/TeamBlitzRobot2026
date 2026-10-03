@@ -71,7 +71,8 @@ public class Shooter extends SubsystemBase {
    * Gets the required Rotations per second of a wheel based on a velocity
    *
    * @param velocity the wanted velocity
-   * @param gearRatio the gear ratio from motor to wheel, formatted as Motor Rotations/Wheel rotations
+   * @param gearRatio the gear ratio from motor to wheel, formatted as Motor Rotations/Wheel
+   *     rotations
    * @param wheelDiameter the diameter of the contacting wheel in meters
    * @return the rotations per second, as a double, for the wanted velocity
    */
@@ -89,12 +90,12 @@ public class Shooter extends SubsystemBase {
    */
   public VelocityVoltage getVoltage(double RPS) {
     VelocityVoltage voltage = new VelocityVoltage(RPS).withSlot(0);
-    //Dynamically calculate feedforward using the CTRE equation: kS * signum(RPS) + kV * RPS
-    //kS is static friction feedforward gain
-    //kV is velocity feedforward coefficient
-    //They can be found in ShooterIOKraken.java
+    // Dynamically calculate feedforward using the CTRE equation: kS * signum(RPS) + kV * RPS
+    // kS is static friction feedforward gain
+    // kV is velocity feedforward coefficient
+    // They can be found in ShooterIOKraken.java
     voltage = voltage.withFeedForward(io.getFeedForward(RPS));
-    //ADD voltage = voltage.withAcceleration(RPS*2); IF THE SHOOTER MOTORS DON't START SPINNING.
+    // ADD voltage = voltage.withAcceleration(RPS*2); IF THE SHOOTER MOTORS DON't START SPINNING.
     return voltage;
   }
 
@@ -108,13 +109,16 @@ public class Shooter extends SubsystemBase {
             io.getShooterRPS()
                 - getRPS(
                     getVelocity(
-                        getDistance() + Constants.ShooterConstants.SHOOTER_DISTANCE_OFFSET, //Distance
-                        Constants.ShooterConstants.SHOOTER_ANGLE,//Angle
-                        Constants.ShooterConstants.BALL_HEIGHT) //Heightgain
-                      / Constants.ShooterConstants.SHOOTER_EFFICIENCY, //Account for shooter efficiency by dividing by our percentage TODO Tune this!!
-                    Constants.ShooterConstants.SHOOTER_GEAR,//Gear Ratio
-                    Constants.ShooterConstants.WHEEL_DIAMETER)) //Wheel Diameter
-        < SPEED_TOLERANCE; //How close we want to be to our speed at minimum
+                            getDistance()
+                                + Constants.ShooterConstants.SHOOTER_DISTANCE_OFFSET, // Distance
+                            Constants.ShooterConstants.SHOOTER_ANGLE, // Angle
+                            Constants.ShooterConstants.BALL_HEIGHT) // Heightgain
+                        / Constants.ShooterConstants
+                            .SHOOTER_EFFICIENCY, // Account for shooter efficiency by dividing by
+                    // our percentage TODO Tune this!!
+                    Constants.ShooterConstants.SHOOTER_GEAR, // Gear Ratio
+                    Constants.ShooterConstants.WHEEL_DIAMETER)) // Wheel Diameter
+        < SPEED_TOLERANCE; // How close we want to be to our speed at minimum
   }
 
   /**
@@ -129,13 +133,19 @@ public class Shooter extends SubsystemBase {
                         getVoltage(
                             getRPS(
                                 getVelocity(
-                                        getDistance() + Constants.ShooterConstants.SHOOTER_DISTANCE_OFFSET, //Distance
-                                        Constants.ShooterConstants.SHOOTER_ANGLE,//Angle
-                                        Constants.ShooterConstants.BALL_HEIGHT) //Heightgain
-                                    / Constants.ShooterConstants.SHOOTER_EFFICIENCY, //Account for shooter efficiency by dividing by our percentage TODO Tune this!!
-                                Constants.ShooterConstants.SHOOTER_GEAR, //Gear ratio
-                                Constants.ShooterConstants.WHEEL_DIAMETER)))) //Wheel diameter
-                .until(this::isAtTargetSpeed), //REPLACE THIS WITH A NORMAL WAIT IF THE BALL NEVER GETS FEEDED
+                                        getDistance()
+                                            + Constants.ShooterConstants
+                                                .SHOOTER_DISTANCE_OFFSET, // Distance
+                                        Constants.ShooterConstants.SHOOTER_ANGLE, // Angle
+                                        Constants.ShooterConstants.BALL_HEIGHT) // Heightgain
+                                    / Constants.ShooterConstants
+                                        .SHOOTER_EFFICIENCY, // Account for shooter efficiency by
+                                // dividing by our percentage TODO Tune
+                                // this!!
+                                Constants.ShooterConstants.SHOOTER_GEAR, // Gear ratio
+                                Constants.ShooterConstants.WHEEL_DIAMETER)))) // Wheel diameter
+                .until(this::isAtTargetSpeed), // REPLACE THIS WITH A NORMAL WAIT IF THE BALL NEVER
+            // GETS FEEDED
             runOnce(() -> io.setFeederSpeed(0.8)),
             idle())
         .finallyDo(
@@ -188,9 +198,9 @@ public class Shooter extends SubsystemBase {
    */
   public Command newShoot() {
     return sequence(
-            runOnce(() -> io.setShooterSpeed(1)), // 0.18 speed for both for endless cycle
+            runOnce(() -> io.setShooterSpeed(0.5)), // 0.18 speed for both for endless cycle
             Commands.waitSeconds(2),
-            runOnce(() -> io.setFeederSpeed(1)),
+            runOnce(() -> io.setFeederSpeed(0.5)),
             idle())
         .finallyDo(
             () -> {
