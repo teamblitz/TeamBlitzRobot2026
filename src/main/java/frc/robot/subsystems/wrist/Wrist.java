@@ -109,6 +109,7 @@ public class Wrist extends BlitzSubsystem {
                   Logger.recordOutput("wrist/goToPosition/arrived", arrived);
 
                   return arrived;
+                  //return true;
                 }))
         .withName(logKey + "/goToPosition " + position);
   }
@@ -124,6 +125,7 @@ public class Wrist extends BlitzSubsystem {
                             Math.min(EXTENDED_POS, IDLE_POS),
                             Math.max(EXTENDED_POS, IDLE_POS)),
                         0));
+            Logger.recordOutput("wrist/goToPosition/goal", this.goal.get().position);
           }
         })
         .handleInterrupt(() -> this.goal = Optional.empty());
