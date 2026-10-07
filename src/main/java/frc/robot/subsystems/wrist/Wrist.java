@@ -27,14 +27,7 @@ public class Wrist extends BlitzSubsystem {
 
     // Check for encoder divergence every loop
     // This means something mechanical has gone wrong - a slipping shaft, snapped belt, etc.
-    if (inputs.encoderDelta > ENCODER_DIVERGENCE_THRESHOLD) {
-
-      // Stop the wrist and clear the goal when a fault is detected
-      // to prevent the motors from stressing the mechanism further
-      io.stop();
-      return;
-    }
-
+    //Stop the wrist if the robot is disabled
     if (DriverStation.isDisabled()) {
       io.stop();
     }
@@ -46,6 +39,11 @@ public class Wrist extends BlitzSubsystem {
     return startEnd(() -> io.setSpeed(speed), () -> io.setSpeed(0));
   }
 
+  /** Define a position in radians for the motor to drive towards. Right now it sets a position for both motors
+  *  
+  *  @param position the position in radians to drive towards
+  *  @return the command to tell the motors to drive towards that with motionmagic.
+  */
   public Command setPosition(double position) {
     // Clamp our position value so that we aren't setting goals outside of our range
     double clampedPosition =
