@@ -29,6 +29,7 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     super.periodic();
+    Logger.processInputs("Shooter", inputs);
   }
 
   /**
@@ -57,12 +58,17 @@ public class Shooter extends SubsystemBase {
    */
   public double getVelocity(double distance, double angle, double heightGain) {
     double velocity;
+    double denominator = ((distance * Math.sin(angle * 2) - heightGain * (1 + Math.cos(angle * 2))));
+
+    if(denominator < 0) {
+      denominator = 0.0;
+    }
     // Second part of the equation, converting distance to required velocty
     velocity =
         Math.sqrt(
             9.81
                 * Math.pow(distance, 2)
-                / ((distance * Math.sin(angle * 2) - heightGain * (1 + Math.cos(angle * 2)))));
+                / denominator);
     // System.out.println("velocity: " + velocity);
     return velocity;
   }
@@ -144,10 +150,14 @@ public class Shooter extends SubsystemBase {
                                 // this!!
                                 Constants.ShooterConstants.SHOOTER_GEAR, // Gear ratio
                                 Constants.ShooterConstants.WHEEL_DIAMETER)))) // Wheel diameter
-                .until(this::isAtTargetSpeed), // REPLACE THIS WITH A NORMAL WAIT IF THE BALL NEVER
+                .alongWith(
+                  sequence(
+                    waitUntil(this::isAtTargetSpeed), // REPLACE THIS WITH A NORMAL WAIT IF THE BALL NEVER
             // GETS FEEDED
             runOnce(() -> io.setFeederSpeed(0.8)),
-            idle())
+            idle()
+          )
+        )
         .finallyDo(
             () -> {
               io.setShooterSpeed(0);
