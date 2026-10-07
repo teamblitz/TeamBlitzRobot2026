@@ -2,7 +2,6 @@ package frc.robot.subsystems.wrist;
 
 import static frc.robot.Constants.WristConstants.*;
 
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -62,8 +61,7 @@ public class WristIOKraken implements WristIO {
                 RIGHT_KD,
                 RIGHT_KG,
                 RIGHT_KV,
-                RIGHT_KS)
-                );
+                RIGHT_KS));
   }
 
   private CANcoderConfiguration buildEncoderConfig(double magnetOffset, boolean inverted) {
@@ -88,16 +86,17 @@ public class WristIOKraken implements WristIO {
       double kS) {
     TalonFXConfiguration cfg = new TalonFXConfiguration();
 
-    cfg.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT_WRIST;
     cfg.CurrentLimits.StatorCurrentLimitEnable = true;
+    cfg.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT_WRIST;
 
     cfg.MotorOutput.withNeutralMode(NeutralModeValue.Coast)
         .withInverted(
             inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive);
 
-    cfg.Feedback.FeedbackRemoteSensorID = encoder.getDeviceID();
-    cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-    cfg.Feedback.RotorToSensorRatio = ROTOR_TO_SENSOR_RATIO;
+    // Sets encoders as what to get feedback from
+    // cfg.Feedback.FeedbackRemoteSensorID = encoder.getDeviceID();
+    // cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+    // cfg.Feedback.RotorToSensorRatio = ROTOR_TO_SENSOR_RATIO;
 
     cfg.Slot0.kP = kP;
     cfg.Slot0.kI = kI;
@@ -151,21 +150,8 @@ public class WristIOKraken implements WristIO {
 
   @Override
   public void setMotionMagic(double position) {
-    double leftPos = absoluteEncoderLeft.getAbsolutePosition().getValueAsDouble();
-    double rightPos = absoluteEncoderRight.getAbsolutePosition().getValueAsDouble();
-
-    // Positive delta means left is ahead of right
-    // We apply a small feed forward nudge to slow down whichever side is ahead
-    double delta = leftPos - rightPos;
-    double correction = delta * SYNC_CORRECTION_SCALE;
-
-    // Left is ahead  -> correction is positive -> subtract from left, add to right
-    // Left is behind -> correction is negative -> add to left, subtract from right
-    wristLeft.setControl(motionMagicLeft.withPosition(position).withFeedForward(-correction));
-    wristRight.setControl(motionMagicRight.withPosition(position).withFeedForward(correction));
-
-    Logger.recordOutput("wrist/syncDelta", delta);
-    Logger.recordOutput("wrist/syncCorrection", correction);
+    wristLeft.setControl(motionMagicLeft.withPosition(position));
+    wristRight.setControl(motionMagicRight.withPosition(-position));
   }
 
   @Override

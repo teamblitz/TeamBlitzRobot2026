@@ -286,7 +286,7 @@ public class RobotContainer {
         .button(1)
         .whileTrue(
             Commands.sequence(
-                Commands.runOnce(() -> wrist.followGoal(Constants.WristConstants.IDLE_POS), wrist),
+                Commands.runOnce(() -> wrist.goToIdle(), wrist),
                 DriveCommands.joystickDrive(
                     drive,
                     () -> driveController.getY(),
@@ -361,7 +361,7 @@ public class RobotContainer {
     OIConstants.Wrist.UP.whileTrue(
         Commands.parallel(wrist.goToIdle(), intake.forwardWithWrist(), agitator.run()));
 
-    OIConstants.Wrist.PANIC_UP.whileTrue(wrist.followGoal(Constants.WristConstants.IDLE_POS));
+    OIConstants.Wrist.PANIC_UP.whileTrue(wrist.goToIdle());
 
     // Agitator
     OIConstants.Agitator.RUN_AGITATOR.whileTrue(agitator.run());
