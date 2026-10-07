@@ -75,6 +75,19 @@ public class WristIOKraken implements WristIO {
     return cfg;
   }
 
+  /** Build the configurations of our wrist motors
+  *
+  *  @param encoder the absolute encoder of the wrist to get feedback from
+  *  @param inverted whether or not the motor needs to be inverted
+  *  @param kP proportional gain
+  *  @param kI integral gain
+  *  @param kD derivative gain
+  *  @param kG the gravity gain(how many volts are needed to hold the wrist steady)
+  *  @param kV the feedforward constant
+  *  @param kS the static gain
+  *
+  *  @return the TalonFX motor configuration to be applied to each of the wrist motors
+  */
   private TalonFXConfiguration buildMotorConfig(
       CANcoder encoder,
       boolean inverted,
@@ -148,10 +161,18 @@ public class WristIOKraken implements WristIO {
     wristRight.set(speed);
   }
 
+  /** Set the position value for motion magic as a goal
+  *  As I understand it motionmagic is just a fancy way to make a motionprofile.
+  *
+  * @param position the position in radians to drive towards
+  */
   @Override
   public void setMotionMagic(double position) {
+    //Tell the motionmagic where we want the motors to be
+    //We shouldn't need negatives here if the motor inverted values in Constants are set correctly
     wristLeft.setControl(motionMagicLeft.withPosition(position));
-    wristRight.setControl(motionMagicRight.withPosition(-position));
+    wristRight.setControl(motionMagicRight.withPosition(position));
+    //Add feedforward using .withFeedforward(feedforward in volts) here if necessary
   }
 
   @Override
