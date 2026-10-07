@@ -2,6 +2,7 @@ package frc.robot.subsystems.wrist;
 
 import static frc.robot.Constants.WristConstants.*;
 
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -61,7 +62,8 @@ public class WristIOKraken implements WristIO {
                 RIGHT_KD,
                 RIGHT_KG,
                 RIGHT_KV,
-                RIGHT_KS));
+                RIGHT_KS)
+                );
   }
 
   private CANcoderConfiguration buildEncoderConfig(double magnetOffset, boolean inverted) {
