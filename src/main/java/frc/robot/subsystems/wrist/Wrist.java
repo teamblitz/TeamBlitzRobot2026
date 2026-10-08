@@ -50,9 +50,9 @@ public class Wrist extends BlitzSubsystem {
     // Clamp our position value so that we aren't setting goals outside of our range
     double clampedPosition =
         MathUtil.clamp(
-            position, Math.max(EXTENDED_POS, IDLE_POS), Math.min(EXTENDED_POS, IDLE_POS));
+            position, Math.min(EXTENDED_POS, IDLE_POS), Math.max(EXTENDED_POS, IDLE_POS));
     // Set the motion magic to follow our clamped position
-    return run(() -> io.setMotionMagic(position));
+    return run(() -> io.setMotionMagic(clampedPosition));
   }
 
   // Go to positon commands

@@ -6,7 +6,6 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
@@ -122,16 +121,17 @@ public class WristIOKraken implements WristIO {
     cfg.Slot0.kG = kG;
     cfg.Slot0.kV = kV;
     cfg.Slot0.kS = kS;
-    cfg.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
+    // cfg.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
+    // cfg.Slot0.GravityArmPositionOffset = KG_POS;
 
     cfg.MotionMagic.MotionMagicCruiseVelocity = MAX_VELOCITY;
     cfg.MotionMagic.MotionMagicAcceleration = MAX_ACCEL;
     cfg.MotionMagic.MotionMagicJerk = 0;
 
-    cfg.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-    cfg.SoftwareLimitSwitch.ForwardSoftLimitThreshold = SOFT_LIMIT_FORWARD;
-    cfg.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-    cfg.SoftwareLimitSwitch.ReverseSoftLimitThreshold = SOFT_LIMIT_REVERSE;
+    // cfg.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    // cfg.SoftwareLimitSwitch.ForwardSoftLimitThreshold = SOFT_LIMIT_FORWARD;
+    // cfg.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+    // cfg.SoftwareLimitSwitch.ReverseSoftLimitThreshold = SOFT_LIMIT_REVERSE;
     // cfg.Feedback.SensorToMechanismRatio = 36;
 
     return cfg;
@@ -178,9 +178,9 @@ public class WristIOKraken implements WristIO {
     System.out.println("************************setMotionMagic " + position);
     // Tell the motionmagic where we want the motors to be
     // We shouldn't need negatives here if the motor inverted values in Constants are set correctly
-    PositionVoltage voltage = new PositionVoltage(position).withSlot(0);
-    wristLeft.setControl(voltage);
-    wristRight.setControl(voltage);
+    // PositionVoltage voltage = new PositionVoltage(position).withSlot(0);
+    wristLeft.setControl(motionMagicLeft.withPosition(position));
+    wristRight.setControl(motionMagicRight.withPosition(position));
     // Add feedforward using .withFeedforward(feedforward in volts) here if necessary
   }
 
