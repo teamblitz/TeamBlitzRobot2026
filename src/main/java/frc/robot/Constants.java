@@ -53,8 +53,8 @@ public final class Constants {
 
     public static final boolean MOTOR_INVERTED_LEFT = true; // tune per your mechanism
     public static final boolean MOTOR_INVERTED_RIGHT = true;
-    public static final boolean ENCODER_INVERTED_LEFT = false;
-    public static final boolean ENCODER_INVERTED_RIGHT = false;
+    public static final boolean ENCODER_INVERTED_LEFT = true;
+    public static final boolean ENCODER_INVERTED_RIGHT = true;
 
     // How far apart the two encoders can read before a fault is triggered (in rotations)
     public static final double ENCODER_DIVERGENCE_THRESHOLD = 0.05;
@@ -73,7 +73,7 @@ public final class Constants {
 
     public static final double IDLE_POS = 0.8; //
 
-    public static final double EXTENDED_POS = 0.67; // 0.355
+    public static final double EXTENDED_POS = 0.5; // 0.355
     public static final double KG_POS = 0.275;
 
     public static final double MAX_VELOCITY = 2; // TODO set

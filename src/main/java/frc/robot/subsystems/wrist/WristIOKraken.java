@@ -6,6 +6,7 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
@@ -177,8 +178,9 @@ public class WristIOKraken implements WristIO {
     System.out.println("************************setMotionMagic " + position);
     // Tell the motionmagic where we want the motors to be
     // We shouldn't need negatives here if the motor inverted values in Constants are set correctly
-    wristLeft.setControl(motionMagicLeft.withPosition(position));
-    wristRight.setControl(motionMagicRight.withPosition(position));
+    PositionVoltage voltage = new PositionVoltage(position).withSlot(0);
+    wristLeft.setControl(voltage);
+    wristRight.setControl(voltage);
     // Add feedforward using .withFeedforward(feedforward in volts) here if necessary
   }
 
