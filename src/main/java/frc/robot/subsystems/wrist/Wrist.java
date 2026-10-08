@@ -59,10 +59,13 @@ public class Wrist extends BlitzSubsystem {
 
   public Command goToIdle() {
     return setPosition(IDLE_POS);
+    // return run(() -> io.setMotionMagic(IDLE_POS));
   }
 
   public Command goToDown() {
     return setPosition(EXTENDED_POS);
+    // System.out.println("!!!!!!!!!!!!!!!!!!!!!!WTF");
+    // return run(() -> io.setMotionMagic(0.0));
   }
 
   // --- Getters ---

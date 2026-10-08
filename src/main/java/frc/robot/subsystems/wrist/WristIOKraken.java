@@ -9,6 +9,7 @@ import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import org.littletonrobotics.junction.Logger;
 
 public class WristIOKraken implements WristIO {
@@ -17,6 +18,7 @@ public class WristIOKraken implements WristIO {
   public final TalonFX wristRight;
   public final CANcoder absoluteEncoderLeft;
   public final CANcoder absoluteEncoderRight;
+  public final ArmFeedforward leftFeedForward;
 
   // Separate Motion Magic requests so we can apply independent feed forward corrections
   private final MotionMagicVoltage motionMagicLeft =
@@ -62,6 +64,8 @@ public class WristIOKraken implements WristIO {
                 RIGHT_KG,
                 RIGHT_KV,
                 RIGHT_KS));
+
+    leftFeedForward = new ArmFeedforward(LEFT_KS, LEFT_KG, LEFT_KV);
   }
 
   private CANcoderConfiguration buildEncoderConfig(double magnetOffset, boolean inverted) {
@@ -107,9 +111,9 @@ public class WristIOKraken implements WristIO {
             inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive);
 
     // Sets encoders as what to get feedback from
-    // cfg.Feedback.FeedbackRemoteSensorID = encoder.getDeviceID();
-    // cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-    // cfg.Feedback.RotorToSensorRatio = ROTOR_TO_SENSOR_RATIO;
+    cfg.Feedback.FeedbackRemoteSensorID = encoder.getDeviceID();
+    cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+    cfg.Feedback.RotorToSensorRatio = ROTOR_TO_SENSOR_RATIO;
 
     cfg.Slot0.kP = kP;
     cfg.Slot0.kI = kI;
@@ -127,6 +131,7 @@ public class WristIOKraken implements WristIO {
     cfg.SoftwareLimitSwitch.ForwardSoftLimitThreshold = SOFT_LIMIT_FORWARD;
     cfg.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
     cfg.SoftwareLimitSwitch.ReverseSoftLimitThreshold = SOFT_LIMIT_REVERSE;
+    // cfg.Feedback.SensorToMechanismRatio = 36;
 
     return cfg;
   }
@@ -169,6 +174,7 @@ public class WristIOKraken implements WristIO {
    */
   @Override
   public void setMotionMagic(double position) {
+    System.out.println("************************setMotionMagic " + position);
     // Tell the motionmagic where we want the motors to be
     // We shouldn't need negatives here if the motor inverted values in Constants are set correctly
     wristLeft.setControl(motionMagicLeft.withPosition(position));
