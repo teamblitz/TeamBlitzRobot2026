@@ -73,7 +73,7 @@ public final class Constants {
 
     public static final double IDLE_POS = 0.3; //
 
-    public static final double EXTENDED_POS = 0.65; // 0.355
+    public static final double EXTENDED_POS = 0.64; // 0.355
     public static final double KG_POS = 0;
 
     public static final double MAX_VELOCITY = 2; // TODO set
