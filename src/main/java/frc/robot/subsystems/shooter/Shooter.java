@@ -29,7 +29,7 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     super.periodic();
-    Logger.processInputs("Shooter", inputs);
+    io.updateInputs();
   }
 
   /**
@@ -58,17 +58,14 @@ public class Shooter extends SubsystemBase {
    */
   public double getVelocity(double distance, double angle, double heightGain) {
     double velocity;
-    double denominator = ((distance * Math.sin(angle * 2) - heightGain * (1 + Math.cos(angle * 2))));
+    double denominator =
+        ((distance * Math.sin(angle * 2) - heightGain * (1 + Math.cos(angle * 2))));
 
-    if(denominator < 0) {
+    if (denominator < 0) {
       denominator = 0.0;
     }
     // Second part of the equation, converting distance to required velocty
-    velocity =
-        Math.sqrt(
-            9.81
-                * Math.pow(distance, 2)
-                / denominator);
+    velocity = Math.sqrt(9.81 * Math.pow(distance, 2) / denominator);
     // System.out.println("velocity: " + velocity);
     return velocity;
   }
@@ -133,31 +130,32 @@ public class Shooter extends SubsystemBase {
    * @return the command to run the shoot
    */
   public Command aimAndShoot() {
-    return sequence(
-            run(() ->
-                    io.setShooterVoltage(
-                        getVoltage(
-                            getRPS(
-                                getVelocity(
-                                        getDistance()
-                                            + Constants.ShooterConstants
-                                                .SHOOTER_DISTANCE_OFFSET, // Distance
-                                        Constants.ShooterConstants.SHOOTER_ANGLE, // Angle
-                                        Constants.ShooterConstants.BALL_HEIGHT) // Heightgain
-                                    / Constants.ShooterConstants
-                                        .SHOOTER_EFFICIENCY, // Account for shooter efficiency by
-                                // dividing by our percentage TODO Tune
-                                // this!!
-                                Constants.ShooterConstants.SHOOTER_GEAR, // Gear ratio
-                                Constants.ShooterConstants.WHEEL_DIAMETER)))) // Wheel diameter
-                .alongWith(
-                  sequence(
-                    waitUntil(this::isAtTargetSpeed), // REPLACE THIS WITH A NORMAL WAIT IF THE BALL NEVER
-            // GETS FEEDED
-            runOnce(() -> io.setFeederSpeed(0.8)),
-            idle()
-          )
-        )
+    return run(() -> {
+          // 1. Calculate target velocity and RPS
+          double distance = getDistance() + Constants.ShooterConstants.SHOOTER_DISTANCE_OFFSET;
+          double velocity =
+              getVelocity(
+                      distance,
+                      Constants.ShooterConstants.SHOOTER_ANGLE,
+                      Constants.ShooterConstants.BALL_HEIGHT)
+                  / Constants.ShooterConstants.SHOOTER_EFFICIENCY;
+
+          double rps =
+              getRPS(
+                  velocity,
+                  Constants.ShooterConstants.SHOOTER_GEAR,
+                  Constants.ShooterConstants.WHEEL_DIAMETER);
+
+          // 2. Apply shooter voltage
+          io.setShooterVoltage(getVoltage(rps));
+
+          // 3. Feed the ball once up to speed
+          if (isAtTargetSpeed()) {
+            io.setFeederSpeed(0.8);
+          } else {
+            io.setFeederSpeed(0.0);
+          }
+        })
         .finallyDo(
             () -> {
               io.setShooterSpeed(0);
@@ -210,7 +208,7 @@ public class Shooter extends SubsystemBase {
     return sequence(
             runOnce(() -> io.setShooterSpeed(0.5)), // 0.18 speed for both for endless cycle
             Commands.waitSeconds(2),
-            runOnce(() -> io.setFeederSpeed(0.5)),
+            runOnce(() -> io.setFeederSpeed(-0.5)),
             idle())
         .finallyDo(
             () -> {

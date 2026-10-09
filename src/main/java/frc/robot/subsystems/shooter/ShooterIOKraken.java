@@ -4,10 +4,12 @@ import static frc.robot.Constants.ShooterConstants.*;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import org.littletonrobotics.junction.Logger;
@@ -41,16 +43,18 @@ public class ShooterIOKraken implements ShooterIO {
         .apply(buildEncoderConfig(MAGNET_OFFSET_SHOOTER, ENCODER_INVERTED_SHOOTER), 0.1);
 
     // Configs the Shooter moters.
-    TalonFXConfiguration shooterConfig = new TalonFXConfiguration();
-    shooterConfig
+    TalonFXConfiguration rightShooterConfig = new TalonFXConfiguration();
+    rightShooterConfig
         .MotorOutput
         .withNeutralMode(NeutralModeValue.Brake)
-        .withInverted(InvertedValue.Clockwise_Positive);
-    shooterConfig.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = RAMP;
+        .withInverted(InvertedValue.CounterClockwise_Positive);
+    rightShooterConfig.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = RAMP;
 
-    shooterConfig.Slot0.kS = 0.05;
-    shooterConfig.Slot0.kV = 0.12;
-    shooterConfig.Slot0.kP = 0.11;
+    rightShooterConfig.Slot0.kS = 0.05;
+    rightShooterConfig.Slot0.kV = 0.12;
+    rightShooterConfig.Slot0.kP = 0.11;
+
+    leftShooter.setControl(new Follower(rightShooter.getDeviceID(), MotorAlignmentValue.Opposed));
 
     // Configs the feeder moter.
     TalonFXConfiguration feederConfig = new TalonFXConfiguration();
@@ -59,8 +63,8 @@ public class ShooterIOKraken implements ShooterIO {
         .withNeutralMode(NeutralModeValue.Brake)
         .withInverted(InvertedValue.Clockwise_Positive);
 
-    rightShooter.getConfigurator().apply(shooterConfig);
-    leftShooter.getConfigurator().apply(shooterConfig);
+    rightShooter.getConfigurator().apply(rightShooterConfig);
+    leftShooter.getConfigurator().apply(rightShooterConfig);
     feeder.getConfigurator().apply(feederConfig);
   }
 
@@ -85,7 +89,7 @@ public class ShooterIOKraken implements ShooterIO {
   @Override
   public void setShooterSpeed(double speed) {
     rightShooter.set(speed);
-    leftShooter.set(speed);
+    leftShooter.set(-speed);
   }
 
   // Creates a void that sets the feeder speed when called, using the double speed.
