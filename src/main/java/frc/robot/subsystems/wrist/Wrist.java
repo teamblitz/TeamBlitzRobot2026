@@ -3,12 +3,9 @@ package frc.robot.subsystems.wrist;
 import static frc.robot.Constants.WristConstants.*;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.BlitzSubsystem;
-import java.util.Optional;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -17,15 +14,9 @@ public class Wrist extends BlitzSubsystem {
   private final WristIO io;
   private final WristInputsAutoLogged inputs = new WristInputsAutoLogged();
 
-  private Optional<TrapezoidProfile.State> goal;
-
-  @AutoLogOutput(key = "wrist/divergenceFault")
-  private boolean divergenceFault = false;
-
   public Wrist(WristIO io) {
     super("Wrist");
     this.io = io;
-    this.goal = Optional.empty();
   }
 
   @Override
@@ -36,33 +27,8 @@ public class Wrist extends BlitzSubsystem {
 
     // Check for encoder divergence every loop
     // This means something mechanical has gone wrong - a slipping shaft, snapped belt, etc.
-    if (inputs.encoderDelta > ENCODER_DIVERGENCE_THRESHOLD) {
-      if (!divergenceFault) {
-        DriverStation.reportWarning(
-            "[Wrist] Encoder divergence fault! Left: "
-                + inputs.absoluteEncoderPositionLeft
-                + " Right: "
-                + inputs.absoluteEncoderPositionRight
-                + " Delta: "
-                + inputs.encoderDelta,
-            false);
-        divergenceFault = true;
-      }
-      // Stop the wrist and clear the goal when a fault is detected
-      // to prevent the motors from stressing the mechanism further
-      io.stop();
-      goal = Optional.empty();
-      return;
-    } else {
-      divergenceFault = false;
-    }
-
-    if (goal.isPresent() && DriverStation.isEnabled()) {
-      io.setMotionMagic(goal.get().position);
-    }
-
+    // Stop the wrist if the robot is disabled
     if (DriverStation.isDisabled()) {
-      goal = Optional.empty();
       io.stop();
     }
   }
@@ -73,62 +39,33 @@ public class Wrist extends BlitzSubsystem {
     return startEnd(() -> io.setSpeed(speed), () -> io.setSpeed(0));
   }
 
+  /**
+   * Define a position in radians for the motor to drive towards. Right now it sets a position for
+   * both motors
+   *
+   * @param position the position in radians to drive towards
+   * @return the command to tell the motors to drive towards that with motionmagic.
+   */
+  public Command setPosition(double position) {
+    // Clamp our position value so that we aren't setting goals outside of our range
+    double clampedPosition =
+        MathUtil.clamp(
+            position, Math.min(EXTENDED_POS, IDLE_POS), Math.max(EXTENDED_POS, IDLE_POS));
+    // Set the motion magic to follow our clamped position
+    return run(() -> io.setMotionMagic(clampedPosition));
+  }
+
+  // Go to positon commands
+
   public Command goToIdle() {
-    return goToPosition(IDLE_POS);
+    return setPosition(IDLE_POS);
+    // return run(() -> io.setMotionMagic(IDLE_POS));
   }
 
   public Command goToDown() {
-    return goToPosition(EXTENDED_POS);
-  }
-
-  public Command holdIdle() {
-    return followGoal(IDLE_POS).withName(logKey + "/holdIdle");
-  }
-
-  public Command goToCenter() {
-    return goToPosition(KG_POS);
-  }
-
-  // Moves to a position and waits until both sides are near the target
-  public Command goToPosition(double position) {
-    return followGoal(position)
-        .withDeadline(
-            Commands.waitUntil(
-                () -> {
-                  // Both sides must individually be near the target, not just the average
-                  // This hopefully ensures the mechanism is actually flat, not one side ahead of
-                  // the other
-                  boolean leftNear =
-                      MathUtil.isNear(position, inputs.absoluteEncoderPositionLeft, TOLERANCE);
-                  boolean rightNear =
-                      MathUtil.isNear(position, inputs.absoluteEncoderPositionRight, TOLERANCE);
-                  boolean arrived = leftNear && rightNear;
-
-                  Logger.recordOutput("wrist/goToPosition/leftNear", leftNear);
-                  Logger.recordOutput("wrist/goToPosition/rightNear", rightNear);
-                  Logger.recordOutput("wrist/goToPosition/arrived", arrived);
-
-                  return arrived;
-                  //return true;
-                }))
-        .withName(logKey + "/goToPosition " + position);
-  }
-
-  public Command followGoal(double goalPos) {
-    return run(() -> {
-          if (this.goal.isEmpty() || this.goal.get().position != goalPos) {
-            this.goal =
-                Optional.of(
-                    new TrapezoidProfile.State(
-                        MathUtil.clamp(
-                            goalPos,
-                            Math.min(EXTENDED_POS, IDLE_POS),
-                            Math.max(EXTENDED_POS, IDLE_POS)),
-                        0));
-            Logger.recordOutput("wrist/goToPosition/goal", this.goal.get().position);
-          }
-        })
-        .handleInterrupt(() -> this.goal = Optional.empty());
+    return setPosition(EXTENDED_POS);
+    // System.out.println("!!!!!!!!!!!!!!!!!!!!!!WTF");
+    // return run(() -> io.setMotionMagic(0.0));
   }
 
   // --- Getters ---
@@ -152,9 +89,5 @@ public class Wrist extends BlitzSubsystem {
   @AutoLogOutput(key = "wrist/encoderDelta")
   public double getEncoderDelta() {
     return inputs.encoderDelta;
-  }
-
-  public boolean hasDivergenceFault() {
-    return divergenceFault;
   }
 }

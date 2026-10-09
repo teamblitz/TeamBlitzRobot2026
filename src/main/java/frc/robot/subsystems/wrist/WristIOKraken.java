@@ -2,7 +2,6 @@ package frc.robot.subsystems.wrist;
 
 import static frc.robot.Constants.WristConstants.*;
 
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -10,6 +9,7 @@ import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import org.littletonrobotics.junction.Logger;
 
 public class WristIOKraken implements WristIO {
@@ -18,6 +18,7 @@ public class WristIOKraken implements WristIO {
   public final TalonFX wristRight;
   public final CANcoder absoluteEncoderLeft;
   public final CANcoder absoluteEncoderRight;
+  public final ArmFeedforward leftFeedForward;
 
   // Separate Motion Magic requests so we can apply independent feed forward corrections
   private final MotionMagicVoltage motionMagicLeft =
@@ -62,8 +63,9 @@ public class WristIOKraken implements WristIO {
                 RIGHT_KD,
                 RIGHT_KG,
                 RIGHT_KV,
-                RIGHT_KS)
-                );
+                RIGHT_KS));
+
+    leftFeedForward = new ArmFeedforward(LEFT_KS, LEFT_KG, LEFT_KV);
   }
 
   private CANcoderConfiguration buildEncoderConfig(double magnetOffset, boolean inverted) {
@@ -77,6 +79,19 @@ public class WristIOKraken implements WristIO {
     return cfg;
   }
 
+  /**
+   * Build the configurations of our wrist motors
+   *
+   * @param encoder the absolute encoder of the wrist to get feedback from
+   * @param inverted whether or not the motor needs to be inverted
+   * @param kP proportional gain
+   * @param kI integral gain
+   * @param kD derivative gain
+   * @param kG the gravity gain(how many volts are needed to hold the wrist steady)
+   * @param kV the feedforward constant
+   * @param kS the static gain
+   * @return the TalonFX motor configuration to be applied to each of the wrist motors
+   */
   private TalonFXConfiguration buildMotorConfig(
       CANcoder encoder,
       boolean inverted,
@@ -88,13 +103,14 @@ public class WristIOKraken implements WristIO {
       double kS) {
     TalonFXConfiguration cfg = new TalonFXConfiguration();
 
-    cfg.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT_WRIST;
     cfg.CurrentLimits.StatorCurrentLimitEnable = true;
+    cfg.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT_WRIST;
 
     cfg.MotorOutput.withNeutralMode(NeutralModeValue.Coast)
         .withInverted(
             inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive);
 
+    // Sets encoders as what to get feedback from
     cfg.Feedback.FeedbackRemoteSensorID = encoder.getDeviceID();
     cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
     cfg.Feedback.RotorToSensorRatio = ROTOR_TO_SENSOR_RATIO;
@@ -105,16 +121,18 @@ public class WristIOKraken implements WristIO {
     cfg.Slot0.kG = kG;
     cfg.Slot0.kV = kV;
     cfg.Slot0.kS = kS;
-    cfg.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
+    // cfg.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
+    // cfg.Slot0.GravityArmPositionOffset = KG_POS;
 
     cfg.MotionMagic.MotionMagicCruiseVelocity = MAX_VELOCITY;
     cfg.MotionMagic.MotionMagicAcceleration = MAX_ACCEL;
     cfg.MotionMagic.MotionMagicJerk = 0;
 
-    cfg.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-    cfg.SoftwareLimitSwitch.ForwardSoftLimitThreshold = SOFT_LIMIT_FORWARD;
-    cfg.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-    cfg.SoftwareLimitSwitch.ReverseSoftLimitThreshold = SOFT_LIMIT_REVERSE;
+    // cfg.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    // cfg.SoftwareLimitSwitch.ForwardSoftLimitThreshold = SOFT_LIMIT_FORWARD;
+    // cfg.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+    // cfg.SoftwareLimitSwitch.ReverseSoftLimitThreshold = SOFT_LIMIT_REVERSE;
+    // cfg.Feedback.SensorToMechanismRatio = 36;
 
     return cfg;
   }
@@ -149,23 +167,21 @@ public class WristIOKraken implements WristIO {
     wristRight.set(speed);
   }
 
+  /**
+   * Set the position value for motion magic as a goal As I understand it motionmagic is just a
+   * fancy way to make a motionprofile.
+   *
+   * @param position the position in radians to drive towards
+   */
   @Override
   public void setMotionMagic(double position) {
-    double leftPos = absoluteEncoderLeft.getAbsolutePosition().getValueAsDouble();
-    double rightPos = absoluteEncoderRight.getAbsolutePosition().getValueAsDouble();
-
-    // Positive delta means left is ahead of right
-    // We apply a small feed forward nudge to slow down whichever side is ahead
-    double delta = leftPos - rightPos;
-    double correction = delta * SYNC_CORRECTION_SCALE;
-
-    // Left is ahead  -> correction is positive -> subtract from left, add to right
-    // Left is behind -> correction is negative -> add to left, subtract from right
-    wristLeft.setControl(motionMagicLeft.withPosition(position).withFeedForward(-correction));
-    wristRight.setControl(motionMagicRight.withPosition(position).withFeedForward(correction));
-
-    Logger.recordOutput("wrist/syncDelta", delta);
-    Logger.recordOutput("wrist/syncCorrection", correction);
+    System.out.println("************************setMotionMagic " + position);
+    // Tell the motionmagic where we want the motors to be
+    // We shouldn't need negatives here if the motor inverted values in Constants are set correctly
+    // PositionVoltage voltage = new PositionVoltage(position).withSlot(0);
+    wristLeft.setControl(motionMagicLeft.withPosition(position));
+    wristRight.setControl(motionMagicRight.withPosition(position));
+    // Add feedforward using .withFeedforward(feedforward in volts) here if necessary
   }
 
   @Override
