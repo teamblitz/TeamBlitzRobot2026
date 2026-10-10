@@ -214,9 +214,10 @@ public class RobotContainer {
 
     /*   Autos   */
     autoChooser.addOption("Straight Test", straightTestAuto());
-    autoChooser.addOption("LeftSide", leftSideToCenter());
+    autoChooser.addOption("LeftTrench", leftSideToCenter());
     autoChooser.addOption("RightTrench", rightSideToCenter());
     autoChooser.addOption("RightCenter", rightCenter());
+    autoChooser.addOption("LeftCenter", leftCenter());
 
     // Set up SysId routines
     autoChooser.addOption(
@@ -420,6 +421,22 @@ public class RobotContainer {
      *  Brings the wrist to idle for any balls stuck in the intake
      *  4 seconds: 2s for shooter to confirm speed + 1.5s feeding + 0.5s buffer
      */
+    path.doneFor(1)
+        .whileTrue(shooter.newShoot().alongWith(agitator.run()).alongWith(wrist.goToIdle()));
+
+    return routine.cmd();
+  }
+
+  private Command leftCenter() {
+    AutoRoutine routine = autoFactory.newRoutine("leftCenter");
+    AutoTrajectory path = routine.trajectory("leftCenter");
+
+    routine.active().onTrue(Commands.sequence(path.resetOdometry(), path.cmd()));
+
+    path.active().onTrue(intake.forward().alongWith(agitator.run()));
+
+    path.atTime("intakeDown").onTrue(intake.forward().alongWith(wrist.goToDown()));
+
     path.doneFor(1)
         .whileTrue(shooter.newShoot().alongWith(agitator.run()).alongWith(wrist.goToIdle()));
 
