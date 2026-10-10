@@ -215,10 +215,8 @@ public class RobotContainer {
     /*   Autos   */
     autoChooser.addOption("Straight Test", straightTestAuto());
     autoChooser.addOption("LeftSide", leftSideToCenter());
-    autoChooser.addOption("RightSide", rightSideToCenter());
-    autoChooser.addOption("Center", centerAuto());
+    autoChooser.addOption("RightTrench", rightSideToCenter());
     autoChooser.addOption("RightCenter", rightCenter());
-    autoChooser.addOption("LeftCenter", leftCenter());
 
     // Set up SysId routines
     autoChooser.addOption(
@@ -404,7 +402,7 @@ public class RobotContainer {
   }
 
   private Command rightSideToCenter() {
-    AutoRoutine routine = autoFactory.newRoutine("RightSide");
+    AutoRoutine routine = autoFactory.newRoutine("RightTrench");
     AutoTrajectory path = routine.trajectory("RightSideAuto");
 
     routine.active().onTrue(Commands.sequence(path.resetOdometry(), path.cmd()));
@@ -438,39 +436,8 @@ public class RobotContainer {
 
     path.atTime("intakeDown").onTrue(intake.forward().alongWith(wrist.goToDown()));
 
-    path.doneFor(10)
-        .whileTrue(shooter.newShoot().alongWith(agitator.run()).alongWith(wrist.goToIdle()));
-
-    return routine.cmd();
-  }
-
-  private Command leftCenter() {
-    AutoRoutine routine = autoFactory.newRoutine("leftCenter");
-    AutoTrajectory path = routine.trajectory("leftCenter");
-
-    routine.active().onTrue(Commands.sequence(path.resetOdometry(), path.cmd()));
-
-    path.active().onTrue(intake.forward().alongWith(agitator.run()));
-
     path.doneFor(1)
         .whileTrue(shooter.newShoot().alongWith(agitator.run()).alongWith(wrist.goToIdle()));
-
-    return routine.cmd();
-  }
-
-  private Command centerAuto() {
-    AutoRoutine routine = autoFactory.newRoutine("CenterAuto");
-    AutoTrajectory path = routine.trajectory("CenterAuto");
-
-    path.atTime("spinup").onTrue(shooter.startSpinUp());
-
-    path.doneFor(1)
-        .whileTrue(
-            shooter
-                .newShoot()
-                .alongWith(agitator.run())
-                .alongWith(wrist.goToIdle())
-                .alongWith(intake.forward()));
 
     return routine.cmd();
   }
