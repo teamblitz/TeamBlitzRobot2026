@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.drive.Drive;
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
 
@@ -174,6 +175,8 @@ public class Shooter extends SubsystemBase {
   public Rotation2d getTargetRotation(double targetX, double targetY, double offset) {
     double xDiff = targetX - drive.getPose().getX();
     double yDiff = targetY - drive.getPose().getY();
+    Logger.recordOutput("Odometry/RobotXDiff", xDiff);
+    Logger.recordOutput("Odometry/RobotYDiff", yDiff);
     Rotation2d rotation = new Rotation2d(Math.atan2(yDiff, xDiff) + offset);
     return rotation;
   }
@@ -205,10 +208,11 @@ public class Shooter extends SubsystemBase {
    * @return the command
    */
   public Command newShoot() {
+    double sspeed = 0.70;
     return sequence(
-            runOnce(() -> io.setShooterSpeed(0.7)), // 0.18 speed for both for endless cycle
+            runOnce(() -> io.setShooterSpeed(sspeed)), // 0.18 speed for both for endless cycle
             Commands.waitSeconds(2),
-            runOnce(() -> io.setFeederSpeed(-0.6)),
+            runOnce(() -> io.setFeederSpeed(-1 * sspeed)),
             idle())
         .finallyDo(
             () -> {
