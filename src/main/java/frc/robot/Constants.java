@@ -130,11 +130,18 @@ public final class Constants {
 
     public static final double SHOOTER_HEIGHT = 0.7493;
     public static final double SHOOTER_DISTANCE_OFFSET = 0.23;
+    // public static final double HUB_X =
+    //     (!Constants.DISABLE_HAL
+    //             && DriverStation.getAlliance().isPresent()
+    //             && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue)
+    //         ? 11.915394
+    //         : 4.625594;
+
     public static final double HUB_X =
         (!Constants.DISABLE_HAL
                 && DriverStation.getAlliance().isPresent()
                 && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue)
-            ? 11.915394
+            ? 6.5
             : 4.625594;
     public static final double HUB_Y = 4.034536;
     public static final double BASIN_H = 1.8288 - SHOOTER_HEIGHT;
