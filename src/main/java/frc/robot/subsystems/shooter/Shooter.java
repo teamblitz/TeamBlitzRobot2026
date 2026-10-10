@@ -189,6 +189,7 @@ public class Shooter extends SubsystemBase {
   public Rotation2d getRotationToHub() {
     Rotation2d rotation = getTargetRotation(HUB_X, HUB_Y, 0);
     Logger.recordOutput("Odometry/ExpectedRotation", Math.toDegrees(rotation.getRadians()));
+    Logger.recordOutput("Odometry/Rotation", Math.toDegrees(drive.getPose().getRotation().getRadians()));
     return rotation;
   }
 
