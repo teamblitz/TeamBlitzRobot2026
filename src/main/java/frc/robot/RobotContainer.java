@@ -396,8 +396,14 @@ public class RobotContainer {
      *  Brings the wrist to idle for any balls stuck in the intake
      *  4 seconds: 2s for shooter to confirm speed + 1.5s feeding + 0.5s buffer
      */
-    path.doneFor(1)
-        .whileTrue(shooter.newShoot().alongWith(agitator.run()).alongWith(wrist.goToIdle()));
+    path.done()
+        .whileTrue(
+            Commands.parallel(
+                DriveCommands.joystickDriveAggresiveAtAngle(
+                    drive, () -> 0, () -> 0, () -> shooter.getRotationToHub()),
+                shooter.newShoot(),
+                agitator.run(),
+                wrist.goToIdle()));
 
     return routine.cmd();
   }
@@ -421,8 +427,14 @@ public class RobotContainer {
      *  Brings the wrist to idle for any balls stuck in the intake
      *  4 seconds: 2s for shooter to confirm speed + 1.5s feeding + 0.5s buffer
      */
-    path.doneFor(1)
-        .whileTrue(shooter.newShoot().alongWith(agitator.run()).alongWith(wrist.goToIdle()));
+    path.done()
+        .whileTrue(
+            Commands.parallel(
+                DriveCommands.joystickDriveAggresiveAtAngle(
+                    drive, () -> 0, () -> 0, () -> shooter.getRotationToHub()),
+                shooter.newShoot(),
+                agitator.run(),
+                wrist.goToIdle()));
 
     return routine.cmd();
   }
@@ -437,8 +449,14 @@ public class RobotContainer {
 
     path.atTime("intakeDown").onTrue(intake.forward().alongWith(wrist.goToDown()));
 
-    path.doneFor(1)
-        .whileTrue(shooter.newShoot().alongWith(agitator.run()).alongWith(wrist.goToIdle()));
+    path.done()
+        .whileTrue(
+            Commands.parallel(
+                DriveCommands.joystickDriveAggresiveAtAngle(
+                    drive, () -> 0, () -> 0, () -> shooter.getRotationToHub()),
+                shooter.newShoot(),
+                agitator.run(),
+                wrist.goToIdle()));
 
     return routine.cmd();
   }
@@ -453,8 +471,14 @@ public class RobotContainer {
 
     path.atTime("intakeDown").onTrue(intake.forward().alongWith(wrist.goToDown()));
 
-    path.doneFor(1)
-        .whileTrue(shooter.newShoot().alongWith(agitator.run()).alongWith(wrist.goToIdle()));
+    path.done()
+        .whileTrue(
+            Commands.parallel(
+                DriveCommands.joystickDriveAggresiveAtAngle(
+                    drive, () -> 0, () -> 0, () -> shooter.getRotationToHub()),
+                shooter.newShoot(),
+                agitator.run(),
+                wrist.goToIdle()));
 
     return routine.cmd();
   }
