@@ -447,5 +447,6 @@
   "splits":[0]
  },
  "events":[
-   {"name":"spinup", "from":{"target":12, "targetTimestamp":10.79933, "offset":{"exp":"0 s", "val":0.0}}, "event":null}]
+   {"name":"spinup", "from":{"target":12, "targetTimestamp":10.79933, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
+   {"name":"Shoot", "from":{"target":16, "targetTimestamp":null, "offset":{"exp":"0 s", "val":0.0}}, "event":null}]
 }

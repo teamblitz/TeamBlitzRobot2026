@@ -354,5 +354,6 @@
   "splits":[0]
  },
  "events":[
-   {"name":"intakeDown", "from":{"target":3, "targetTimestamp":2.31848, "offset":{"exp":"0 s", "val":0.0}}, "event":null}]
+   {"name":"intakeDown", "from":{"target":3, "targetTimestamp":2.31848, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
+   {"name":"Shoot", "from":{"target":11, "targetTimestamp":null, "offset":{"exp":"0 s", "val":0.0}}, "event":null}]
 }

@@ -51,7 +51,7 @@ public final class Constants {
     public static final double MAGNET_OFFSET_LEFT = 0.6; // calibrate per robot
     public static final double MAGNET_OFFSET_RIGHT = 0.103;
 
-    public static final boolean MOTOR_INVERTED_LEFT = true; // tune per your mechanism
+    public static final boolean MOTOR_INVERTED_LEFT = false; // tune per your mechanism
     public static final boolean MOTOR_INVERTED_RIGHT = true;
     public static final boolean ENCODER_INVERTED_LEFT = true;
     public static final boolean ENCODER_INVERTED_RIGHT = true;
