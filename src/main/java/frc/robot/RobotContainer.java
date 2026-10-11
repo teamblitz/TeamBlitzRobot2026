@@ -397,7 +397,7 @@ public class RobotContainer {
      *  4 seconds: 2s for shooter to confirm speed + 1.5s feeding + 0.5s buffer
      */
     path.done()
-        .whileTrue(
+        .onTrue(
             Commands.parallel(
                 DriveCommands.joystickDriveAggresiveAtAngle(
                     drive, () -> 0, () -> 0, () -> shooter.getRotationToHub()),
@@ -428,7 +428,7 @@ public class RobotContainer {
      *  4 seconds: 2s for shooter to confirm speed + 1.5s feeding + 0.5s buffer
      */
     path.done()
-        .whileTrue(
+        .onTrue(
             Commands.parallel(
                 DriveCommands.joystickDriveAggresiveAtAngle(
                     drive, () -> 0, () -> 0, () -> shooter.getRotationToHub()),
@@ -450,7 +450,7 @@ public class RobotContainer {
     path.atTime("intakeDown").onTrue(intake.forward().alongWith(wrist.goToDown()));
 
     path.done()
-        .whileTrue(
+        .onTrue(
             Commands.parallel(
                 DriveCommands.joystickDriveAggresiveAtAngle(
                     drive, () -> 0, () -> 0, () -> shooter.getRotationToHub()),
@@ -472,7 +472,7 @@ public class RobotContainer {
     path.atTime("intakeDown").onTrue(intake.forward().alongWith(wrist.goToDown()));
 
     path.done()
-        .whileTrue(
+        .onTrue(
             Commands.parallel(
                 DriveCommands.joystickDriveAggresiveAtAngle(
                     drive, () -> 0, () -> 0, () -> shooter.getRotationToHub()),
